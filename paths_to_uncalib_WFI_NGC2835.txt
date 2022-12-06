@@ -1,0 +1,2 @@
+# Galaxy name, path to data in docorozco
+NGC2835 /home/arazza/NB_photometry/WFIreduction/DATA/P102/2018-11-04/processed/output/stacks
