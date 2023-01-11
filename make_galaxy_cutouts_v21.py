@@ -141,24 +141,21 @@ if __name__ == "__main__":
     
     start_time = timeit.default_timer()
     
-    galnames, paths = np.loadtxt('paths_to_uncalib_WFI.txt', dtype='str', unpack=True)
+    galnames, paths = np.loadtxt('paths_to_calib_WFI.txt', dtype='str', unpack=True)
 
     galnames = np.atleast_1d(galnames)
     paths = np.atleast_1d(paths)
 
     for obj, p in zip(galnames, paths) :
         
-        ### COMMENT OUT TO RUN IN DOCOROZCO ###
-        p = Path('/Volumes/My_Passport/test/WFI')
-        ##################################
-        p = Path(p).joinpath('phot_calib')
+        p = Path(p)
             
         for filt in ['Rc', 'Ha'] :
             
             mosaics = sorted(p.glob('%s_%s_stack?_calib.fits'%(obj,filt))) + sorted(p.glob('%s_%s_stack??_calib.fits'%(obj,filt)))
             maskframes = sorted(p.glob('%s_%s_stack?_mask_calib.fits'%(obj,filt))) + sorted(p.glob('%s_%s_stack??_mask_calib.fits'%(obj,filt)))
-            newmaskframes = sorted(p.glob('%s_%s_stack?_newmask_calib.fits'%(obj,filt))) + sorted(p.glob('%s_%s_stack??_newmask_calib.fits'%(obj,filt)))
-            sp_maskframes = sorted(p.glob('%s_%s_stack?_sp_mask_calib.fits'%(obj,filt))) + sorted(p.glob('%s_%s_stack??_sp_mask_calib.fits'%(obj,filt)))
+            newmaskframes = sorted(p.parent.glob('%s_%s_stack?_newmask.fits'%(obj,filt))) + sorted(p.parent.glob('%s_%s_stack??_newmask.fits'%(obj,filt)))
+            sp_maskframes = sorted(p.parent.glob('%s_%s_stack?_sp_mask.fits'%(obj,filt))) + sorted(p.parent.glob('%s_%s_stack??_sp_mask.fits'%(obj,filt)))
             errorframes = sorted(p.glob('%s_%s_stack?_std_calib.fits'%(obj,filt))) + sorted(p.glob('%s_%s_stack??_std_calib.fits'%(obj,filt)))
             
             if mosaics == [] :
@@ -175,7 +172,7 @@ if __name__ == "__main__":
                 
                 wfi.set_arrays(mosaic, maskframe, newmaskframe, sp_maskframe, errorframe)
                 
-                wfi.merge_masks()    # This step can be removed in pipeline v2.1
+                #wfi.merge_masks()    # This step can be removed in pipeline v2.1
                 
                 wfi.trim_data(myell)
                 

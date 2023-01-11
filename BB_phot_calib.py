@@ -727,8 +727,8 @@ if __name__ == "__main__":
                 errorframes = sorted(p.glob('%s_Rc_stack?_var.fits'%gal)) + sorted(p.glob('%s_Rc_stack??_var.fits'%gal))
 
                 # setting the list of bad column and saturated pixels mask frames (new in NB-DR2 for WFI)
-                newmaskframes = sorted(p.joinpath(cal_path).glob('%s_Rc_stack?_newmask_calib.fits'%gal)) + sorted(p.joinpath(cal_path).glob('%s_Rc_stack??_newmask_calib.fits'%gal))
-                sp_maskframes = sorted(p.joinpath(cal_path).glob('%s_Rc_stack?_sp_mask_calib.fits'%gal)) + sorted(p.joinpath(cal_path).glob('%s_Rc_stack??_sp_mask_calib.fits'%gal))
+                newmaskframes = sorted(p.glob('%s_Rc_stack?_newmask.fits'%gal)) + sorted(p.glob('%s_Rc_stack??_newmask.fits'%gal))
+                sp_maskframes = sorted(p.glob('%s_Rc_stack?_sp_mask.fits'%gal)) + sorted(p.glob('%s_Rc_stack??_sp_mask.fits'%gal))
 
                 if (not scienceframes) or (not maskframes) or (not errorframes) :
                     
