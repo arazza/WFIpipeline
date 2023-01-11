@@ -44,8 +44,7 @@ class NewMasks (object) :
             for j in range(len(new_x)) :
                      
                 new_mask[new_ymin[j]:new_ymax[j]+1,new_x[j]] = 1e12
-
-            #new_mask_filename = str(mask).replace('frame','newmask_frame')
+            
             new_mask_filename = str(mask).replace('_mask','_newmask')
             
             print('\nSaving new mask in\n%s\n'%new_mask_filename)
@@ -181,57 +180,47 @@ class ReprojectedImage (object) :
 if __name__ == "__main__":
     
     start_time = timeit.default_timer()
-
+    
     newmasks = NewMasks()
     
-    galnames, paths = np.loadtxt('path_to_calib_full.txt', dtype='str', unpack=True)
-
+    galnames, paths = np.loadtxt('paths_to_uncalib_WFI.txt', dtype='str', unpack=True)
+    
     for gal, p in zip(galnames, paths) :
-
+        
         p = Path(p)
          
-        path_to_wcs = Path(p).parents[1].joinpath('mask')
-        
-        ##### REMOVE TO RUN IN DOCOROZCO #####
-        #if gal != 'NGC1365' :
-        #      continue
-        
-        #p = Path('/Users/arazza/DAS/Observations/MPG2.2m/WFI_pipeline_v2/test')
-
-        #path_to_wcs = Path('/Users/arazza/DAS/Observations/MPG2.2m/WFI_pipeline_v2/rawdata/wcs')
-        ######################################
+        path_to_wcs = p.parent.joinpath('mask')
          
         for filt in ['Rc', 'Ha'] :
-        
+            
             #if filt == 'Rc' :
             #    continue
             
-            #list_of_masks = sorted(path_to_wcs.glob('wcs%s_%s_3_frame?.fits'%(gal,filt))) + sorted(path_to_wcs.glob('wcs%s_%s_3_frame??.fits'%(gal,filt)))
             list_of_masks = sorted(path_to_wcs.glob('wcs%s_%s_3_frame?_mask.fits'%(gal,filt))) + sorted(path_to_wcs.glob('wcs%s_%s_3_frame??_mask.fits'%(gal,filt)))
-
+            
             for i in range(len(list_of_masks)) :
-
+                
                 #if i!=0 :
                 #    continue
-
+                
                 ccd_str = ''
-
+                
                 for j in range(3) :
                     if path_to_wcs.joinpath('wcs%s_%s_%s_frame%s_mask.fits'%(gal,filt,j+1,i+1)).exists() :
                         ccd_str = ccd_str + str(j+1)
                 
                 if ccd_str == '' :
                     continue
-
-                #list_of_newmasks = sorted(path_to_wcs.glob('wcs%s_%s_[123]_frame%s.fits'%(gal,filt,i+1)))        
+                
                 list_of_newmasks = sorted(path_to_wcs.glob('wcs%s_%s_[%s]_frame%s_mask.fits'%(gal,filt,ccd_str,i+1)))
                 
                 newmasks.set_new_masks(list_of_newmasks)
                 
-                repr_file = p.joinpath('%s_%s_stack%s_mask_calib.fits'%(gal,filt,i+1))
+                repr_file = p.joinpath('%s_%s_stack%s_mask.fits'%(gal,filt,i+1))
+                
                 if not repr_file.exists() :
                     continue
-
+                
                 repr_img = ReprojectedImage(str(repr_file))
                  
                 repr_img.reproj_masks(newmasks.new_mask_fits)
