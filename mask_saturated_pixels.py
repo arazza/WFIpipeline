@@ -149,7 +149,7 @@ class ReprojectedImage (object) :
         image_centre = [self.hdr['CRVAL1'],self.hdr['CRVAL2']]
         pixel_scale = float(self.hdr['CD2_2'])*3600
 
-        self.out_name = self.filename.replace('calib.fits','sp_mask_calib.fits')
+        self.out_name = self.filename.replace('.fits','_sp_mask.fits')
 
         print ('\nRunning SWARP for ...')
         for fits in mask_fits :
@@ -183,22 +183,13 @@ if __name__ == "__main__":
     
     start_time = timeit.default_timer()
     
-    galnames, paths = np.loadtxt('path_to_calib_full.txt', dtype='str', unpack=True)
+    galnames, paths = np.loadtxt('paths_to_uncalib_WFI.txt', dtype='str', unpack=True)
 
     for gal, p in zip(galnames, paths) :
 
         p = Path(p)
          
-        path_to_wcs = Path(p).parents[1].joinpath('wcs_corrected')
-        
-        ##### REMOVE TO RUN IN DOCOROZCO #####
-        #if gal != 'NGC1365' :
-        #      continue
-        
-        #p = Path('/Users/arazza/DAS/Observations/MPG2.2m/WFI_pipeline_v2/test')
-
-        #path_to_wcs = Path('/Users/arazza/DAS/Observations/MPG2.2m/WFI_pipeline_v2/rawdata/wcs')
-        ######################################
+        path_to_wcs = p.parent.joinpath('wcs_corrected')
          
         for filt in ['Rc', 'Ha'] :
         
@@ -225,10 +216,11 @@ if __name__ == "__main__":
                 
                 spm.set_new_masks()
 
-                repr_file = p.joinpath('%s_%s_stack%s_calib.fits'%(gal,filt,i+1))
+                repr_file = p.joinpath('%s_%s_stack%s.fits'%(gal,filt,i+1))
+                
                 if not repr_file.exists() :
                     continue
-
+                 
                 repr_img = ReprojectedImage(str(repr_file))
                  
                 repr_img.reproj_masks(spm.sat_pix_mask_fits)
