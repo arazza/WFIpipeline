@@ -222,6 +222,9 @@ if __name__ == "__main__":
             
             wfi_galnames, wfi_paths = np.loadtxt('paths_to_uncalib_WFI.txt', dtype='str', unpack=True)
             
+            wfi_galnames = np.atleast_1d(wfi_galnames)
+            wfi_paths = np.atleast_1d(wfi_paths)
+            
             for gal, p in zip(wfi_galnames, wfi_paths) :
 
                 if gal not in list_of_galaxy :

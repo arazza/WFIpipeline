@@ -145,7 +145,7 @@ if __name__ == "__main__":
 
     galnames = np.atleast_1d(galnames)
     paths = np.atleast_1d(paths)
-
+    
     for obj, p in zip(galnames, paths) :
         
         p = Path(p)

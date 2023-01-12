@@ -184,7 +184,10 @@ if __name__ == "__main__":
     start_time = timeit.default_timer()
     
     galnames, paths = np.loadtxt('paths_to_uncalib_WFI.txt', dtype='str', unpack=True)
-
+    
+    galnames = np.atleast_1d(galnames)
+    paths = np.atleast_1d(paths)
+    
     for gal, p in zip(galnames, paths) :
 
         p = Path(p)
