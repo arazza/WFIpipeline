@@ -222,6 +222,9 @@ if __name__ == "__main__":
             
             wfi_galnames, wfi_paths = np.loadtxt('paths_to_uncalib_WFI.txt', dtype='str', unpack=True)
             
+            wfi_galnames = np.atleast_1d(wfi_galnames)
+            wfi_paths = np.atleast_1d(wfi_paths)
+            
             for gal, p in zip(wfi_galnames, wfi_paths) :
 
                 if gal not in list_of_galaxy :
@@ -254,8 +257,8 @@ if __name__ == "__main__":
                 errorframes = sorted(p.glob('%s_Ha_stack?_var.fits'%gal)) + sorted(p.glob('%s_Ha_stack??_var.fits'%gal))
 
                 # setting the list of bad column and saturated pixels mask frames (new in NB-DR2 for WFI)
-                newmaskframes = sorted(p.joinpath(cal_path).glob('%s_Ha_stack?_newmask_calib.fits'%gal)) + sorted(p.joinpath(cal_path).glob('%s_Ha_stack??_newmask_calib.fits'%gal))
-                sp_maskframes = sorted(p.joinpath(cal_path).glob('%s_Ha_stack?_sp_mask_calib.fits'%gal)) + sorted(p.joinpath(cal_path).glob('%s_Ha_stack??_sp_mask_calib.fits'%gal))
+                newmaskframes = sorted(p.glob('%s_Ha_stack?_newmask.fits'%gal)) + sorted(p.glob('%s_Ha_stack??_newmask.fits'%gal))
+                sp_maskframes = sorted(p.glob('%s_Ha_stack?_sp_mask.fits'%gal)) + sorted(p.glob('%s_Ha_stack??_sp_mask.fits'%gal))
 
                 if (not scienceframes) or (not maskframes) or (not errorframes) :
                     
