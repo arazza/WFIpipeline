@@ -70,18 +70,19 @@ def janesick (config, rawdir, images, nhdu) :
     flat_arr_of_max = ccdproc.block_reduce(flat1, size, func=np.max)
     flat_arr_of_min = ccdproc.block_reduce(flat1, size, func=np.min)
     #flat_min_diff = np.min(flat_arr_of_max-flat_arr_of_min)
-    flat_min_diff_10 = np.percentile(flat_arr_of_max-flat_arr_of_min, 10)
+    flat_min_diff_10 = np.percentile(flat_arr_of_max-flat_arr_of_min, 20)
     #print (flat_min_diff, flat_min_diff_10)
     bias_arr_diff = ccdproc.block_replicate(bias_arr_of_max-bias_arr_of_min, size, conserve_sum=False)
     flat_arr_diff = ccdproc.block_replicate(flat_arr_of_max-flat_arr_of_min, size, conserve_sum=False)
     # save boxes position equals to the minimum plus noise level
     boxes = []
     i=0
+
     while i <= bias_arr_diff.shape[0]-size :
         flag = False
         j=0
         while j <= bias_arr_diff.shape[1]-size :
-            #print (i, j, arr_diff[i,j], flag)
+            # print (i, j, bias_arr_diff[i,j], flag)
             if (bias_arr_diff[i,j]<=bias_min_diff_10)*(flat_arr_diff[i,j]<=flat_min_diff_10) :
                 boxes.append([i,i+size,j,j+size])
                 flag = True
@@ -110,6 +111,8 @@ def janesick (config, rawdir, images, nhdu) :
         
         readnoise = gain * np.std(dbias) / m.sqrt(2)
         readnoises.append(readnoise)
+        
+        
         
     med_gain = np.median(np.array(gains))
     med_readnoise = np.median(np.array(readnoises))
@@ -199,11 +202,11 @@ def flat_norm_factors (flatlists) :
     for i in range(8) :
         print ('CCD %s' %(i+1))
         for j,iccd in enumerate(flatlists[i]) :
-            arr_median[i,j] = np.median(iccd)
+            arr_median[i,j] = np.nanmedian(iccd)
             print ('median of flat %s : %s' %(j+1, arr_median[i,j]))
     
-    median_of_medians = [np.median(arr_median[:,col]) for col in range(arr_median.shape[1])]
-    inv_of_median_of_medians = [1/np.median(arr_median[:,col]) for col in range(arr_median.shape[1])]
+    median_of_medians = [np.nanmedian(arr_median[:,col]) for col in range(arr_median.shape[1])]
+    inv_of_median_of_medians = [1/np.nanmedian(arr_median[:,col]) for col in range(arr_median.shape[1])]
     print ('median fo medians: ', median_of_medians)
     print ('(median fo medians)^-1: ', inv_of_median_of_medians)
     return inv_of_median_of_medians
@@ -288,7 +291,10 @@ def empirical_gain (masterflat1, masterflat2, n2hdu, bpm1, bpm2, egain1) :
         ccd2 = np.ma.array(masterflat2.data[3878:4078, 2062:2092], mask=bpm2[3878:4078, 2062:2092])
     
     emp_gain = np.ma.median(ccd1) / np.ma.median(ccd2)
-
+    print(emp_gain)
+    if not np.isfinite(emp_gain):
+        emp_gain=1.
+    print(emp_gain)
     return emp_gain
 
 def correct_gain (args, masterdir, masterflat, egain, gain, filtname, nhdu, trimsection) :
@@ -627,6 +633,7 @@ def WFIreduce (args, config) :
         egain = {}
         egain['egain1'] = 1. 
         for i in range(7) :
+            print(i)
             egain['egain%s'%(i+2)] = empirical_gain (masterflat_r['masterflat_r%s'%(i+1)], masterflat_r['masterflat_r%s'%(i+2)], i+2, 
                 bpm_r['bpm_r%s'%(i+1)], bpm_r['bpm_r%s'%(i+2)], egain['egain%s'%(i+1)])
         with open(outegain, 'w') as outfile:

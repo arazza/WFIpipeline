@@ -141,8 +141,8 @@ class GalaxyEllipse (object) :
             
             threshold = detect_threshold(data, snr, background=median, error=std, mask=bpm+mask, mask_value=None)
             print('Threshold --> ', threshold[0][0])
-            kernel = None
-            segm = detect_sources(data, threshold, npixels=5, filter_kernel=kernel, 
+            
+            segm = detect_sources(data, threshold, npixels=5,  
                                      mask=mask)    # pixels within the ellipse are excluded from any source 
             #dilate_size = 11
             selem = np.ones((dilate_size, dilate_size))
@@ -161,8 +161,8 @@ class GalaxyEllipse (object) :
             
             threshold = detect_threshold(data, snr, background=median, error=std)
             print('Threshold --> ', threshold[0][0])
-            kernel = None
-            segm = detect_sources(data, threshold, npixels=5, filter_kernel=kernel) 
+            
+            segm = detect_sources(data, threshold, npixels=5) 
                                      
             #dilate_size = 11
             selem = np.ones((dilate_size, dilate_size))
