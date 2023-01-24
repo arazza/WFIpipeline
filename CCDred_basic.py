@@ -283,12 +283,15 @@ def empirical_gain (masterflat1, masterflat2, n2hdu, bpm1, bpm2, egain1) :
     if n2hdu <= 4 :
         ccd1 = np.ma.array(masterflat1.data[50:250, 2062:2092] * egain1, mask=bpm1[50:250, 2062:2092])
         ccd2 = np.ma.array(masterflat2.data[50:250, 53:83], mask=bpm2[50:250, 53:83])
-    elif n2hdu == 5 :
+    elif n2hdu == 8: # This connects lower right corner of CCD1 to upper right corner of CCD8
+        ccd1 = np.ma.array(masterflat1.data[50:80, 1892:2092] * egain1, mask=bpm1[50:80, 1892:2092])
+        ccd2 = np.ma.array(masterflat2.data[3878:4078, 1892:2092], mask=bpm2[3878:4078, 1892:2092])
+    else :  # This connects the lower to upper left corners from CCD2 to CCD7 and CCD3 to CCD6
         ccd1 = np.ma.array(masterflat1.data[50:80, 53:253] * egain1, mask=bpm1[50:80, 53:253])
         ccd2 = np.ma.array(masterflat2.data[4048:4078, 53:253], mask=bpm2[4048:4078, 53:253])
-    else :
-        ccd1 = np.ma.array(masterflat1.data[3878:4078, 53:83] * egain1, mask=bpm1[3878:4078, 53:83])
-        ccd2 = np.ma.array(masterflat2.data[3878:4078, 2062:2092], mask=bpm2[3878:4078, 2062:2092])
+
+        # ccd1 = np.ma.array(masterflat1.data[3878:4078, 53:83] * egain1, mask=bpm1[3878:4078, 53:83])
+        # ccd2 = np.ma.array(masterflat2.data[3878:4078, 2062:2092], mask=bpm2[3878:4078, 2062:2092])
     
     emp_gain = np.ma.median(ccd1) / np.ma.median(ccd2)
     print(emp_gain)
@@ -632,10 +635,14 @@ def WFIreduce (args, config) :
     if (args.empirical) + (not os.path.exists(outegain)) + (not os.path.exists(outnewgain)) + (not os.path.exists(outnewron)) :
         egain = {}
         egain['egain1'] = 1. 
-        for i in range(7) :
+        for i in range(4) :
             print(i)
             egain['egain%s'%(i+2)] = empirical_gain (masterflat_r['masterflat_r%s'%(i+1)], masterflat_r['masterflat_r%s'%(i+2)], i+2, 
                 bpm_r['bpm_r%s'%(i+1)], bpm_r['bpm_r%s'%(i+2)], egain['egain%s'%(i+1)])
+        for i in range(4,7) :
+            print(i)
+            egain['egain%s'%(i+2)] = empirical_gain (masterflat_r['masterflat_r%s'%(7-i)], masterflat_r['masterflat_r%s'%(i+2)], i+2, 
+                bpm_r['bpm_r%s'%(7-i)], bpm_r['bpm_r%s'%(i+2)], egain['egain%s'%(7-i)])
         with open(outegain, 'w') as outfile:
             json.dump(egain, outfile, sort_keys=True)
         # correct for the new empirical gain 
