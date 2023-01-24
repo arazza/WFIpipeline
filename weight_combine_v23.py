@@ -436,7 +436,7 @@ if __name__ == "__main__":
     
     start_time = timeit.default_timer()
 
-    wfi_galaxies = ['NGC1087', 'NGC1672', 'NGC2835', 'NGC3627', 'NGC4535', 'IC5332', 'NGC4254', 'NGC5068', 
+    wfi_galaxies = ['NGC1097','NGC1087', 'NGC1672', 'NGC2835', 'NGC3627', 'NGC4535', 'IC5332', 'NGC4254', 'NGC5068', 
                       'NGC0628', 'NGC1512', 'NGC1300', 'NGC1365', 'NGC1385', 'NGC1433', 'NGC1566', 'NGC4303', 
                         'NGC4321', 'NGC6744', 'NGC3511' , 'NGC3596', 'NGC4293', 'NGC4298', 'NGC4496A', 'NGC4569', 
                           'NGC4571', 'NGC4654', 'NGC4731', 'NGC2997', 'NGC3351', 'NGC4540', 'NGC4548', 'NGC4689']
