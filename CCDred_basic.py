@@ -142,7 +142,10 @@ def make_masterbias (rawdir, intdir, masterdir, images, nhdu, gain, ron, poly_mo
         #ccd = ccdproc.create_deviation(ccd, gain=gain, readnoise=ron)
         #ccd = ccdproc.gain_correct(ccd, gain)
         #ccd = ccdproc.subtract_overscan(ccd, overscan_axis=1, fits_section='[2095:2142,1:4128]', model=poly_model)
-        ccd = ccdproc.subtract_overscan(ccd, fits_section='[2095:2142,1:4128]', median=True)
+        #ccd = ccdproc.subtract_overscan(ccd, fits_section='[2095:2142,1:4128]', median=True)
+        #ccd = ccdproc.subtract_overscan(ccd, fits_section='[2095:2142,1:4128]')
+        ccd = ccdproc.subtract_overscan(ccd, fits_section='[2098:2139,1:4128]')
+        #ccd = ccdproc.subtract_overscan(ccd, fits_section='[5:37,1:4128]')
 
         if correct :
             ccd = ccdproc.trim_image(ccd, fits_section=trimsection)
@@ -180,7 +183,10 @@ def make_flatlist (rawdir, intdir, images, filtname, nhdu, gain, ron, poly_model
         rawflat = os.path.join (rawdir, flat)
         ccd = ccdproc.CCDData.read(rawflat, hdu=nhdu, unit=u.adu)
         #ccd = ccdproc.subtract_overscan(ccd, overscan_axis=1, fits_section='[2095:2142,1:4128]', model=poly_model)
-        ccd = ccdproc.subtract_overscan(ccd, fits_section='[2095:2142,1:4128]', median=True)
+        #ccd = ccdproc.subtract_overscan(ccd, fits_section='[2095:2142,1:4128]', median=True)
+        #ccd = ccdproc.subtract_overscan(ccd, fits_section='[2095:2142,1:4128]')
+        ccd = ccdproc.subtract_overscan(ccd, fits_section='[2098:2139,1:4128]')
+        #ccd = ccdproc.subtract_overscan(ccd, fits_section='[5:37,1:4128]')
         
         if correct :
             ccd = ccdproc.trim_image(ccd, fits_section=trimsection)
@@ -461,7 +467,10 @@ def basic_reduction (args, config, rawdir, intdir, masterdir, outdir, images, fi
             
             print ('\tOverscan subtraction ...')
             #ccd = ccdproc.subtract_overscan(ccd, overscan_axis=1, fits_section=config.get('Image sections', 'overscan'), model=poly_model)
-            ccd = ccdproc.subtract_overscan(ccd, fits_section='[2095:2142,1:4128]', median=True)
+            #ccd = ccdproc.subtract_overscan(ccd, fits_section='[2095:2142,1:4128]', median=True)
+            #ccd = ccdproc.subtract_overscan(ccd, fits_section='[2095:2142,1:4128]')
+            ccd = ccdproc.subtract_overscan(ccd, fits_section='[2098:2139,1:4128]')
+            #ccd = ccdproc.subtract_overscan(ccd, fits_section='[5:37,1:4128]')
             if args.intermediate :
                 ccd.write((os.path.join(intdir,'ocr%s' %img)).replace('.fits','_%s.fits'%nhdu), overwrite=True)
             
