@@ -55,15 +55,61 @@ class GalaxyEllipse (object) :
             
         phangs_tbl = Table.read('phangs_sample_table_v1p6.fits')
         #phangs_tbl = Table.read('/Users/arazza/DAS/Papers_in_prep/PHANGS/Halpha_Survey/All_plots/Files/phangs_sample_table_v1p6.fits')
-
-        pgc = [phangs_tbl['pgc'][i] for i,galname in enumerate(phangs_tbl['name']) if galname.strip()==self.name.lower()][0]
-        my_gal = phangs_tbl['pgc']==pgc
-
-        self.a = Angle(phangs_tbl['size_r25'][my_gal][0] * u.arcsec).to(u.arcmin)
-        self.b = self.a * np.cos(Angle(phangs_tbl['orient_incl'][my_gal][0] * u.deg).radian)
-        self.pa = phangs_tbl['orient_posang'][my_gal][0] * u.deg
-        self.obj_coord = SkyCoord (ra=phangs_tbl['orient_ra'][my_gal][0], dec=phangs_tbl['orient_dec'][my_gal][0], unit=(u.deg, u.deg))
-     
+        
+        try:
+            if self.name=='M83':
+                obj = 'NGC5236'
+            elif self.name=='ESO97-G13':
+                obj = 'ESO097-013'
+            else:
+                obj = self.name
+            pgc = [phangs_tbl['pgc'][i] for i,galname in enumerate(phangs_tbl['name']) if galname.strip()==obj.lower()][0]
+            my_gal = phangs_tbl['pgc']==pgc
+    
+            self.a = Angle(phangs_tbl['size_r25'][my_gal][0] * u.arcsec).to(u.arcmin)
+            self.b = self.a * np.cos(Angle(phangs_tbl['orient_incl'][my_gal][0] * u.deg).radian)
+            self.pa = phangs_tbl['orient_posang'][my_gal][0] * u.deg
+            self.obj_coord = SkyCoord (ra=phangs_tbl['orient_ra'][my_gal][0], dec=phangs_tbl['orient_dec'][my_gal][0], unit=(u.deg, u.deg))
+            print('Taking galaxy parameters from the PHANGS sample table.')
+        
+        except:
+            print('Galaxy is not in PHANGS sample.')
+            try:
+                data=fits.open('CGS.fits')[1].data
+                if self.name.startswith('NGC'):
+                    obj = 'NGC '+self.name[3:]
+                elif self.name.startswith('IC'):
+                    obj = 'IC '+self.name[2:]
+                elif self.name.startswith('M'):
+                    obj = 'M '+self.name[1:]
+                my_gal = data['Name']==obj
+                
+                self.a = Angle(data['D25'][my_gal][0]*u.arcmin)
+                self.b = self.a * (1-data['ell'][my_gal][0])
+                self.pa = data['PA'][my_gal][0] * u.deg
+                self.obj_coord = SkyCoord(ra=data['_RAJ2000'][my_gal][0],dec=data['_DEJ2000'][my_gal][0],unit=(u.deg,u.deg))
+                print('Taking galaxy parameters from the CGS table.')
+                
+            except:
+                print('Galaxy is not in CGS sample.')
+                try:
+                    data=fits.open('RC3.fits')[1].data
+                    if self.name.startswith('NGC'):
+                        obj = 'NGC  '+self.name[3:]
+                    elif self.name.startswith('IC'):
+                        obj = 'IC    '+self.name[2:]
+                    my_gal = data['name']==obj
+                    
+                    # D25 is in units of log10(0.1*arcmin), R25 is log10 of major-to-minor axis ratio
+                    self.a = Angle(10**(data['D25'][my_gal][0])*0.1*u.arcmin)
+                    self.b = self.a / (10**data['R25'][my_gal][0])
+                    self.pa = data['PA'][my_gal][0] * u.deg
+                    self.obj_coord = SkyCoord(ra=data['RA2000'][my_gal][0],dec=data['DE2000'][my_gal][0],unit=(u.deg,u.deg))   
+                    print('Taking galaxy parameters from the RC3 table.')
+                except Exception:
+                    print('Galaxy is not in RC3 sample. Please provide parameters manually.')
+                    raise
+            
         print('Position of %s : '%self.name, self.obj_coord.to_string('hmsdms'))
         print('Semi-major axis : ',round(self.a.value, 3) * u.arcmin) 
         print('Semi-minor axis : ',round(self.b.value, 3) * u.arcmin)
