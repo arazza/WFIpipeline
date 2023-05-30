@@ -535,7 +535,7 @@ class ZPParams (object) :
         
         #tbl_filename = stars.filename.name.replace('wcs_reproj.fits','phot_table.dat')
         tbl_filename = '%s_%s_%s_phot_table.dat'%(stars.obj,stars.filt,stars.filenum)
-        stars.tbl.write(stars.tbl_path.joinpath(tbl_filename), format='ascii.commented_header')
+        stars.tbl.write(stars.tbl_path.joinpath(tbl_filename), format='ascii.commented_header', overwrite=True)
         
         # Plot 1
         stars.ax2.errorbar (gaia_r, iZP, xerr=err_gaia_r, yerr=sigma_iZP, fmt='none', ms=4, alpha=0.5, ecolor='lightgray', zorder=1)
@@ -636,10 +636,12 @@ if __name__ == "__main__":
     
     start_time = timeit.default_timer()
 
-    wfi_galaxies = ['NGC1097', 'NGC1087', 'NGC1672', 'NGC2835', 'NGC3627', 'NGC4535', 'IC5332', 'NGC4254', 'NGC5068', 
+    wfi_galaxies = ['IC5273','NGC613','NGC1087', 'NGC1097', 'NGC1672', 'NGC2835', 'NGC3627', 'NGC4535', 'IC5332', 'NGC4254', 'NGC5068', 
                       'NGC0628', 'NGC1512', 'NGC1300', 'NGC1365', 'NGC1385', 'NGC1433', 'NGC1566', 'NGC4303', 
                         'NGC4321', 'NGC6744', 'NGC3511' , 'NGC3596', 'NGC4293', 'NGC4298', 'NGC4496A', 'NGC4569', 
-                          'NGC4571', 'NGC4654', 'NGC4731', 'NGC2997', 'NGC3351', 'NGC4540', 'NGC4548', 'NGC4689']
+                          'NGC4571', 'NGC4654', 'NGC4731', 'NGC2997', 'NGC3351', 'NGC4540', 'NGC4548', 'NGC4689', 
+                          'NGC6814','NGC7582','NGC7793','NGC1808','M83','NGC2903','NGC3521','NGC4651','NGC4826',
+                          'ESO97-G13']
     
        
     ccd_galaxies = ['NGC0685', 'NGC1317', 'NGC1326', 'IC1954', 'IC1993', 'NGC1511', 'NGC1546', 'NGC1559',
