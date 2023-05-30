@@ -3,8 +3,8 @@
 '''
 Broad-band images photometric calibration.
 
-The code finds the zero points for each frame 
-by calibrating the broad-band images against 
+The code finds the zero points for each frame
+by calibrating the broad-band images against
 Gaia DR2 and makes the plots to show the method.
 
 It works for both WFI and DP data set.
@@ -52,34 +52,34 @@ class ImageStars (object) :
     def __init__ (self, instr, path, tbl_path, plot_path, obj, filedata, filemask, file_newmask, file_sp_mask, filesigma, fwhm, comb=False) :
         '''
         Note on the fwhm: the mean value computed from Brent's NB-DR1 WFI PSFs
-        and the weighted average seeing of the du Pont observations resulted 
+        and the weighted average seeing of the du Pont observations resulted
         to be ~4.08 pixels
 
-        The comb variable serves to discriminate the class when instantiated 
+        The comb variable serves to discriminate the class when instantiated
         for the final combined broad-band image, to be used in the narrow-band
         photometric calibration script, or for the broad- and narrow-band
-        individual frames. 
-        ''' 
-        
+        individual frames.
+        '''
+
         self.path = path
         self.tbl_path = tbl_path
         self.plot_path = plot_path
         self.obj = obj
         self.wcs = WCS(fits.open(str(filedata))[0].header)
         self.filename = filedata
-        
+
         self.data = fits.open(str(filedata))[0].data
         self.hdr = fits.open(str(filedata))[0].header
         if comb :
         	self.mask = np.full(self.data.shape, 99.)
-        	self.mask[np.isnan(self.data)] = 1.0e6 
+        	self.mask[np.isnan(self.data)] = 1.0e6
         else :
             self.mask = fits.open(str(filemask))[0].data
-        
+
         self.instr = instr
-        
+
         if (self.instr == 'WFI') * (not comb) :
-            
+
             self.newmask = fits.open(file_newmask)[0].data
             self.sp_mask = fits.open(file_sp_mask)[0].data
             self.error = np.sqrt(fits.open(str(filesigma))[0].data)
@@ -88,34 +88,34 @@ class ImageStars (object) :
                 self.filenum = str(filedata)[-6]
             else :
                 self.filenum = str(filedata)[-7:-5]
-        
+
         if (self.instr == 'CCD') + (comb) :
-            
+
             self.newmask = file_newmask
             self.sp_mask = file_sp_mask
             self.error = fits.open(str(filesigma))[0].data
-        
+
         if (self.instr == 'CCD') * (not comb) :
 
             pos = [i for i, c in enumerate(filedata.name) if c=='_']
             if len(pos) >=3 :
-                self.filenum = int(filedata.name[pos[1]+1:pos[2]]) 
+                self.filenum = int(filedata.name[pos[1]+1:pos[2]])
             else :
                 self.filenum = 0    # For specphot stars fields
 
         if comb :
 
         	self.filenum = 0
-        
+
         self.fwhm = fwhm
         #self.airmass = self.hdr['AIRMASS']
 
-    
+
     def merge_masks (self) :
         '''
         The method mergees the three types of masks available for WFI in NB-DR2
         '''
-        
+
         self.mask[(np.round(self.newmask)!=99) * (self.newmask!=0)] = 1e12
 
         self.mask[np.round(self.sp_mask)!=99] = 1e12
@@ -123,18 +123,18 @@ class ImageStars (object) :
 
     def find_image_stars (self, threshold_nstd, find_stars=IRAFStarFinder, peakmax=None) :
         '''
-        This method computes the image threshold to find stars with 
-        IRAFFindStars algorithm. An astropy Table is created with pixel positions. 
+        This method computes the image threshold to find stars with
+        IRAFFindStars algorithm. An astropy Table is created with pixel positions.
         '''
-        
+
         # find stars in the input image
-        sigclip_sigma=3.0  
+        sigclip_sigma=3.0
         sigclip_iters=5
-        image_mean, image_median, image_std = sigma_clipped_stats(self.data, sigma=sigclip_sigma, maxiters=sigclip_iters)    
+        image_mean, image_median, image_std = sigma_clipped_stats(self.data, sigma=sigclip_sigma, maxiters=sigclip_iters)
         print (image_mean, image_median, image_std)
         threshold = image_median + (threshold_nstd * image_std)
         print('Threshold for finding bright stars', threshold)
-        
+
         iraffind = find_stars(threshold=threshold, fwhm=self.fwhm, peakmax=peakmax)
         self.tbl = iraffind(self.data)
         self.tbl.keep_columns(['xcentroid', 'ycentroid'])
@@ -144,13 +144,13 @@ class ImageStars (object) :
 
     def match_with_gaia (self, gaia_stars) :
         '''
-        Centroid positions are converted in sky coordinates, by means of 
+        Centroid positions are converted in sky coordinates, by means of
         the image wcs solution. Gaia DR2 stars are then retreived to be matched.
         '''
         # Convert pixel positions in coordinates
         ra, dec = self.wcs.all_pix2world(self.tbl['xcentroid'], self.tbl['ycentroid'], 0)
         self.coord = SkyCoord (ra=ra*u.deg, dec=dec*u.deg)
-        
+
         # .. and update tbl
         ra = Column(self.coord.ra, name='ra')
         dec = Column(self.coord.dec, name='dec')
@@ -165,12 +165,12 @@ class ImageStars (object) :
 
         ## match with Gaia stars
         #idxc, idxcatalog, d2d, d3d = gaia_stars.coord.search_around_sky(self.coord, 0.5*u.arcsec)
-        #print('\nNumber of matching stars between the image and Gaia : %s\n' %len(idxc)) 
+        #print('\nNumber of matching stars between the image and Gaia : %s\n' %len(idxc))
         #
         ## match with Gaia stars
         #idxc, idxcatalog, d2d, d3d = gaia_stars.coord.search_around_sky(self.coord, 1.*u.arcsec)
-        #print('\nNumber of matching stars between the image and Gaia : %s\n' %len(idxc)) 
-        
+        #print('\nNumber of matching stars between the image and Gaia : %s\n' %len(idxc))
+
         # update tbl
         self.tbl = self.tbl[sep_constraint]
         gaia_stars.coord = gaia_stars.coord[idx[sep_constraint]]
@@ -202,7 +202,7 @@ class ImageStars (object) :
         self.tbl.add_column(gaia_RPmag)
         self.tbl.add_column(gaia_BP_RPmag)
         self.tbl.add_column(gaia_BP_RPmag_err)
-        
+
         for col in self.tbl.colnames:
             self.tbl[col].info.format = '%.4f'
 
@@ -212,22 +212,22 @@ class ImageStars (object) :
         This method filter the positions of stars too close to each other or too close to masked pixels.
         It instantiates and mask an ellipse around the galaxy.
         '''
-        
+
         # Initialise the x0 and y0 pixel positions of the stars
-        sources_x0 = self.tbl['xcentroid']        
+        sources_x0 = self.tbl['xcentroid']
         sources_y0 = self.tbl['ycentroid']
-        
+
         # Mask an ellipse around the galaxy
         myellipse = GalaxyEllipse(self.obj, 'Rc', self.filename, self.mask)
         myellipse.get_ellipse()
         myellipse.ellipse_to_pixel(instr)
         myellipse.mask_ellipse(r=1.2)
-        
+
         # Mask the stars
         d1 = 12    # equivalent to typical FWHM * 3
         d2 = 15    # equivalent to the aperture photometry radius
         d3 = 30    # equivalent to the annulus external radius
-        
+
         nstars = len(sources_x0)
         mask = np.ones((nstars), bool)
         for i in range(nstars) :
@@ -239,17 +239,17 @@ class ImageStars (object) :
             # exclude stars in the minimal bounding box of the ellipse around the galaxy
             if myellipse.mask[y0-1,x0-1]==True :
                 mask[i]=False
-            # exclude stars close to the edge of the ccds or to the gaps    
+            # exclude stars close to the edge of the ccds or to the gaps
             if (self.data[y0-d3:y0+d3,x0-d3:x0+d3]==0).any() :
                 mask[i]=False
 
         # exclude stars closer than the aperture photometry radius to each of the other stars
         positions = [(sources_x0[i], sources_y0[i]) for i in range(nstars)]
         distances = cdist(positions,positions)
-        close_points = (distances<=d3*2) & (distances!=0) 
-        rejected_stars = np.where(close_points)[0] 
+        close_points = (distances<=d3*2) & (distances!=0)
+        rejected_stars = np.where(close_points)[0]
         mask[rejected_stars] = False
-        
+
         # Assign the values for the aperture photometry radii
         self.r = d2
         self.r_in = d2 + 5
@@ -260,7 +260,7 @@ class ImageStars (object) :
 
         print('\nNumber of remaining isolated stars (after filtering bad positions) : %s\n' %len(self.tbl))
 
-    
+
 
     def annulus_photometry (self, snr=20):
         '''
@@ -273,12 +273,12 @@ class ImageStars (object) :
 
         # Define the mask
         mask = np.round(self.mask)!=99
-            
+
         # Aperture photometry
         self.apertures = CircularAperture(positions, r=self.r)
         self.annulus_apertures = CircularAnnulus(positions, r_in=self.r_in, r_out=self.r_out)
         phot_table = aperture_photometry(self.data, self.apertures, error=self.error, mask=mask)
-        
+
         # Local background subtraction
 
         '''
@@ -289,10 +289,10 @@ class ImageStars (object) :
         \sigma_\mathrm{B/pix} = 1.4826 \cdot \mathrm{MAD}
         '''
         mymasks = self.annulus_apertures.to_mask(method='center')
-        
+
         bkg_median = np.zeros(len(mymasks))
         bkg_err = np.zeros(len(mymasks))
-        
+
         for k,mask in enumerate(mymasks) :
             annulus_data = mask.multiply(self.data)
             annulus_data_1d = annulus_data[mask.data > 0]
@@ -300,44 +300,44 @@ class ImageStars (object) :
             bkg_median[k] = median_sigclip
             bkg_err[k] = mad_std(annulus_data_1d, ignore_nan=True)
 
-        phot_table['annulus_median'] = bkg_median    
-        
+        phot_table['annulus_median'] = bkg_median
+
         N_aper = self.apertures.area
         N_back = self.annulus_apertures.area
 
         phot_table['aper_bkg'] = bkg_median * N_aper
-        
+
         phot_table['aper_bkg_err'] = bkg_err * N_aper * np.sqrt(np.pi/2) / np.sqrt(N_back)
-        
+
         phot_table['aper_sum_bkgsub'] = phot_table['aperture_sum'] - phot_table['aper_bkg']
-        
+
         phot_table['aper_sum_bkgsub_err'] = np.sqrt(phot_table['aperture_sum_err']**2 + phot_table['aper_bkg_err']**2)
-        
+
         # Check of WFI vs DP pipeline aperture photometry error computation formula
         #for i in range(len(phot_table)) :
         #    print(np.sqrt(phot_table['aperture_sum_err'][i]**2 + (bkg_err[i])**2 * N_aper), phot_table['aper_sum_bkgsub_err'][i])
 
-        #Update the table 
-        
+        #Update the table
+
         fluxes = phot_table['aper_sum_bkgsub']
         errfluxes = phot_table['aper_sum_bkgsub_err']
-        
+
         f_ap = Column(fluxes, name='flux_apert')
         err_f_ap = Column(errfluxes, name='flux_apert_err')
         m_ap = Column(-2.5*np.log10(fluxes), name='mag_apert')
         m_ap_err = Column(1.086*(errfluxes/fluxes), name='mag_apert_err')
-        
+
         self.tbl.add_column(f_ap)
         self.tbl.add_column(err_f_ap)
-        self.tbl.add_column(m_ap) 
+        self.tbl.add_column(m_ap)
         self.tbl.add_column(m_ap_err)
 
         for col in self.tbl.colnames:
-            self.tbl[col].info.format = '%.4f'  
+            self.tbl[col].info.format = '%.4f'
 
         # Cut out stars with S/N lower than snr (default 20)
         stn_cut = (self.tbl['flux_apert'] / self.tbl['flux_apert_err']) > snr
-        
+
         self.tbl = self.tbl[stn_cut]
         self.apertures = self.apertures[stn_cut]
         self.annulus_apertures = self.annulus_apertures[stn_cut]
@@ -357,12 +357,12 @@ class ImageStars (object) :
 
     def set_airmass (self) :
         '''
-        Method to compute the target airmass for WFI 
+        Method to compute the target airmass for WFI
         and to read it from the header for CCD.
         '''
-        
+
         if self.instr == 'WFI' :
-            
+
             #Initialization
             obj_coord = SkyCoord.from_name(self.obj)
             LaSilla = EarthLocation.of_site('La Silla Observatory')
@@ -370,7 +370,7 @@ class ImageStars (object) :
             # Conversion to Airmass
             obj_altaz = obj_coord.transform_to (AltAz (obstime=time, location=LaSilla))
             self.airmass = obj_altaz.secz.value
-        
+
         if self.instr == 'CCD' :
 
             self.airmass = self.hdr['AIRMASS']
@@ -383,23 +383,23 @@ class ImageStars (object) :
 
 
 class GAIAStars (object) :
-    
-    def __init__ (self, obj, instr, my_catname = 'Gaia-DR2') : 
-        
+
+    def __init__ (self, obj, instr, my_catname = 'Gaia-DR2') :
+
         self.obj = obj
         self.instr = instr
         self.catname = my_catname
-        
-        
+
+
     def gaia_query (self, g_corr=False, lmag=12, hmag=20) :
-        
+
 
         new_limit = 60  # sets the timeout to 60s
         with conf.set_temp('remote_timeout', new_limit):
             obj_coord = SkyCoord.from_name(self.obj)
-        
+
         vizier = Vizier(columns=['*', 'E(BR/RP)'], catalog='Gaia-DR2', row_limit=-1, timeout=60)
-        result = vizier.query_region(obj_coord, radius=1*u.deg) 
+        result = vizier.query_region(obj_coord, radius=1*u.deg)
 
         # cuts on colours as in https://gea.esac.esa.int/archive/documentation/GDR2/Data_processing/chap_cu5pho/sec_cu5pho_calibr/ssec_cu5pho_PhotTransf.html
         # + new color cut based on the Gaia bands trasformation
@@ -437,10 +437,10 @@ class GAIAStars (object) :
 
         self.coord = SkyCoord(ra=gaia_tbl['RA_ICRS'], dec=gaia_tbl['DE_ICRS'])
 
-        if self.instr == 'WFI' : 
+        if self.instr == 'WFI' :
             '''
-            Transforamtion as in https://gea.esac.esa.int/archive/documentation/GDR2/Data_processing/chap_cu5pho/sec_cu5pho_calibr/ssec_cu5pho_PhotTransf.html#Ch5.T8 
-            G - R = -0.003226 + 0.3833*(BP-RP) - 0.1345*(BP-RP)^2  
+            Transforamtion as in https://gea.esac.esa.int/archive/documentation/GDR2/Data_processing/chap_cu5pho/sec_cu5pho_calibr/ssec_cu5pho_PhotTransf.html#Ch5.T8
+            G - R = -0.003226 + 0.3833*(BP-RP) - 0.1345*(BP-RP)^2
             '''
             self.Rmag = self.Gmag + 0.003226 - 0.3833*(self.BP_RPmag) + 0.1345*(self.BP_RPmag)**2.
             self.e_Rmag = np.sqrt(self.e_Gmag**2.+0.04840**2.)
@@ -451,11 +451,11 @@ class GAIAStars (object) :
             # Filter for the Gaia trasformed magnitudes
             self.Rmag = self.Rmag[mask]
             self.e_Rmag = self.e_Rmag[mask]
-        
+
         if self.instr == 'CCD' :
             '''
-            Transforamtion as in https://gea.esac.esa.int/archive/documentation/GDR2/Data_processing/chap_cu5pho/sec_cu5pho_calibr/ssec_cu5pho_PhotTransf.html#Ch5.T8 
-            G - r = - 0.12879 + 0.24662*(BP-RP) - 0.027464*(BP-RP)^2 - 0.049465*(BP-RP)^3 
+            Transforamtion as in https://gea.esac.esa.int/archive/documentation/GDR2/Data_processing/chap_cu5pho/sec_cu5pho_calibr/ssec_cu5pho_PhotTransf.html#Ch5.T8
+            G - r = - 0.12879 + 0.24662*(BP-RP) - 0.027464*(BP-RP)^2 - 0.049465*(BP-RP)^3
             '''
             self.rmag = self.Gmag + 0.12879 - 0.24662*(self.BP_RPmag) + 0.027464*(self.BP_RPmag)**2. + 0.049465*(self.BP_RPmag)**3.
             self.e_rmag = np.sqrt(self.e_Gmag**2. + 0.066739**2.)
@@ -466,17 +466,17 @@ class GAIAStars (object) :
             # Filter for the Gaia trasformed magnitudes
             self.rmag = self.rmag[mask]
             self.e_rmag = self.e_rmag[mask]
-        
+
         # Filter for the Gaia trasformed magnitudes
         self.Gmag = self.Gmag[mask]
         self.e_Gmag = self.e_Gmag[mask]
         self.BP_RPmag = self.BP_RPmag[mask]
         self.e_BP_RPmag = self.e_BP_RPmag[mask]
         self.coord = self.coord[mask]
-        
+
 
 class ZPParams (object) :
-    
+
     def __init__ (self, stars) :
 
         self.ZP = None
@@ -492,21 +492,21 @@ class ZPParams (object) :
 
     def find_zp (self, stars) :
 
-        k = self.exct    
-        sigma_k = self.sigma_exct 
-        
+        k = self.exct
+        sigma_k = self.sigma_exct
+
         fluxes = stars.tbl['flux_apert']
         err_fluxes = stars.tbl['flux_apert_err']
-        
+
         if stars.instr == 'WFI' :
-            gaia_r = stars.tbl['gaia_R_mag'] 
+            gaia_r = stars.tbl['gaia_R_mag']
             err_gaia_r = stars.tbl['gaia_R_mag_err']
-        if stars.instr == 'CCD' :   
+        if stars.instr == 'CCD' :
             gaia_r = stars.tbl['gaia_r_mag']
             err_gaia_r = stars.tbl['gaia_r_mag_err']
-        
+
         gaia_color = stars.tbl['gaia_BP_RPmag']
-        
+
         ### Zero point computation ###
 
         # VEGA-to-AB offset from Bessel & Murphy (2012)
@@ -523,18 +523,19 @@ class ZPParams (object) :
         ZP = np.sum(1/(sigma_iZP**2)*iZP)/err_weight
         sigma_ZP = np.sqrt(1/err_weight)
         print('Before clipping ZP : ', ZP, sigma_ZP)
-            
+
         zp = Column(iZP, name='zero_point')
         err_zp = Column(sigma_iZP, name='zero_point_err')
-        
+
         stars.tbl.add_column(zp)
         stars.tbl.add_column(err_zp)
-        
-        stars.tbl['zero_point'].info.format = '%.4f'         
+
+        stars.tbl['zero_point'].info.format = '%.4f'
         stars.tbl['zero_point_err'].info.format = '%.4f'
-        
+
         #tbl_filename = stars.filename.name.replace('wcs_reproj.fits','phot_table.dat')
         tbl_filename = '%s_%s_%s_phot_table.dat'%(stars.obj,stars.filt,stars.filenum)
+
         stars.tbl.write(stars.tbl_path.joinpath(tbl_filename), format='ascii.commented_header', overwrite=True)
         
         # Plot 1
@@ -550,7 +551,7 @@ class ZPParams (object) :
         if stars.instr == 'CCD' :
             stars.ax2.set_xlabel(r'GAIA-DR2 $r$ [mag]')
         stars.ax2.set_ylabel('ZP [mag]')
-            
+
         # Sigma clipping of ZP
         sigclip = SigmaClip(sigma=3, maxiters=5)
         #sigclip = SigmaClip(sigma=2.5, maxiters=None)
@@ -565,7 +566,7 @@ class ZPParams (object) :
         ZP = np.sum(1/(sigma_iZP_clipped**2)*iZP_clipped)/err_weight
         sigma_ZP = np.sqrt(1/err_weight)
         print('After clipping ZP : ', ZP, sigma_ZP)
-        
+
         # Plot 1
         stars.ax2.scatter(gaia_r[iZP_filt.mask], iZP[iZP_filt.mask], s=50, marker='x', c='C3')
         # Plot again to resize and get the limits
@@ -576,21 +577,21 @@ class ZPParams (object) :
         stars.ax2.axhline(y=ZP+sigma_ZP, c='r', ls=':', zorder=2)
         stars.ax2.axhline(y=ZP, c='r', ls='--', zorder=2)
         stars.ax2.axhline(y=ZP-sigma_ZP, c='r', ls=':', zorder=2)
-        stars.ax2.text(0.02, ZP+sigma_ZP+0.04, r'ZP$=$%.2f$\pm$%.2f'%(ZP,sigma_ZP), 
+        stars.ax2.text(0.02, ZP+sigma_ZP+0.04, r'ZP$=$%.2f$\pm$%.2f'%(ZP,sigma_ZP),
             color='r', ha='left', fontsize=10, transform=stars.ax2.get_yaxis_transform())
 
         stars.ax2.set_ylim(ZP-0.2, ZP+0.2)
-        
+
         title_txt = '%s %s frame%s'%(stars.obj,stars.filt,stars.filenum)
         plt.suptitle(title_txt)
-        
+
         stars.fig.subplots_adjust(left=0.08, right=0.92, top=0.85, bottom=0.2, wspace=0.3)
-                
+
         stars.fig.savefig(stars.plot_path.joinpath(Path(stars.filename).name.replace('.fits','_zp.png')))
 
         print('\nClosing plots ..')
         plt.close()
-        
+
         self.ZP = ZP
         self.sigma_ZP = sigma_ZP
 
@@ -599,7 +600,7 @@ class ZPParams (object) :
         '''
         Apply ZP to calibrate science and error frames
         '''
-        
+
         print('\n\nPhotometric calibration ...\n')
         '''
         f_r &= f * 10^{-0.4\cdot(\rm{ZP}-\kappa\chi-\rm{ZP}_0)}\\
@@ -615,11 +616,11 @@ class ZPParams (object) :
         '''
         Write to fits file the recalibrated science frame and variance frame
         '''
-        
+
         cal_filename = stars.path.joinpath(stars.filename.name.replace('.fits','_calib.fits'))
         cal_std_filename = stars.path.joinpath(stars.filename.name.replace('.fits','_std_calib.fits'))
         cal_mask_filename = stars.path.joinpath(stars.filename.name.replace('.fits','_mask_calib.fits'))
-        
+
         # Writing the unit in the FITS file header
         hdr = stars.hdr
         hdr['BUNIT'] = ('uJy/pixel', 'flux unit')
@@ -633,8 +634,9 @@ class ZPParams (object) :
 
 
 if __name__ == "__main__":
-    
+
     start_time = timeit.default_timer()
+
 
     wfi_galaxies = ['IC5273','NGC613','NGC1087', 'NGC1097', 'NGC1672', 'NGC2835', 'NGC3627', 'NGC4535', 'IC5332', 'NGC4254', 'NGC5068', 
                       'NGC0628', 'NGC1512', 'NGC1300', 'NGC1365', 'NGC1385', 'NGC1433', 'NGC1566', 'NGC4303', 
@@ -643,30 +645,29 @@ if __name__ == "__main__":
                           'NGC6814','NGC7582','NGC7793','NGC1808','M83','NGC2903','NGC3521','NGC4651','NGC4826',
                           'ESO97-G13']
     
-       
     ccd_galaxies = ['NGC0685', 'NGC1317', 'NGC1326', 'IC1954', 'IC1993', 'NGC1511', 'NGC1546', 'NGC1559',
-                      'NGC1809', 
+                      'NGC1809',
                       'NGC1792', 'NGC2090', 'NGC2283', 'NGC2566', 'NGC2775', 'NGC3059', 'NGC3507',
                         'NGC3626', 'NGC4207', 'NGC4424', 'NGC4457', 'NGC4540', 'NGC4548', 'NGC4689', 'NGC4694',
                           'NGC4781', 'NGC4941', 'NGC4951', 'NGC5042', 'NGC5134', 'NGC5248', 'NGC5530', 'NGC5643',
                             'NGC6300', 'IC5273', 'NGC7456', 'NGC7496']
-    
+
     parser = argparse.ArgumentParser()
-    
+
     parser.add_argument('--wfi_path', action='store', type=str, default=None, help='path to uncalibrated WFI frames')
-    parser.add_argument('--ccd_path', action='store', type=str, 
+    parser.add_argument('--ccd_path', action='store', type=str,
         default='/home/arazza/NB_photometry/dirCCDreduction/DuPontDATA/PROCESSED/reproj/', help='path to uncalibrated du Pont frames')
-    parser.add_argument('-w', '--wfi', nargs='*', type=str, default=wfi_galaxies, 
+    parser.add_argument('-w', '--wfi', nargs='*', type=str, default=wfi_galaxies,
         help='list of selected WFI galaxies (type a non-valid galaxy to avoid calibrating WFI)')
-    parser.add_argument('-c', '--ccd', nargs='*', type=str, default=ccd_galaxies, 
+    parser.add_argument('-c', '--ccd', nargs='*', type=str, default=ccd_galaxies,
         help='list of selected CCD galaxies (type a non-valid galaxy to avoid calibrating CCD)')
     parser.add_argument('-f', '--fwhm', action='store', type=float, default=4.0, help='FWHM to be used for IRAFStarFinder')
     parser.add_argument('--snr', action='store', type=float, default=20., help='threshold for rejecting low SNR as computed with the aperture photometry')
-    
+
     parser.add_argument('--g_corr', action='store_true', default=False, help='apply Gaia DR2 G-band correction in Casagrande (2018)')
-    
+
     args = parser.parse_args()
-    
+
     # Instantiate the lists of galaxies
 
     lists_of_galaxies = [args.wfi, args.ccd]
@@ -674,9 +675,9 @@ if __name__ == "__main__":
     ##### Main loop #####
 
     for i,list_of_galaxy in enumerate(lists_of_galaxies) :
-        
+
         # Check the lists
-        
+
         if (i==0) * (not (set(list_of_galaxy) <= set(wfi_galaxies))) :
 
             print('\nThere is a galaxy not belonging to WFI data\n... skipping WFI calibration ...\n\n')
@@ -687,37 +688,37 @@ if __name__ == "__main__":
 
             print('\nThere is a galaxy not belonging to CCD data\n... skipping CCD calibration ...\n\n')
 
-            continue 
+            continue
 
         # Instantiate the paths and start the loop for WFI
 
         if (i==0) * (set(list_of_galaxy) <= set(wfi_galaxies)) :
-            
+
             wfi_galnames, wfi_paths = np.loadtxt('paths_to_uncalib_WFI.txt', dtype='str', unpack=True)
-            
+
             wfi_galnames = np.atleast_1d(wfi_galnames)
             wfi_paths = np.atleast_1d(wfi_paths)
-            
+
             filt = 'Rc'
-            
+
             for gal, p in zip(wfi_galnames, wfi_paths) :
 
                 if gal not in list_of_galaxy :
                     continue
-                
+
                 print('\nCalibrating %s ...\n'%gal)
-                
+
                 if args.wfi_path :
                     p = Path(args.wfi_path)
                 else:
                     p = Path(p)
 
                 print('Images path :\n%s'%p)
-                
+
                 # setting the path to calibrated file
                 cal_path = p.joinpath('phot_calib')
                 cal_path.mkdir(exist_ok=True)
-                
+
                 # setting the path to save the tabels with results from photometry for each frame
                 tbl_path = p.joinpath('phot_tables')
                 tbl_path.mkdir(exist_ok=True)
@@ -736,23 +737,23 @@ if __name__ == "__main__":
                 sp_maskframes = sorted(p.glob('%s_Rc_stack?_sp_mask.fits'%gal)) + sorted(p.glob('%s_Rc_stack??_sp_mask.fits'%gal))
 
                 if (not scienceframes) or (not maskframes) or (not errorframes) :
-                    
+
                     print('\nThere are no frames with filter Rc for %s\n'%gal)
                     continue
 
                 for scienceframe, maskframe, newmaskframe, sp_maskframe, errorframe in zip(scienceframes, maskframes, newmaskframes, sp_maskframes, errorframes) :
-                    
+
                     #if scienceframe != scienceframes[3] :
                     #    continue
-                    
+
                     ##### Aperture photometry with ImageStars object #####
-                    
-                    # Instantiate ImageStars class        
+
+                    # Instantiate ImageStars class
                     stars = ImageStars('WFI', cal_path, tbl_path, plot_path, gal, scienceframe, maskframe, newmaskframe, sp_maskframe, errorframe, args.fwhm)
 
                     # Merge the masks created for NB-DR2
                     stars.merge_masks()
-                    
+
                     # Find stars in the image
                     stars.find_image_stars(threshold_nstd=5.)
 
@@ -766,7 +767,7 @@ if __name__ == "__main__":
                     # Create tuples of star positions and filter those too close to each other or to masked pixels
                     stars.star_positions('WFI')
 
-                    # Aperture photometry        
+                    # Aperture photometry
                     stars.annulus_photometry(args.snr)
 
                     # Setting the airmass
@@ -782,26 +783,26 @@ if __name__ == "__main__":
                     myZP.find_zp(stars)
                     myZP.calib_images(stars)
                     myZP.write_calib_to(stars)
-                    
-        
+
+
         # Loop for CCD
-        
+
         else :
 
             filt = 'r'
 
             for gal in list_of_galaxy :
-                
+
                 print('\nCalibrating %s ...\n'%gal)
 
                 p = Path(args.ccd_path)
-                
+
                 print('Images path :\n%s'%p)
-                
+
                 # setting the path to calibrated file
                 cal_path = p.parent.joinpath('phot_calib')
                 cal_path.mkdir(exist_ok=True)
-                
+
                 # setting the path to save the tabels with results from photometry for each frame
                 tbl_path = p.parent.joinpath('phot_tables')
                 tbl_path.mkdir(exist_ok=True)
@@ -820,18 +821,18 @@ if __name__ == "__main__":
                 sp_maskframes = []
 
                 if (not scienceframes) or (not maskframes) or (not errorframes) :
-                    
+
                     print('\nThere are no frames with filter r for %s\n'%gal)
                     continue
-    
+
                 for scienceframe, maskframe, errorframe in zip(scienceframes, maskframes, errorframes) :
-                    
+
                     #if scienceframe != scienceframes[2] :
                     #    continue
-                    
+
                     ##### Aperture photometry with ImageStars object #####
-                    
-                    # Instantiate ImageStars class        
+
+                    # Instantiate ImageStars class
                     stars = ImageStars('CCD', cal_path, tbl_path, plot_path, gal, scienceframe, maskframe, newmaskframes, sp_maskframes, errorframe, args.fwhm)
 
                     # Find stars in the image
@@ -847,7 +848,7 @@ if __name__ == "__main__":
                     # Create tuples of star positions and filter those too close to each other or to masked pixels
                     stars.star_positions('CCD')
 
-                    # Aperture photometry        
+                    # Aperture photometry
                     stars.annulus_photometry(args.snr)
 
                     # Setting the airmass
@@ -863,9 +864,9 @@ if __name__ == "__main__":
                     myZP.find_zp(stars)
                     myZP.calib_images(stars)
                     myZP.write_calib_to(stars)
-            
-    
-    
+
+
+
     elapsed = timeit.default_timer() - start_time
     minutes, seconds = divmod(elapsed, 60)
     hours, minutes = divmod(minutes, 60)
