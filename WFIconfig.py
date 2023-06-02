@@ -18,6 +18,9 @@ def ConfigWrite () :
     
     # CCD reduction
     config['CCD reduction'] = {'pixel_shifts' : 'No'}
+
+    # CCDMASK
+    config['ccdmask'] = {'findbadcolumns': 'True', 'ncmed': '7', 'nlmed': '7', 'ncsig': '12', 'nlsig': '12', 'lsigma': '9', 'hsigma': '9'}
     
     # Image Stacking
     config['Image Stacking'] = {'excl_ccds' : '[5, 6]'}

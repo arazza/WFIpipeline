@@ -192,7 +192,7 @@ def make_flatlist (rawdir, intdir, images, filtname, nhdu, gain, ron, poly_model
             ccd = ccdproc.trim_image(ccd, fits_section=trimsection)
             
         ccd = ccdproc.subtract_bias(ccd, masterbias)
-        ccd = ccdproc.create_deviation(ccd, gain=gain, readnoise=ron)
+        ccd = ccdproc.create_deviation(ccd, gain=gain, readnoise=ron, disregard_nan=True)
         ccd = ccdproc.gain_correct(ccd, gain)
         
         flatlist.append(ccd)
@@ -260,10 +260,22 @@ def make_masterflat (masterdir, norm_factors, flatlist, filtname, nhdu, correct,
 
 ### BAD PIXEL MASK ###
 
-def bad_pixel_mask (masterdir, masterflat, filtname, nhdu) :
+def bad_pixel_mask (masterdir, masterflat, filtname, nhdu, config) :
     
     print ('Creating bad pixel mask of CCD %s (it might take some time!) ...' %nhdu)
-    bpm = ccdproc.ccdmask (masterflat, findbadcolumns=True, ncmed=12, nlmed=12, ncsig=25, nlsig=25, lsigma=9, hsigma=9)   # byblocks=True and ngood>5 do not work for coulumns. findbadcolumns=True is also not affecting the majority of columns.
+    '''
+    bpm = ccdproc.ccdmask (masterflat, findbadcolumns=True, ncmed=12, nlmed=12, ncsig=25, nlsig=25, lsigma=9, hsigma=9) # WFI 1.0--2.3
+    ncmed=7, nlmed=7, ncsig=12, nlsig=12 are the default values
+    byblocks=True and ngood>5 do not work for coulumns. findbadcolumns=True is also not affecting the majority of columns.
+    '''
+    findbadcolumns = config.getboolean('ccdmask', 'findbadcolumns')
+    ncmed = config.getint('ccdmask', 'ncmed')
+    nlmed = config.getint('ccdmask', 'nlmed')
+    ncsig = config.getint('ccdmask', 'ncsig')
+    nlsig = config.getint('ccdmask', 'nlsig')
+    lsigma = config.getfloat('ccdmask', 'lsigma')
+    hsigma = config.getfloat('ccdmask', 'hsigma')
+    bpm = ccdproc.ccdmask (masterflat, findbadcolumns=findbadcolumns, ncmed=ncmed, nlmed=nlmed, ncsig=ncsig, nlsig=nlsig, lsigma=lsigma, hsigma=hsigma)
     # update with bad pixel columns not individuated by ccdmask routine
     nccd, X, Y = np.loadtxt('bad_pixel_columns.txt', dtype='int', unpack=True)
     for i in range(len(X)) :
@@ -485,7 +497,7 @@ def basic_reduction (args, config, rawdir, intdir, masterdir, outdir, images, fi
                 ccd.write((os.path.join(intdir,'btocr%s' %img)).replace('.fits','_%s.fits'%nhdu), overwrite=True)
             
             print ('\tCreating error frame ...')
-            ccd = ccdproc.create_deviation(ccd, gain=gain, readnoise=ron)
+            ccd = ccdproc.create_deviation(ccd, gain=gain, readnoise=ron, disregard_nan=True)
             
             print ('\tGain correction ...')
             ccd = ccdproc.gain_correct(ccd, gain)
@@ -628,12 +640,12 @@ def WFIreduce (args, config) :
     for i in range(8) :
         outbpm_r = os.path.join (masterdir, 'bpm_r%s.npy' %(i+1))
         if (args.badpixel) + (not os.path.exists(outbpm_r)) :
-            bpm_r['bpm_r%s'%(i+1)] = bad_pixel_mask (masterdir, masterflat_r['masterflat_r%s'%(i+1)], 'BB#Rc/162_ESO844', i+1)
+            bpm_r['bpm_r%s'%(i+1)] = bad_pixel_mask (masterdir, masterflat_r['masterflat_r%s'%(i+1)], 'BB#Rc/162_ESO844', i+1, config)
         else :
             bpm_r['bpm_r%s'%(i+1)] = np.load (outbpm_r)
         outbpm_h = os.path.join (masterdir, 'bpm_h%s.npy' %(i+1))
         if (args.badpixel) + (not os.path.exists(outbpm_h)) :
-            bpm_h['bpm_h%s'%(i+1)] = bad_pixel_mask (masterdir, masterflat_h['masterflat_h%s'%(i+1)], 'NB#Halpha/7_ESO856', i+1)
+            bpm_h['bpm_h%s'%(i+1)] = bad_pixel_mask (masterdir, masterflat_h['masterflat_h%s'%(i+1)], 'NB#Halpha/7_ESO856', i+1, config)
         else :
             bpm_h['bpm_h%s'%(i+1)] = np.load (outbpm_h)
 
