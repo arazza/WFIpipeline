@@ -444,10 +444,10 @@ def astrometry (paths, config, exposures, stack_name, ref_catalog, ref_band='DEF
         #fits.writeto (varfile, var_temp.data, header=rwcs_header, overwrite=True)
         
         # save variance map frames
-        varfits = hdu['UNCERT']
-        varmapfile = os.path.join(paths['var'], os.path.basename(wcsfile.replace('.fits','_var.fits')))
-        print ('Writing to ...\n %s' %varmapfile)
-        fits.writeto (varmapfile, varfits.data, header=rwcs_header, overwrite=True)
+        stdfits = hdu['UNCERT']
+        varfile = os.path.join(paths['var'], os.path.basename(wcsfile.replace('.fits','_var.fits')))
+        print ('Writing to ...\n %s' %varfile)
+        fits.writeto (varfile, data=stdfits.data**2., header=rwcs_header, overwrite=True)
 
 
     # Resample (rotate and scale) and combine (stack) images
