@@ -18,8 +18,7 @@ fitsheader *.fits -f -e 0 -k OBJECT -k "EXPTIME" -k "HIERARCH ESO DPR TYPE" -k "
 ##### (5b) If this doesn't work well, you can also manually create/edit the output files ***{galaxy}\_Rc_{night}.txt*** and ***{galaxy}\_Ha_{night}.txt***. This file shows the RA/DEC and pixel coordinates of the galaxy centre, but a reference star can also be used.
 ##### (5c) The new observations seem to have "_large" and "_small" added to the actual object name in the header keyword. There is a function in ***make_objects_txt_WFI.py*** which removes these suffixes, whith will otherwise make the pipeline break. Call it if necessary with the --chkeys option.
 ### (6) Check if it is necessary to exclude CCDs from the reduction and add the numbers in WFIpipeline.config
-### (7) Add galaxy to list ***wfi_galaxies*** in ***BB_phot_calib.py***, ***NB_phot_calib.py***,  ***PSF_compute_gauss_to_gauss.py*** and ***weight_combine_v23.py***
-Note: Create a simple text file with a list of WFI galaxies and feed that to the four different scripts
+### (7) Add galaxy to list in ***PHANGS_WFI_galaxies.txt***
 ### (8) Add path to ***paths_to_uncalib_WFI.txt*** in the form 
 _{path_to_WFI_data}/{night YYYY-MM-DD}/processed/output/stacks_ 
 ### and to  paths_to_calib_WFI.txt in the form  
@@ -36,10 +35,10 @@ python CCDred_basic.py {path_to_WFI_data} {night} -o {galaxy} -jmbed
 python WFIpipeline.py {path_to_WFI_data} {night} -o {galaxy} -a -c
 ```
 ```sh
-python newmask_reprojection.py
+python newmask_reprojection.py -g {galaxy}
 ```
 ```sh
-python mask_saturated_pixels.py
+python mask_saturated_pixels.py -g {galaxy}
 ```
 ```sh
 python BB_phot_calib.py -w {galaxy} -c NGC0000 
@@ -48,7 +47,7 @@ python BB_phot_calib.py -w {galaxy} -c NGC0000
 python NB_phot_calib.py -w {galaxy} -c NGC0000
 ```
 ```sh
-python make_galaxy_cutouts_v21.py 
+python make_galaxy_cutouts_v21.py -g {galaxy}
 ```
 ```sh
 python PSF_compute_gauss_to_gauss.py -w {galaxy} -c NGC0000 --bkg_subtraction
