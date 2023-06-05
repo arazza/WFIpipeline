@@ -36,12 +36,10 @@ python CCDred_basic.py {path_to_WFI_data} {night} -o {galaxy} -jmbed
 python WFIpipeline.py {path_to_WFI_data} {night} -o {galaxy} -a -c
 ```
 ```sh
-python newmask_reprojection.py      
-# creates masks for all galaxies in paths_to_uncalib.txt - we should add a keyword to give a specific galaxy
+python newmask_reprojection.py
 ```
 ```sh
-python mask_saturated_pixels.py     
-# creates masks for all galaxies in paths_to_uncalib.txt - we should add a keyword to give a specific galaxy
+python mask_saturated_pixels.py
 ```
 ```sh
 python BB_phot_calib.py -w {galaxy} -c NGC0000 

@@ -4,6 +4,8 @@ import os
 
 import timeit
 
+import argparse
+
 import numpy as np
 
 from pathlib import Path
@@ -187,8 +189,36 @@ if __name__ == "__main__":
     
     galnames = np.atleast_1d(galnames)
     paths = np.atleast_1d(paths)
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('-g', '--gals', nargs='*', type=str, default=galnames,
+        help='list of selected WFI galaxies')
+
+    args = parser.parse_args()
+
+    # Instantiate the lists of galaxies and list of paths
+
+    if set(args.gals) <= set(galnames) :
+        
+        list_of_gals = []
+        list_of_paths = []
+
+        for gal in args.gals :
+            
+            pos = [i for i, g in enumerate(galnames) if g==gal][0]
+            
+            list_of_gals.append(gal)
+            list_of_paths.append(paths[pos])
+
+    else :
+
+        list_of_gals = galnames.copy()
+        list_of_paths = paths.copy()
     
-    for gal, p in zip(galnames, paths) :
+    # Main loop
+    
+    for gal, p in zip(list_of_gals, list_of_paths) :
         
         p = Path(p)
          
