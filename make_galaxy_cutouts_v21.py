@@ -2,6 +2,8 @@
 
 import timeit
 
+import argparse
+
 from pathlib import Path
 
 import numpy as np
@@ -142,11 +144,39 @@ if __name__ == "__main__":
     start_time = timeit.default_timer()
     
     galnames, paths = np.loadtxt('paths_to_calib_WFI.txt', dtype='str', unpack=True)
-
+    
     galnames = np.atleast_1d(galnames)
     paths = np.atleast_1d(paths)
     
-    for obj, p in zip(galnames, paths) :
+    parser = argparse.ArgumentParser()
+    
+    parser.add_argument('-g', '--gals', nargs='*', type=str, default=galnames,
+        help='list of selected WFI galaxies')
+    
+    args = parser.parse_args()
+    
+    # Instantiate the lists of galaxies and list of paths
+    
+    if set(args.gals) <= set(galnames) :
+        
+        list_of_gals = []
+        list_of_paths = []
+    
+        for gal in args.gals :
+            
+            pos = [i for i, g in enumerate(galnames) if g==gal][0]
+            
+            list_of_gals.append(gal)
+            list_of_paths.append(paths[pos])
+    
+    else :
+        
+        list_of_gals = galnames.copy()
+        list_of_paths = paths.copy()
+        
+    # Main loop
+    
+    for obj, p in zip(list_of_gals, list_of_paths) :
         
         p = Path(p)
             
