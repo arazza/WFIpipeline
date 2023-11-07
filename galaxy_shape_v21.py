@@ -61,6 +61,8 @@ class GalaxyEllipse (object) :
                 obj = 'NGC5236'
             elif self.name=='ESO97-G13':
                 obj = 'ESO097-013'
+            elif self.name=='CenA':
+                obj = 'NGC5128'
             else:
                 obj = self.name
             pgc = [phangs_tbl['pgc'][i] for i,galname in enumerate(phangs_tbl['name']) if galname.strip()==obj.lower()][0]

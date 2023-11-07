@@ -17,15 +17,20 @@ from matplotlib import pyplot as plt
 
 from galaxy_shape_v21 import GalaxyEllipse
 
+from configparser import ConfigParser
 
 class WFIMosaic (object) :
 
     
     def __init__ (self, path, obj, filt) :
 
+        config = ConfigParser()
+        config.read('WFIpipeline.config')
+
         self.path = path
         self.obj = obj
         self.filter = filt
+        self.outpath = Path(config.get('Paths','data_products'))
 
     
     def set_arrays (self, mosaic, maskframe, newmaskframe, sp_maskframe, errorframe) :
@@ -109,7 +114,7 @@ class WFIMosaic (object) :
 
         plt.show()
 
-        self.cutout_folder = Path('.').joinpath('cutout_images')
+        self.cutout_folder = self.outpath.joinpath('cutout_images')
         self.cutout_folder.mkdir(exist_ok=True)
 
         self.cutouts_plots_folder = self.cutout_folder.joinpath('cutout_plots')
