@@ -181,6 +181,7 @@ def make_flatlist (rawdir, intdir, images, filtname, nhdu, gain, ron, poly_model
         print ('Reducing flat %s ...' %flat)
         rawflat = os.path.join (rawdir, flat)
         ccd = ccdproc.CCDData.read(rawflat, hdu=nhdu, unit=u.adu)
+        
         #ccd = ccdproc.subtract_overscan(ccd, overscan_axis=1, fits_section='[2095:2142,1:4128]', model=poly_model)
         #ccd = ccdproc.subtract_overscan(ccd, fits_section='[2095:2142,1:4128]', median=True)
         #ccd = ccdproc.subtract_overscan(ccd, fits_section='[2095:2142,1:4128]')
@@ -191,8 +192,9 @@ def make_flatlist (rawdir, intdir, images, filtname, nhdu, gain, ron, poly_model
             ccd = ccdproc.trim_image(ccd, fits_section=trimsection)
             
         ccd = ccdproc.subtract_bias(ccd, masterbias)
-        ccd = ccdproc.create_deviation(ccd, gain=gain, readnoise=ron)
-        #ccd = ccdproc.create_deviation(ccd, gain=gain, readnoise=ron, disregard_nan=True)
+
+        #ccd = ccdproc.create_deviation(ccd, gain=gain, readnoise=ron)
+        ccd = ccdproc.create_deviation(ccd, gain=gain, readnoise=ron, disregard_nan=True)
         ccd = ccdproc.gain_correct(ccd, gain)
         
         flatlist.append(ccd)
@@ -465,28 +467,6 @@ def basic_reduction (args, config, rawdir, intdir, masterdir, outdir, images, fi
             # reduction
             ccd = ccdproc.CCDData(ccd.data, mask=bpm, wcs=wcs, meta=ccd.meta, unit=u.adu)     # added mask metadata to the CCDData object
             
-            print ('\tCreating error frame ...')
-            ccd = ccdproc.create_deviation(ccd, gain=gain, readnoise=ron)
-            #ccd = ccdproc.create_deviation(ccd, gain=gain, readnoise=ron, disregard_nan=True)
-            
-            print ('\tGain correction ...')
-            ccd = ccdproc.gain_correct(ccd, gain)
-            if args.intermediate :
-                ccd.write((os.path.join(intdir,'g%s' %img)).replace('.fits','_%s.fits'%nhdu), overwrite=True)
-            
-            print ('\tRemoving cosmic rays ...')
-            '''
-            Lacosmic technique, van Dokkum (2001) as implemented by McCully (2014).
-            Note 1 : gain_apply argument was not necessary in ccdproc 1.2 since the gain correction is made
-            by default with a gain=1.0, but in version 2.1 the units are automatically converted in electrons.
-            Note 2: gain_apply=False ahould avoid unit conversion but only if gain!=1.0 that seems to be a bug.
-            Note on June, 4th 2023: I stick to the default gain=1.0 and gain_apply=True because the gain correction
-            is now done before cosmic ray removal.
-            '''
-            ccd = ccdproc.cosmicray_lacosmic(ccd, gain=1.0, sigclip=6.5, sigfrac=0.2, objlim=20.0, niter=4, gain_apply=True)  
-            if args.intermediate :
-                ccd.write((os.path.join(intdir,'crg%s' %img)).replace('.fits','_%s.fits'%nhdu), overwrite=True)
-            
             print ('\tOverscan subtraction ...')
             #ccd = ccdproc.subtract_overscan(ccd, overscan_axis=1, fits_section=config.get('Image sections', 'overscan'), model=poly_model)
             #ccd = ccdproc.subtract_overscan(ccd, fits_section='[2095:2142,1:4128]', median=True)
@@ -494,18 +474,44 @@ def basic_reduction (args, config, rawdir, intdir, masterdir, outdir, images, fi
             ccd = ccdproc.subtract_overscan(ccd, fits_section='[2098:2139,1:4128]')
             #ccd = ccdproc.subtract_overscan(ccd, fits_section='[5:37,1:4128]')
             if args.intermediate :
-                ccd.write((os.path.join(intdir,'ocrg%s' %img)).replace('.fits','_%s.fits'%nhdu), overwrite=True)
+                ccd.write((os.path.join(intdir,'o%s' %img)).replace('.fits','_%s.fits'%nhdu), overwrite=True)
             
             print ('\tTrimming the image ...')
             ccd = ccdproc.trim_image(ccd, fits_section=ccd.meta['TRIMSEC'])
             if args.intermediate :
-                ccd.write((os.path.join(intdir,'tocrg%s' %img)).replace('.fits','_%s.fits'%nhdu), overwrite=True)
+                ccd.write((os.path.join(intdir,'to%s' %img)).replace('.fits','_%s.fits'%nhdu), overwrite=True)
             
             print ('\tBias subtraction ...')
-            gain_corrected_masterbias = ccdproc.gain_correct(masterbias, gain)
-            ccd = ccdproc.subtract_bias(ccd, gain_corrected_masterbias)
+            #gain_corrected_masterbias = ccdproc.gain_correct(masterbias, gain)
+            #ccd = ccdproc.subtract_bias(ccd, gain_corrected_masterbias)
+            ccd = ccdproc.subtract_bias(ccd, masterbias)
             if args.intermediate :
-                ccd.write((os.path.join(intdir,'btocrg%s' %img)).replace('.fits','_%s.fits'%nhdu), overwrite=True)
+                ccd.write((os.path.join(intdir,'bto%s' %img)).replace('.fits','_%s.fits'%nhdu), overwrite=True)
+
+            print ('\tCreating error frame ...')
+            #ccd = ccdproc.create_deviation(ccd, gain=gain, readnoise=ron)
+            ccd = ccdproc.create_deviation(ccd, gain=gain, readnoise=ron, disregard_nan=True)
+            
+            print ('\tGain correction ...')
+            ccd = ccdproc.gain_correct(ccd, gain)
+            if args.intermediate :
+                ccd.write((os.path.join(intdir,'gbto%s' %img)).replace('.fits','_%s.fits'%nhdu), overwrite=True)
+
+            print ('\tRemoving cosmic rays ...')
+            '''
+            Lacosmic technique, van Dokkum (2001) as implemented by McCully (2014).
+            Note 1 : gain_apply argument was not necessary in ccdproc 1.2 since the gain correction is made
+            by default with a gain=1.0, but in version 2.1 the units are automatically converted in electrons.
+            Note 2: gain_apply=False should avoid unit conversion but only if gain!=1.0 that seems to be a bug.
+            Note on June, 4th 2023: I stick to the default gain=1.0 and gain_apply=True because the gain correction
+            is now done before cosmic ray removal.
+            Note on June, 27th 2023: gain correction done after cosmic ray removal.
+            Note on July 12th 2023: default gain=1.0 and gain_apply=True used and cosmic ray removal done after gain correction
+            '''
+            
+            ccd = ccdproc.cosmicray_lacosmic(ccd, gain=1.0, sigclip=6.5, sigfrac=0.2, objlim=20.0, niter=4, gain_apply=False)  
+            if args.intermediate :
+                ccd.write((os.path.join(intdir,'crgbto%s' %img)).replace('.fits','_%s.fits'%nhdu), overwrite=True)
 
             # final image corrected
             print ('\tFlat field correction ...')
@@ -515,7 +521,7 @@ def basic_reduction (args, config, rawdir, intdir, masterdir, outdir, images, fi
             ccd_fc.uncertainty.unit = u.electron    # necessary for ccdproc 2.1
             ccd_fc = ccdproc.CCDData(ccd_fc.data, uncertainty=ccd_fc.uncertainty, mask=ccd.mask, wcs=ccd.wcs, meta=ccd.meta, unit=u.electron)
             if args.intermediate :
-                ccd_fc.write((os.path.join(intdir,'fbtocrg%s'%img)).replace('.fits','_%s.fits'%nhdu), overwrite=True)
+                ccd_fc.write((os.path.join(intdir,'fcrgbto%s'%img)).replace('.fits','_%s.fits'%nhdu), overwrite=True)
             
             # normalized to electron per second
             print ('\tNormalization to electron/second ...')
