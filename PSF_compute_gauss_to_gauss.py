@@ -25,6 +25,8 @@ import timeit
 
 import argparse
 
+from configparser import ConfigParser
+
 from pathlib import Path
 
 import numpy as np
@@ -1134,6 +1136,9 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
 
+    config = ConfigParser()
+    config.read('WFIpipeline.config')
+
     # Instantiate the ellipse radius for the on-the-fly background subtraction
 
     r = args.ell_radius
@@ -1174,6 +1179,8 @@ if __name__ == "__main__":
             wfi_galnames = np.atleast_1d(wfi_galnames)
             wfi_paths = np.atleast_1d(wfi_paths)
             
+            outpath = Path(config.get('Paths','data_products'))
+
             for gal, p in zip(wfi_galnames, wfi_paths) :
             
                 if gal not in list_of_galaxy :
@@ -1320,9 +1327,9 @@ if __name__ == "__main__":
                     for filt in args.wfi_filters :
                         
                         # setting the list of science, mask and error frames
-                        scienceframes = sorted(Path('.').glob('cutout_images/%s_%s_stack?_cutout.fits'%(gal,filt))) + sorted(Path('.').glob('cutout_images/%s_%s_stack??_cutout.fits'%(gal,filt)))
-                        maskframes = sorted(Path('.').glob('cutout_images/%s_%s_stack?_mask_cutout.fits'%(gal,filt))) + sorted(Path('.').glob('cutout_images/%s_%s_stack??_mask_cutout.fits'%(gal,filt)))
-                        errorframes = sorted(Path('.').glob('cutout_images/%s_%s_stack?_std_cutout.fits'%(gal,filt))) + sorted(Path('.').glob('cutout_images/%s_%s_stack??_std_cutout.fits'%(gal,filt)))
+                        scienceframes = sorted(outpath.glob('cutout_images/%s_%s_stack?_cutout.fits'%(gal,filt))) + sorted(outpath.glob('cutout_images/%s_%s_stack??_cutout.fits'%(gal,filt)))
+                        maskframes = sorted(outpath.glob('cutout_images/%s_%s_stack?_mask_cutout.fits'%(gal,filt))) + sorted(outpath.glob('cutout_images/%s_%s_stack??_mask_cutout.fits'%(gal,filt)))
+                        errorframes = sorted(outpath.glob('cutout_images/%s_%s_stack?_std_cutout.fits'%(gal,filt))) + sorted(outpath.glob('cutout_images/%s_%s_stack??_std_cutout.fits'%(gal,filt)))
                         
                         scienceframes = scienceframes[args.frame_number-1:]
                         maskframes = maskframes[args.frame_number-1:]
@@ -1360,7 +1367,7 @@ if __name__ == "__main__":
                                 # Instiantiate the sky object
                                 sky = SkyImage(scienceframe, maskframe, errorframe, ds9_reg.mask, gal, filt, num)
                                 myellipse = sky.elliptical_aperture(r, 'WFI')
-                                myellipse.annulus_background(r, Path('bkg'), dilate_size, filename='ellipse_radii_%s.png'%num)
+                                myellipse.annulus_background(r, outpath.joinpath('bkg'), dilate_size, filename='ellipse_radii_%s.png'%num)
                                 sky.compute_bkg(myellipse, True, exclude_percentile, dilate_size)
                                 sky.plot_bkg(myellipse)
                                 
@@ -1535,7 +1542,7 @@ if __name__ == "__main__":
                                 # Instiantiate the sky object
                                 sky = SkyImage(scienceframe, maskframe, errorframe, ds9_reg.mask, gal, filt, num)
                                 myellipse = sky.elliptical_aperture(r, 'CCD')
-                                myellipse.annulus_background(r, Path('bkg'), dilate_size, filename='ellipse_radii_%s.png'%num)
+                                myellipse.annulus_background(r, outpath.joinpath('bkg'), dilate_size, filename='ellipse_radii_%s.png'%num)
                                 sky.compute_bkg(myellipse, True, exclude_percentile, dilate_size)
                                 sky.plot_bkg(myellipse)
                                 
