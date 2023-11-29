@@ -28,7 +28,7 @@ from scipy.ndimage.filters import generic_filter
 from scipy.interpolate import griddata
 from scipy.optimize import least_squares
 
-from photutils import make_source_mask, Background2D, detect_threshold, detect_sources
+from photutils import Background2D, detect_threshold, detect_sources
 from photutils.background import SExtractorBackground, StdBackgroundRMS, BkgZoomInterpolator
 
 from photutils import EllipticalAperture
