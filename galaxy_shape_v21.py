@@ -194,7 +194,7 @@ class GalaxyEllipse (object) :
                                      mask=mask)    # pixels within the ellipse are excluded from any source 
             #dilate_size = 11
             selem = np.ones((dilate_size, dilate_size))
-            mask = ndimage.binary_dilation(segm.data.astype(np.bool), selem)
+            mask = ndimage.binary_dilation(segm.data.astype('bool'), selem)
             
             # Update the mask by masking the galaxy and the gaps
             return mask + bpm
@@ -214,7 +214,7 @@ class GalaxyEllipse (object) :
                                      
             #dilate_size = 11
             selem = np.ones((dilate_size, dilate_size))
-            mask = ndimage.binary_dilation(segm.data.astype(np.bool), selem)
+            mask = ndimage.binary_dilation(segm.data.astype('bool'), selem)
             
             # Update the mask by masking the galaxy and the gaps
             return mask
