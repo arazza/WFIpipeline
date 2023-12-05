@@ -90,8 +90,9 @@ class SkyImage (object) :
             segm = detect_sources(data, threshold, npixels=5)
             #dilate_size = 11
             selem = np.ones((dilate_size, dilate_size))
-            mask = ndimage.binary_dilation(segm.data.astype(np.bool), selem)
-            
+            #mask = ndimage.binary_dilation(segm.data.astype(np.bool), selem)    # numpy.bool name deprecated from numpy 1.20
+            mask = ndimage.binary_dilation(segm.data.astype('bool'), selem)
+
             # Update the mask by masking the galaxy and the gaps
             return mask + input_mask
 
