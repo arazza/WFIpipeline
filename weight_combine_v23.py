@@ -171,7 +171,7 @@ class PHANGSImage (object) :
 
             print('\nOpening %s ...\n'%errorframe.name)
             error = fits.open(str(errorframe))[0].data
-            e = np.ma.array(error, mask=self.mask)
+            e = np.ma.array(error**2., mask=self.mask)
             
             # Update the mask in the num array
 
@@ -183,13 +183,15 @@ class PHANGSImage (object) :
             
             err = np.ma.sum([err,e], axis=0)
 
-            num = np.ma.sum([num,1.], axis=0)
+            #num = np.ma.sum([num,1.], axis=0)    # not allowed in numpy from at least 1.25
+            ones = np.ma.array(np.ones(size, np.float32), mask=self.mask)
+            num = np.ma.sum([num,ones], axis=0)
 
         # Final computation of the combination and its uncertainty
 
         avg = np.ma.prod([sci,1/num], axis=0)
         
-        unc = np.ma.prod([err,1/num**2.], axis=0)
+        unc = np.ma.prod([np.sqrt(err),1/num], axis=0)
         
         # Saving the final images
 
@@ -295,7 +297,8 @@ def combine_fullFOV (p, obj, filt) :
 
     print('\nWeight combine WFI full FOV ...\n')
     
-    scienceframes = sorted(p.glob('%s_%s_stack?_calib_nosky.fits'%(obj,filt))) + sorted(p.glob('%s_%s_stack??_calib_nosky.fits'%(obj,filt)))
+    #scienceframes = sorted(p.glob('%s_%s_stack?_calib_nosky.fits'%(obj,filt))) + sorted(p.glob('%s_%s_stack??_calib_nosky.fits'%(obj,filt)))
+    scienceframes = sorted(p.glob('%s_%s_stack?_calib.fits'%(obj,filt))) + sorted(p.glob('%s_%s_stack??_calib.fits'%(obj,filt)))
     maskframes = sorted(p.glob('%s_%s_stack?_mask_calib.fits'%(obj,filt))) + sorted(p.glob('%s_%s_stack??_mask_calib.fits'%(obj,filt)))
     errorframes = sorted(p.glob('%s_%s_stack?_std_calib.fits'%(obj,filt))) + sorted(p.glob('%s_%s_stack??_std_calib.fits'%(obj,filt)))
     
