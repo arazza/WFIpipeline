@@ -30,7 +30,7 @@ from scipy.ndimage.filters import generic_filter
 from scipy.interpolate import griddata
 from scipy.optimize import least_squares
 
-from photutils import make_source_mask, Background2D, detect_threshold, detect_sources
+from photutils import Background2D, detect_threshold, detect_sources
 from photutils.background import SExtractorBackground, StdBackgroundRMS, BkgZoomInterpolator
 
 from photutils import EllipticalAperture
@@ -92,7 +92,7 @@ class SkyImage (object) :
             mean, median, std = sigma_clipped_stats(data, mask=input_mask, sigma=sigclip_sigma, maxiters=sigclip_iters)    
             print (mean, median, std)
             
-            threshold = detect_threshold(data, snr, background=median, error=std, mask=input_mask, mask_value=None)
+            threshold = detect_threshold(data, snr, background=median, error=std, mask=input_mask)
             print('Threshold --> ', threshold[0][0])
             kernel = None
             segm = detect_sources(data, threshold, npixels=5, filter_kernel=kernel)
@@ -192,10 +192,7 @@ if __name__ == "__main__":
     
     start_time = timeit.default_timer()
 
-    wfi_galaxies = ['NGC1087', 'NGC1672', 'NGC2835', 'NGC3627', 'NGC4535', 'IC5332', 'NGC4254', 'NGC5068', 
-                      'NGC0628', 'NGC1512', 'NGC1300', 'NGC1365', 'NGC1385', 'NGC1433', 'NGC1566', 'NGC4303', 
-                        'NGC4321', 'NGC6744', 'NGC3511' , 'NGC3596', 'NGC4293', 'NGC4298', 'NGC4496A', 'NGC4569', 
-                          'NGC4571', 'NGC4654', 'NGC4731', 'NGC2997', 'NGC3351', 'NGC4540', 'NGC4548', 'NGC4689']
+    wfi_galaxies = list(np.loadtxt('PHANGS_WFI_galaxies.txt', dtype='str', unpack=True))
     
     parser = argparse.ArgumentParser()
     

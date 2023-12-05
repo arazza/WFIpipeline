@@ -84,7 +84,7 @@ class SkyImage (object) :
             mean, median, std = sigma_clipped_stats(data, mask=input_mask, sigma=sigclip_sigma, maxiters=sigclip_iters)    
             print (mean, median, std)
             
-            threshold = detect_threshold(data, snr, background=median, error=std, mask=input_mask, mask_value=None)
+            threshold = detect_threshold(data, snr, background=median, error=std, mask=input_mask)
             print('Threshold --> ', threshold[0][0])
             
             segm = detect_sources(data, threshold, npixels=5)
