@@ -283,9 +283,9 @@ class GalaxyEllipse (object) :
 
             medians.append(median_sigclip)
 
-            aper.plot(axes=ax1, color='C1', lw=0.7)
+            aper.plot(ax=ax1, color='C1', lw=0.7)
         
-        rad_aper.plot(axes=ax1, color='k', lw=1.0, zorder=2)
+        rad_aper.plot(ax=ax1, color='k', lw=1.0, zorder=2)
         
         ax1.set_xlabel('x [pix]')
         ax1.set_ylabel('y [pix]')
