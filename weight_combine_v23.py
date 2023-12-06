@@ -297,8 +297,8 @@ def combine_fullFOV (p, obj, filt) :
 
     print('\nWeight combine WFI full FOV ...\n')
     
-    #scienceframes = sorted(p.glob('%s_%s_stack?_calib_nosky.fits'%(obj,filt))) + sorted(p.glob('%s_%s_stack??_calib_nosky.fits'%(obj,filt)))
-    scienceframes = sorted(p.glob('%s_%s_stack?_calib.fits'%(obj,filt))) + sorted(p.glob('%s_%s_stack??_calib.fits'%(obj,filt)))
+    scienceframes = sorted(p.glob('%s_%s_stack?_calib_nosky.fits'%(obj,filt))) + sorted(p.glob('%s_%s_stack??_calib_nosky.fits'%(obj,filt)))
+    #scienceframes = sorted(p.glob('%s_%s_stack?_calib.fits'%(obj,filt))) + sorted(p.glob('%s_%s_stack??_calib.fits'%(obj,filt)))
     maskframes = sorted(p.glob('%s_%s_stack?_mask_calib.fits'%(obj,filt))) + sorted(p.glob('%s_%s_stack??_mask_calib.fits'%(obj,filt)))
     errorframes = sorted(p.glob('%s_%s_stack?_std_calib.fits'%(obj,filt))) + sorted(p.glob('%s_%s_stack??_std_calib.fits'%(obj,filt)))
     
