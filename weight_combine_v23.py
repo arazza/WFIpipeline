@@ -175,7 +175,8 @@ class PHANGSImage (object) :
             
             # Update the mask in the num array
 
-            num = np.ma.array(num, mask=self.mask)
+            #num = np.ma.array(num, mask=self.mask)
+            num = np.ma.array(num, mask=np.full(size, False))
             
             # Stacking the frames together
             
