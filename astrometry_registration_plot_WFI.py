@@ -52,7 +52,7 @@ class ImageAstrometry (object) :
         self.filename = Path(path).joinpath(gal_file.name.replace(suffix, '.fits'))
 
         if cutouts :
-            self.filename = Path(str(self.filename).replace('/full_FOV','/cutouts').replace('_fullFOV',''))
+            self.filename = Path(str(self.filename).replace('_fullFOV',''))
 
     
     def set_coordinates (self) :
@@ -433,7 +433,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--path', action='store', type=str, 
-        default='/Users/arazza/DAS/Observations/NB_DR31_pipeline/final_images/WFI/full_FOV/fits', help='path to galaxy final images')
+        default='/Users/arazza/DAS/Observations/NB_DR31_pipeline/final_images/WFI/full_FOV/fits', help='path to galaxy final images (cutouts or full FOV)')
     parser.add_argument('--tbl_path', action='store', type=str, 
         default='/Users/arazza/DAS/Observations/NB_DR31_pipeline/WFI_tables', help='path to astrometric tables')
     parser.add_argument('--plot_path', action='store', type=str, 
