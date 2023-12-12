@@ -56,3 +56,27 @@ python PSF_compute_gauss_to_gauss.py -w {galaxy} -c NGC0000 --bkg_subtraction
 ```sh
 python weight_combine_v23.py --wfi_galaxies {galaxy} --ccd_galaxies NGC0000
 ```
+
+### POST-PROCESSING SCRIPTS FOR ASTROMETRIC REGISTRATION ###
+This set of four scripts allows a further astrometric registration towards zero offset with Gaia DR2 stars matched with the stars in the WFI images.
+Execute the scripts in the following order:
+```sh
+python Bkg_subtraction_full_FOV.py --wfi_fullFOV_path {path_to_WFI_calib} -w {galaxy}
+```
+to create the background subtracted images of each calibrated frame. An argument ***--frame_number {number_of_frame}*** can be added to start the computation from one specific frame in case of failure for running out of memory. 
+```sh
+python weight_combine_v23.py --wfi_path {path_to_WFI_calib} --wfi_galaxies {galaxy} --full_FOV
+```
+to combine the background-subtracted full FOV images.
+```sh
+python astrometry_tables_WFI.py --path {path_to_final_full_FOV} --tbl_path {path_to_pipeline_folder}/WFI_tables --phot_sel --wfi_galaxies {galaxy} --gaia_dr GAIA-DR2
+```
+to write a table of Gaia DR2 stars in the galaxy field by reading the final ***comb*** images.
+```sh
+python astrometry_registration_plot_WFI.py --path {path_to_final_full_FOV} --tbl_path {path_to_pipeline_folder}/WFI_tables --plot_path {path_to_pipeline_folder}/WFI_astrometry_plots --phot_sel --wfi_galaxies {galaxy} --gaia_dr GAIA-DR2 --correct_astrometry
+```
+to plot the RA-DEC plots of the offset positions between Gaia DR2 stars and the stars in WFI images ans to apply the mean offset to re-register the astrometry of the full FOV images
+```sh
+python astrometry_registration_plot_WFI.py --path {path_to_final_cutouts} --tbl_path {path_to_pipeline_folder}/WFI_tables --plot_path {path_to_pipeline_folder}/WFI_astrometry_plots --phot_sel --wfi_galaxies {galaxy} --gaia_dr GAIA-DR2 --correct_astrometry --cutouts
+```
+to do the same as above but to register the same astrometric solution found from the ***comb*** images into the cutouts.
