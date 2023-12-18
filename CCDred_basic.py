@@ -38,7 +38,7 @@ def make_list (dir='.') :
     # create the list of files in the current directory with ImageFileCollection
     keys = ['object', 'eso obs targ name', 'eso dpr catg', 'eso dpr type', 'eso ins filt1 name']
     images = ccdproc.ImageFileCollection(dir, keywords=keys)
-    
+
     # fill the masked values in column 'eso obs targ name'
     images.summary['eso obs targ name'].fill_value = 'NONE'
     images.summary['eso obs targ name'] = images.summary['eso obs targ name'].filled()
@@ -57,7 +57,7 @@ def janesick (config, rawdir, images, nhdu) :
 
     bias1 = ccdproc.CCDData.read(os.path.join(rawdir, biases[0]), hdu=nhdu, unit=u.adu).data
     bias2 = ccdproc.CCDData.read(os.path.join(rawdir, biases[1]), hdu=nhdu, unit=u.adu).data
-    flat1 = ccdproc.CCDData.read(os.path.join(rawdir, flats[0]), hdu=nhdu, unit=u.adu).data   
+    flat1 = ccdproc.CCDData.read(os.path.join(rawdir, flats[0]), hdu=nhdu, unit=u.adu).data
     flat2 = ccdproc.CCDData.read(os.path.join(rawdir, flats[1]), hdu=nhdu, unit=u.adu).data
 
     # search for a 100x100 without bad/hot pixels, cosmic rays and strong gradients
@@ -102,18 +102,18 @@ def janesick (config, rawdir, images, nhdu) :
         b2 = bias2[box[0]:box[1],box[2]:box[3]].astype(np.int32)
         f1 = flat1[box[0]:box[1],box[2]:box[3]].astype(np.int32)
         f2 = flat2[box[0]:box[1],box[2]:box[3]].astype(np.int32)
-        
+
         dbias = b1 - b2
         dflat = f1 - f2
 
         gain = ((np.mean(f1)+np.mean(f2)) - (np.mean(b1)+np.mean(b2))) / (np.std(dflat)**2.-np.std(dbias)**2.)
         gains.append(gain)
-        
+
         readnoise = gain * np.std(dbias) / m.sqrt(2)
         readnoises.append(readnoise)
-        
-        
-        
+
+
+
     med_gain = np.median(np.array(gains))
     med_readnoise = np.median(np.array(readnoises))
 
@@ -128,18 +128,18 @@ def janesick (config, rawdir, images, nhdu) :
 ### MASTERBIAS ###
 
 def make_masterbias (rawdir, intdir, masterdir, images, nhdu, gain, ron, poly_model, correct, trimsection) :
-    
+
     # creates the lists of bias frames
     match = (images.summary['object'] == 'BIAS')
     biases = images.summary['file'][match]
-    
+
     print ('hdu %s' %nhdu)
     biaslist = []
     for bias in biases :
         print ('Reducing bias %s ...' %bias)
         rawbias = os.path.join (rawdir, bias)
         ccd = ccdproc.CCDData.read(rawbias, hdu=nhdu, unit=u.adu)
-        
+
         #ccd = ccdproc.subtract_overscan(ccd, overscan_axis=1, fits_section='[2095:2142,1:4128]', model=poly_model)
         #ccd = ccdproc.subtract_overscan(ccd, fits_section='[2095:2142,1:4128]', median=True)
         #ccd = ccdproc.subtract_overscan(ccd, fits_section='[2095:2142,1:4128]')
@@ -148,25 +148,25 @@ def make_masterbias (rawdir, intdir, masterdir, images, nhdu, gain, ron, poly_mo
 
         if correct :
             ccd = ccdproc.trim_image(ccd, fits_section=trimsection)
-            
+
         biaslist.append(ccd)
-    
+
     print ('Creating masterbias%s ...' %nhdu)
     combiner = ccdproc.Combiner(biaslist)
     masterbias = combiner.median_combine()
-    
+
     if correct :
         masterbias.write(os.path.join(masterdir,'masterbias%s_corr.fits'%nhdu), overwrite=True)
-    else: 
+    else:
         masterbias.write(os.path.join(masterdir,'masterbias%s.fits'%nhdu), overwrite=True)
-    
+
     return masterbias
 
 
 ### MASTERFLAT ###
 
-'''                                                                                                                                                        
-An uncertainty frame is created for each flat which is then gain corrected, overscan and bias subtracted, normalized to the median                     
+'''
+An uncertainty frame is created for each flat which is then gain corrected, overscan and bias subtracted, normalized to the median
 '''
 
 def make_flatlist (rawdir, intdir, images, filtname, nhdu, gain, ron, poly_model, masterbias, correct, trimsection) :
@@ -174,47 +174,47 @@ def make_flatlist (rawdir, intdir, images, filtname, nhdu, gain, ron, poly_model
     # creates the lists of flatfield frames
     match = (images.summary['object'] == 'FLAT,SKY') & (images.summary['eso ins filt1 name'] == filtname)
     flats = images.summary['file'][match]
-    
+
     print ('hdu %s' %nhdu)
     flatlist = []
     for flat in flats :
         print ('Reducing flat %s ...' %flat)
         rawflat = os.path.join (rawdir, flat)
         ccd = ccdproc.CCDData.read(rawflat, hdu=nhdu, unit=u.adu)
-        
+
         #ccd = ccdproc.subtract_overscan(ccd, overscan_axis=1, fits_section='[2095:2142,1:4128]', model=poly_model)
         #ccd = ccdproc.subtract_overscan(ccd, fits_section='[2095:2142,1:4128]', median=True)
         #ccd = ccdproc.subtract_overscan(ccd, fits_section='[2095:2142,1:4128]')
         ccd = ccdproc.subtract_overscan(ccd, fits_section='[2098:2139,1:4128]')
         #ccd = ccdproc.subtract_overscan(ccd, fits_section='[5:37,1:4128]')
-        
+
         if correct :
             ccd = ccdproc.trim_image(ccd, fits_section=trimsection)
-            
+
         ccd = ccdproc.subtract_bias(ccd, masterbias)
 
         #ccd = ccdproc.create_deviation(ccd, gain=gain, readnoise=ron)
         ccd = ccdproc.create_deviation(ccd, gain=gain, readnoise=ron, disregard_nan=True)
         ccd = ccdproc.gain_correct(ccd, gain)
-        
+
         flatlist.append(ccd)
-            
+
     return flatlist
-    
+
 
 def flat_norm_factors (flatlists) :
-	
+
     # create a matrix with the median of CCDData objects for each flat frame and CCD
     arr_median = np.zeros ((8,len(flatlists[0])))
-    
+
     print ('Computing medians of each CCD (for each flatfield frame, be patient!) ...')
-    
+
     for i in range(8) :
         print ('CCD %s' %(i+1))
         for j,iccd in enumerate(flatlists[i]) :
             arr_median[i,j] = np.nanmedian(iccd)
             print ('median of flat %s : %s' %(j+1, arr_median[i,j]))
-    
+
     median_of_medians = [np.nanmedian(arr_median[:,col]) for col in range(arr_median.shape[1])]
     inv_of_median_of_medians = [1/np.nanmedian(arr_median[:,col]) for col in range(arr_median.shape[1])]
     print ('median fo medians: ', median_of_medians)
@@ -236,8 +236,8 @@ def make_masterflat (masterdir, norm_factors, flatlist, filtname, nhdu, correct,
     #print (np.median(masterflat3.uncertainty.array))
     #print ('+++++++')
     #if correct :
-    #    masterflat_corr = masterflat.multiply(egain) 
-    
+    #    masterflat_corr = masterflat.multiply(egain)
+
     if filtname == 'BB#Rc/162_ESO844' :
         if correct :
             print ('Correcting masterflat_r%s ...' %nhdu)
@@ -257,13 +257,13 @@ def make_masterflat (masterdir, norm_factors, flatlist, filtname, nhdu, correct,
     else :
         sys.exit('Error: filter not defined!')
 
-    return masterflat 
-        
+    return masterflat
+
 
 ### BAD PIXEL MASK ###
 
 def bad_pixel_mask (masterdir, masterflat, filtname, nhdu, config) :
-    
+
     print ('Creating bad pixel mask of CCD %s (it might take some time!) ...' %nhdu)
     '''
     bpm = ccdproc.ccdmask (masterflat, findbadcolumns=True, ncmed=12, nlmed=12, ncsig=25, nlsig=25, lsigma=9, hsigma=9) # WFI 1.0--2.3
@@ -289,19 +289,19 @@ def bad_pixel_mask (masterdir, masterflat, filtname, nhdu, config) :
         np.save (os.path.join(masterdir,'bpm_h%s.npy'%nhdu), bpm)
     else :
         sys.exit('Error: filter not defined!')
-    
+
     return bpm
 
 
 ### EMPIRICAL GAIN & READOUT NOISE CORRECTION
 '''
 The first CCD is used as reference, hence the first emprical gain is equal to the computed gain.
-Other gains are computed "empirically" by scaling areas of masterflats, adjacent to each other, for each couple of ccds 
+Other gains are computed "empirically" by scaling areas of masterflats, adjacent to each other, for each couple of ccds
 (e.g. lower right corner of CCD1 and lower left of CCD2).
 '''
 
 def empirical_gain (masterflat1, masterflat2, n2hdu, bpm1, bpm2, egain1) :
-    
+
     if n2hdu <= 4 :
         ccd1 = np.ma.array(masterflat1.data[50:250, 2062:2092] * egain1, mask=bpm1[50:250, 2062:2092])
         ccd2 = np.ma.array(masterflat2.data[50:250, 53:83], mask=bpm2[50:250, 53:83])
@@ -314,7 +314,7 @@ def empirical_gain (masterflat1, masterflat2, n2hdu, bpm1, bpm2, egain1) :
 
         # ccd1 = np.ma.array(masterflat1.data[3878:4078, 53:83] * egain1, mask=bpm1[3878:4078, 53:83])
         # ccd2 = np.ma.array(masterflat2.data[3878:4078, 2062:2092], mask=bpm2[3878:4078, 2062:2092])
-    
+
     emp_gain = np.ma.median(ccd1) / np.ma.median(ccd2)
     print(emp_gain)
     if not np.isfinite(emp_gain):
@@ -323,29 +323,29 @@ def empirical_gain (masterflat1, masterflat2, n2hdu, bpm1, bpm2, egain1) :
     return emp_gain
 
 def correct_gain (args, masterdir, masterflat, egain, gain, filtname, nhdu, trimsection) :
-    
+
     outflat_r_corr = os.path.join (masterdir, 'masterflat_r%s_corr.fits' %nhdu)
-    outflat_h_corr = os.path.join (masterdir, 'masterflat_h%s_corr.fits' %nhdu)   
-    
+    outflat_h_corr = os.path.join (masterdir, 'masterflat_h%s_corr.fits' %nhdu)
+
     if (args.master) + (not os.path.exists(outflat_r_corr)) + (not os.path.exists(outflat_h_corr)) :
 
-        masterflat_corr = masterflat.multiply(egain) 
+        masterflat_corr = masterflat.multiply(egain)
         masterflat_corr = ccdproc.trim_image(masterflat_corr, fits_section=trimsection)
-        
+
         if filtname == 'BB#Rc/162_ESO844' :
             print ('Correcting gain in masterflat_r%s ...' %nhdu)
             masterflat_corr.write(outflat_r_corr, overwrite=True)
         elif filtname == 'NB#Halpha/7_ESO856' :
             print ('Correcting gain in masterflat_h%s ...' %nhdu)
             masterflat_corr.write(outflat_h_corr, overwrite=True)
-    
+
     return egain * gain
 
 
 ### FRAMES REDUCTION ###
 
 def basic_reduction (args, config, rawdir, intdir, masterdir, outdir, images, filtname, nhdu, gain, ron, poly_model, masterbias, masterflat, bpm, chipnum, trimsection) :
-    
+
     # WFI camera characteristic sizes
     pixscale = 0.238/3600. # * u.degree / u.pixel
     xarcsec = 486.948 # x axis dimension in arcsec
@@ -353,9 +353,10 @@ def basic_reduction (args, config, rawdir, intdir, masterdir, outdir, images, fi
     xgap = 22.848 # gap between ccd in x direction
     ygap = 14.28 # gap between ccd in y direction
     dra = (xarcsec + xgap) / 3600. # deg
-    ddec = (yarcsec + ygap)/ 3600. # deg 
+    ddec = (yarcsec + ygap)/ 3600. # deg
 
     objs = [obj for obj in images.values('object', unique=True) if obj not in ['FLAT,SKY','BIAS','DARK','FLAT,SCREEN','FLUX,STD']]
+
     for obj in images.values('eso obs targ name', unique=True) :
         if (obj != 'NONE') * (obj not in objs) :
             objs.append(obj)
@@ -386,9 +387,9 @@ def basic_reduction (args, config, rawdir, intdir, masterdir, outdir, images, fi
         yield out
 
     matches = [((images.summary['object'] == obj) + (images.summary['eso obs targ name'] == obj)) * (images.summary['eso ins filt1 name'] == filtname) for obj in objs]
-    
+
     frameslists = []
-    
+
     for match in matches :
         # order the alphanumeric list
         l = list(images.summary['file'][match])
@@ -399,49 +400,49 @@ def basic_reduction (args, config, rawdir, intdir, masterdir, outdir, images, fi
         frameslists.append(l_sorted)
 
     print ('hdu %s' %nhdu)
-    
+
     reducedlist = []
-    
+
     for j, frames in enumerate(frameslists) :
-        
+
         for i, img in enumerate(frames) :
-            
+
             if sublist != [] :
                 if img not in sublist :
                     continue
-            
+
             print ('Reducing frame %s ...' %img)
-            
+
             rawimg = os.path.join (rawdir, img)
-            
+
             # loading the frame
             ccd = ccdproc.CCDData.read(rawimg, hdu=nhdu, unit=u.adu)
-            
+
             # update the header
             header = fits.open(rawimg)[0].header
-            
+
             if header['OBJECT'] != 'FLUX,STD' :
                 ccd.meta['OBJECT'] = header['OBJECT']
-                
+
             else :
                 ccd.meta['OBJECT'] = header['ESO OBS TARG NAME']
-               
+
             ccd.meta['FILTNAME'] = header['ESO INS FILT1 NAME']
             ccd.meta['CHIPINDE'] = chipnum
-            
+
             if nhdu <= 4 :
                 ccd.meta['CHIPX'] = nhdu
                 ccd.meta['CHIPY'] = 2
             else :
                 ccd.meta['CHIPX'] = chipnum - 4
                 ccd.meta['CHIPY'] = 1
-            
-            ccd.meta['TRIMSEC'] = trimsection   
-            
+
+            ccd.meta['TRIMSEC'] = trimsection
+
             ### ROUGH WCS SOLUTION ###
             '''
             We first inizialize galaxy coordinates, tangent point (galaxy centre), ccd where the galaxy is centered
-            and we then create a first wcs solution 
+            and we then create a first wcs solution
             '''
             objectname = ccd.meta['OBJECT']
             obj_txt = '%s_%s_%s.txt' %(objectname, filtname[3:5], args.obsdate)
@@ -453,20 +454,19 @@ def basic_reduction (args, config, rawdir, intdir, masterdir, outdir, images, fi
                     crpix1[i] = crpix1[i] - 48
                     crpix2[i] = crpix2[i] - 30
 
-            # defining X & Y positions of the CCDs 
+            # defining X & Y positions of the CCDs
             pos = lambda x: {5:[4,1],6:[3,1],7:[2,1],8:[1,1]}.get(x,[x,2])
             X = pos(obj_ccd)[0]
             Y = pos(obj_ccd)[1]
             print ('\tFinding a rough WCS solution ...')
             #hdu = first_wcs (rawdir, img, ccd.meta, X, Y, pixscale, ra, dec, dra, ddec, crpix1[i], crpix2[i])    #, objectname, filtname, obj_ccd)
             hdr = first_wcs (ccd.meta, X, Y, pixscale, ra, dec, dra, ddec, crpix1[i], crpix2[i])    #, objectname, filtname, obj_ccd)
-            
+
             # create wcs
             wcs = WCS(hdr)
-            
             # reduction
             ccd = ccdproc.CCDData(ccd.data, mask=bpm, wcs=wcs, meta=ccd.meta, unit=u.adu)     # added mask metadata to the CCDData object
-            
+
             print ('\tOverscan subtraction ...')
             #ccd = ccdproc.subtract_overscan(ccd, overscan_axis=1, fits_section=config.get('Image sections', 'overscan'), model=poly_model)
             #ccd = ccdproc.subtract_overscan(ccd, fits_section='[2095:2142,1:4128]', median=True)
@@ -475,12 +475,12 @@ def basic_reduction (args, config, rawdir, intdir, masterdir, outdir, images, fi
             #ccd = ccdproc.subtract_overscan(ccd, fits_section='[5:37,1:4128]')
             if args.intermediate :
                 ccd.write((os.path.join(intdir,'o%s' %img)).replace('.fits','_%s.fits'%nhdu), overwrite=True)
-            
+
             print ('\tTrimming the image ...')
             ccd = ccdproc.trim_image(ccd, fits_section=ccd.meta['TRIMSEC'])
             if args.intermediate :
                 ccd.write((os.path.join(intdir,'to%s' %img)).replace('.fits','_%s.fits'%nhdu), overwrite=True)
-            
+
             print ('\tBias subtraction ...')
             #gain_corrected_masterbias = ccdproc.gain_correct(masterbias, gain)
             #ccd = ccdproc.subtract_bias(ccd, gain_corrected_masterbias)
@@ -491,7 +491,7 @@ def basic_reduction (args, config, rawdir, intdir, masterdir, outdir, images, fi
             print ('\tCreating error frame ...')
             #ccd = ccdproc.create_deviation(ccd, gain=gain, readnoise=ron)
             ccd = ccdproc.create_deviation(ccd, gain=gain, readnoise=ron, disregard_nan=True)
-            
+
             print ('\tGain correction ...')
             ccd = ccdproc.gain_correct(ccd, gain)
             if args.intermediate :
@@ -508,8 +508,8 @@ def basic_reduction (args, config, rawdir, intdir, masterdir, outdir, images, fi
             Note on June, 27th 2023: gain correction done after cosmic ray removal.
             Note on July 12th 2023: default gain=1.0 and gain_apply=True used and cosmic ray removal done after gain correction
             '''
-            
-            ccd = ccdproc.cosmicray_lacosmic(ccd, gain=1.0, sigclip=6.5, sigfrac=0.2, objlim=20.0, niter=4, gain_apply=False)  
+
+            ccd = ccdproc.cosmicray_lacosmic(ccd, gain=1.0, sigclip=6.5, sigfrac=0.2, objlim=20.0, niter=4, gain_apply=False)
             if args.intermediate :
                 ccd.write((os.path.join(intdir,'crgbto%s' %img)).replace('.fits','_%s.fits'%nhdu), overwrite=True)
 
@@ -522,7 +522,7 @@ def basic_reduction (args, config, rawdir, intdir, masterdir, outdir, images, fi
             ccd_fc = ccdproc.CCDData(ccd_fc.data, uncertainty=ccd_fc.uncertainty, mask=ccd.mask, wcs=ccd.wcs, meta=ccd.meta, unit=u.electron)
             if args.intermediate :
                 ccd_fc.write((os.path.join(intdir,'fcrgbto%s'%img)).replace('.fits','_%s.fits'%nhdu), overwrite=True)
-            
+
             # normalized to electron per second
             print ('\tNormalization to electron/second ...')
             ccd_norm = ccd_fc.divide(ccd_fc.meta['exptime'])
@@ -535,18 +535,19 @@ def basic_reduction (args, config, rawdir, intdir, masterdir, outdir, images, fi
             '''
             ccd_norm = ccdproc.CCDData(ccd_norm.data, uncertainty=ccd_norm.uncertainty, mask=ccd_fc.mask, wcs=ccd_fc.wcs, meta=ccd_fc.meta, unit=u.electron)
             #ccd.write((os.path.join(masterdir,'nfbtocrg%s'%img)).replace('.fits','_%s.fits'%nhdu), overwrite=True)
-            
+
             # write the file with rough wcs
             ccd_norm.write(os.path.join(outdir, 'rwcs%s_%s_%s_frame%s.fits' %(objectname, filtname[3:5], ccd.meta['CHIPINDE'], i+1)), overwrite=True)
             print ('rwcs%s_%s_%s_frame%s.fits created!\n' %(objectname, filtname[3:5], ccd.meta['CHIPINDE'], i+1))
 
             reducedlist.append(ccd_norm)
 
+
     return reducedlist
-    
+
 
 def WFIreduce (args, config) :
-    
+
     # initializing the working directories
     obsdir = os.path.join (args.pathtodata, args.obsdate)
     rawdir = os.path.join (obsdir, 'rawdata')
@@ -565,25 +566,25 @@ def WFIreduce (args, config) :
         os.makedirs(outdir)
     except OSError:
         pass
-	
+
 	# list of fits file created with ImageFileCollection
     images = make_list(rawdir)
-    
+
     # gain and readout noise computations or initialization
     outgain = os.path.join(masterdir, 'outgain.json')
     outron = os.path.join(masterdir, 'outron.json')
-    
+
     if (args.janesick) + (not os.path.exists(outgain)) + (not os.path.exists(outron)) :
         # gain and readout noise calculated with Janesick's method
         gain = {}
         ron = {}
         for i in range(8) :
-            gain['gain%s'%(i+1)], ron['ron%s'%(i+1)] = janesick (config, rawdir, images, i+1) 
+            gain['gain%s'%(i+1)], ron['ron%s'%(i+1)] = janesick (config, rawdir, images, i+1)
         with open(outgain, 'w') as outfile:
             json.dump(gain, outfile, sort_keys=True)
         with open(outron, 'w') as outfile:
             json.dump(ron, outfile, sort_keys=True)
-    
+
     with open(outgain) as data_file:
         gain = json.load(data_file)
     with open(outron) as data_file:
@@ -601,7 +602,7 @@ def WFIreduce (args, config) :
     chipindex = lambda x: {5:8,6:7,7:6,8:5}.get(x,x)    # transformation from hdu number to chip index
 
     trimsection = np.loadtxt ('TrimSections.txt', dtype='str', usecols=(1,))    # load trim sections
-    
+
     # load/create masterbias (for each CCD)
     masterbias = {}
     for i in range(8) :
@@ -627,14 +628,14 @@ def WFIreduce (args, config) :
             flatlist_h.append(make_flatlist(rawdir, intdir, images, 'NB#Halpha/7_ESO856', i+1, gain['gain%s'%(i+1)], ron['ron%s'%(i+1)], poly_model, masterbias['masterbias%s'%(i+1)], correct, trimsection[chipindex(i+1)-1]))
         else :
             masterflat_h['masterflat_h%s'%(i+1)] = ccdproc.CCDData.read(outflat_h, unit=u.electron)
-	
+
     # create normalisation factors with the median of all CCDs of a given flat frame
 	# --> one factor each frame instead of one factor each CCD of each frame !!!
     if flatlist_r != [] :
         norm_factors_r = flat_norm_factors(flatlist_r)
     if flatlist_h != [] :
         norm_factors_h = flat_norm_factors(flatlist_h)
-	
+
     # create masterflats (for each CCD and for each filter)
     if masterflat_r == {} :
         for i in range(8) :
@@ -642,10 +643,10 @@ def WFIreduce (args, config) :
     if masterflat_h == {} :
         for i in range(8) :
             masterflat_h['masterflat_h%s'%(i+1)] = make_masterflat (masterdir, norm_factors_h, flatlist_h[i], 'NB#Halpha/7_ESO856', i+1, correct)
-	
+
     # bad pixel mask with masterflat frames (we don't have high- and low-count dome flats)
     bpm_r = {}
-    bpm_h = {}    
+    bpm_h = {}
     for i in range(8) :
         outbpm_r = os.path.join (masterdir, 'bpm_r%s.npy' %(i+1))
         if (args.badpixel) + (not os.path.exists(outbpm_r)) :
@@ -660,25 +661,25 @@ def WFIreduce (args, config) :
 
     # empirical correction of gain and readout noise
     correct = True
-    
+
     # find the empirical gain
     outegain = os.path.join(masterdir, 'outegain.json')
     outnewgain = os.path.join(masterdir, 'outnewgain.json')
     outnewron = os.path.join(masterdir, 'outnewron.json')
     if (args.empirical) + (not os.path.exists(outegain)) + (not os.path.exists(outnewgain)) + (not os.path.exists(outnewron)) :
         egain = {}
-        egain['egain1'] = 1. 
+        egain['egain1'] = 1.
         for i in range(4) :
             print(i)
-            egain['egain%s'%(i+2)] = empirical_gain (masterflat_r['masterflat_r%s'%(i+1)], masterflat_r['masterflat_r%s'%(i+2)], i+2, 
+            egain['egain%s'%(i+2)] = empirical_gain (masterflat_r['masterflat_r%s'%(i+1)], masterflat_r['masterflat_r%s'%(i+2)], i+2,
                 bpm_r['bpm_r%s'%(i+1)], bpm_r['bpm_r%s'%(i+2)], egain['egain%s'%(i+1)])
         for i in range(4,7) :
             print(i)
-            egain['egain%s'%(i+2)] = empirical_gain (masterflat_r['masterflat_r%s'%(7-i)], masterflat_r['masterflat_r%s'%(i+2)], i+2, 
+            egain['egain%s'%(i+2)] = empirical_gain (masterflat_r['masterflat_r%s'%(7-i)], masterflat_r['masterflat_r%s'%(i+2)], i+2,
                 bpm_r['bpm_r%s'%(7-i)], bpm_r['bpm_r%s'%(i+2)], egain['egain%s'%(7-i)])
         with open(outegain, 'w') as outfile:
             json.dump(egain, outfile, sort_keys=True)
-        # correct for the new empirical gain 
+        # correct for the new empirical gain
         with open(outgain) as data_file:
             gain = json.load(data_file)
         newgain = {}
@@ -698,7 +699,7 @@ def WFIreduce (args, config) :
             print ('Corrected readout noise for CCD %s :'%(i+1), newron['newron%s'%(i+1)])
         with open(outnewron, 'w') as outfile:
             json.dump(newron, outfile, sort_keys=True)
-    
+
     with open(outegain) as data_file:
         egain = json.load(data_file)
     with open(outnewgain) as data_file:
@@ -717,7 +718,7 @@ def WFIreduce (args, config) :
         masterflat_r['masterflat_r%s'%(i+1)] = ccdproc.CCDData.read(outflat_r_corr, unit=u.electron)
         outflat_h_corr = os.path.join (masterdir, 'masterflat_h%s_corr.fits' %(i+1))
         print ('Loading %s ...' %os.path.basename(outflat_h_corr))
-        masterflat_h['masterflat_h%s'%(i+1)] = ccdproc.CCDData.read(outflat_h_corr, unit=u.electron)        
+        masterflat_h['masterflat_h%s'%(i+1)] = ccdproc.CCDData.read(outflat_h_corr, unit=u.electron)
 
     # correcting masterbias
     for i in range(8) :
@@ -725,7 +726,7 @@ def WFIreduce (args, config) :
         if (args.master) + (not os.path.exists(outmaster_corr)) :
             masterbias['masterbias%s'%(i+1)] = make_masterbias(rawdir, intdir, masterdir, images, i+1, newgain['newgain%s'%(i+1)], newron['newron%s'%(i+1)], poly_model, correct, trimsection[chipindex(i+1)-1])
         else :
-            masterbias['masterbias%s'%(i+1)] = ccdproc.CCDData.read(outmaster_corr, unit=u.adu)   
+            masterbias['masterbias%s'%(i+1)] = ccdproc.CCDData.read(outmaster_corr, unit=u.adu)
 
     # ccd basic reduction (for each CCD)
     reducedlist_r = []
@@ -734,7 +735,7 @@ def WFIreduce (args, config) :
         for i in range(8) :
             reducedlist_r.append (basic_reduction (args, config, rawdir, intdir, masterdir, outdir, images, 'BB#Rc/162_ESO844', i+1, newgain['newgain%s'%(i+1)], newron['newron%s'%(i+1)], poly_model, masterbias['masterbias%s'%(i+1)], masterflat_r['masterflat_r%s'%(i+1)], bpm_r['bpm_r%s'%(i+1)], chipindex(i+1), trimsection[chipindex(i+1)-1]))
             reducedlist_h.append (basic_reduction (args, config, rawdir, intdir, masterdir, outdir, images, 'NB#Halpha/7_ESO856', i+1, newgain['newgain%s'%(i+1)], newron['newron%s'%(i+1)], poly_model, masterbias['masterbias%s'%(i+1)], masterflat_h['masterflat_h%s'%(i+1)], bpm_h['bpm_h%s'%(i+1)], chipindex(i+1), trimsection[chipindex(i+1)-1]))
-    
+
 
 
 if __name__ == "__main__":
@@ -750,7 +751,7 @@ if __name__ == "__main__":
     parser.add_argument('-b', '--badpixel', action="store_true", default=False, help='force creating a bad pixel mask')
     parser.add_argument('-i', '--intermediate', action="store_true", default=False, help='save the intermediate products of image detrend')
     parser.add_argument('-d', '--detrend', action="store_true", default=False, help='detrend the images, compute gain and readout noise, write a rough astrometric solution in the headers, create a mask and an error frame for each CCD')
-    
+
     args = parser.parse_args()
 
     #Read/Write configuration file
