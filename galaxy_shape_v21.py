@@ -26,8 +26,8 @@ from astropy.table import Table
 from astropy.stats import sigma_clipped_stats
 from astropy.visualization import ZScaleInterval
 
-from photutils import EllipticalAperture, EllipticalAnnulus
-from photutils import detect_threshold, detect_sources
+from photutils.aperture import EllipticalAperture, EllipticalAnnulus    # added .aperture (photutils 2.02)
+from photutils.segmentation import detect_threshold, detect_sources    # added .segmentation (photutils 2.02)
 
 from scipy import ndimage
 

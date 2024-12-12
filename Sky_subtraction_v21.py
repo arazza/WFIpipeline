@@ -28,10 +28,10 @@ from scipy.ndimage.filters import generic_filter
 from scipy.interpolate import griddata
 from scipy.optimize import least_squares
 
-from photutils import Background2D, detect_threshold, detect_sources
-from photutils.background import SExtractorBackground, StdBackgroundRMS, BkgZoomInterpolator
+from photutils.segmentation import detect_threshold, detect_sources    # added .segmentation (photutils version 2.02)
+from photutils.background import Background2D, SExtractorBackground, StdBackgroundRMS, BkgZoomInterpolator
 
-from photutils import EllipticalAperture
+from photutils.aperture import EllipticalAperture    # added .aperture (photutils version 2.02)
 
 from matplotlib import pyplot as plt
 import matplotlib.gridspec as gridspec

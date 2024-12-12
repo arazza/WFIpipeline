@@ -44,9 +44,10 @@ from astropy.convolution import convolve, Gaussian2DKernel, Kernel
 
 from astroquery.vizier import Vizier
 
-from photutils import IRAFStarFinder, EPSFBuilder, extract_stars
-from photutils import detect_threshold, detect_sources, SourceCatalog
-from photutils import CircularAperture, CircularAnnulus, aperture_photometry
+from photutils.detection import IRAFStarFinder    # added .detection (photutils version 2.02)
+from photutils.segmentation import detect_threshold, detect_sources, SourceCatalog   # added .segmentation (photutils 2.02)  
+from photutils.aperture import CircularAperture, CircularAnnulus, aperture_photometry    # added .saperture (photutils 2.02)
+from photutils.psf import EPSFBuilder, extract_stars    # added .psf (photutils version 2.02)
 from photutils.centroids import centroid_com, centroid_2dg
 from photutils.detection import find_peaks
 
@@ -1088,7 +1089,9 @@ if __name__ == "__main__":
                       'NGC1792', 'NGC2090', 'NGC2283', 'NGC2566', 'NGC2775', 'NGC3059', 'NGC3507',
                         'NGC3626', 'NGC4207', 'NGC4424', 'NGC4457', 'NGC4540', 'NGC4548', 'NGC4689', 'NGC4694',
                           'NGC4781', 'NGC4941', 'NGC4951', 'NGC5042', 'NGC5134', 'NGC5248', 'NGC5530', 'NGC5643',
-                            'NGC6300', 'IC5273', 'NGC7456', 'NGC7496']
+                            'NGC6300', 'IC5273', 'NGC7456', 'NGC7496',
+                            'NGC3489', 'NGC3599', 'NGC4459', 'NGC4476', 'NGC4477', 'NGC4596' # ETGs 
+                            ]
     
     parser = argparse.ArgumentParser()
     
