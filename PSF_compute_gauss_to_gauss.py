@@ -1089,15 +1089,10 @@ if __name__ == "__main__":
                       'NGC1792', 'NGC2090', 'NGC2283', 'NGC2566', 'NGC2775', 'NGC3059', 'NGC3507',
                         'NGC3626', 'NGC4207', 'NGC4424', 'NGC4457', 'NGC4540', 'NGC4548', 'NGC4689', 'NGC4694',
                           'NGC4781', 'NGC4941', 'NGC4951', 'NGC5042', 'NGC5134', 'NGC5248', 'NGC5530', 'NGC5643',
-<<<<<<< HEAD
                             'NGC6300', 'IC5273', 'NGC7456', 'NGC7496',
                             'NGC3489', 'NGC3599', 'NGC4459', 'NGC4476', 'NGC4477', 'NGC4596' # ETGs 
                             ]
     
-=======
-                            'NGC6300', 'IC5273', 'NGC7456', 'NGC7496']
-
->>>>>>> 3e038444871c034afc3dddb6a11641bf7bec5547
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--wfi_path', action='store', type=str, default=None, help='path to calibrated WFI frames')
@@ -1188,7 +1183,7 @@ if __name__ == "__main__":
             wfi_paths = np.atleast_1d(wfi_paths)
 
             outpath = Path(config.get('Paths','data_products'))
-
+            
             for gal, p in zip(wfi_galnames, wfi_paths) :
                 
                 if gal not in list_of_galaxy :
@@ -1429,6 +1424,11 @@ if __name__ == "__main__":
 
                 p = Path(args.ccd_path)
 
+                # Create the background plot folder
+
+                path_to_bkg = p.parent.joinpath('bkg')
+                path_to_bkg.mkdir(exist_ok=True)
+
                 print('Images path :\n%s'%p)
 
                 # Dictionary of lists necessary for saving the tables and comparng the FWHMs
@@ -1550,7 +1550,7 @@ if __name__ == "__main__":
                                 # Instiantiate the sky object
                                 sky = SkyImage(scienceframe, maskframe, errorframe, ds9_reg.mask, gal, filt, num)
                                 myellipse = sky.elliptical_aperture(r, 'CCD')
-                                myellipse.annulus_background(r, outpath.joinpath('bkg'), dilate_size, filename='ellipse_radii_%s.png'%num)
+                                myellipse.annulus_background(r, path_to_bkg, dilate_size, filename='ellipse_radii_%s.png'%num)
                                 sky.compute_bkg(myellipse, True, exclude_percentile, dilate_size)
                                 sky.plot_bkg(myellipse)
 
