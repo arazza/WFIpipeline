@@ -57,7 +57,7 @@ class SkyImage (object) :
         self.bpm = np.round(fits.open(pathtomask)[0].data)!=99    # This create a boolean bad pixel mask (True for non-valid data)
         self.bpm = self.bpm + ds9_mask    # Update with DS9 masks implemented in NB-DR2 for masking image artifacts
         self.std = fits.open(pathtostd)[0].data
-        self.hdr = fits.open(pathtofile)[0].header 
+        self.hdr = fits.open(pathtofile)[0].header
         self.mask = None
         self.bkg = None
         self.fit = None
@@ -305,7 +305,7 @@ class SkyImage (object) :
         fig1.suptitle('%s %s frame %s '%(self.obj,self.filter, self.num))
     
         #fig1.savefig(str(self.path.parents[1].joinpath('bkg/%s_%s_%s_'%(self.obj,self.filter, self.num)+'bkg_v2_1.png')))
-        fig1.savefig('bkg/%s/%s_%s_%s_bkg_v2_1.png'%(self.obj,self.obj,self.filter,self.num))
+        fig1.savefig(str(self.path.parents[1].joinpath('bkg/%s/%s_%s_%s_bkg_v2_1.png'%(self.obj,self.obj,self.filter,self.num))))
 
         plt.close()
 
@@ -356,7 +356,7 @@ class SkyImage (object) :
         fig2.suptitle('%s %s frame %s '%(self.obj,self.filter, self.num))
     
         #fig2.savefig(str(self.path.parents[1].joinpath('bkg/%s_%s_%s_'%(self.obj,self.filter, self.num)+'bkg_v2_2.png')))
-        fig2.savefig('bkg/%s/%s_%s_%s_bkg_v2_2.png'%(self.obj,self.obj,self.filter,self.num))
+        fig2.savefig(str(self.path.parents[1].joinpath('bkg/%s/%s_%s_%s_bkg_v2_2.png'%(self.obj,self.obj,self.filter,self.num))))
 
         plt.close()
 
