@@ -449,7 +449,9 @@ if __name__ == "__main__":
                       'NGC1792', 'NGC2090', 'NGC2283', 'NGC2566', 'NGC2775', 'NGC3059', 'NGC3507',
                         'NGC3626', 'NGC4207', 'NGC4424', 'NGC4457', 'NGC4540', 'NGC4548', 'NGC4689', 'NGC4694',
                           'NGC4781', 'NGC4941', 'NGC4951', 'NGC5042', 'NGC5134', 'NGC5248', 'NGC5530', 'NGC5643',
-                            'NGC6300', 'IC5273', 'NGC7456', 'NGC7496']
+                            'NGC6300', 'IC5273', 'NGC7456', 'NGC7496',
+                            'NGC3489', 'NGC3599', 'NGC4459', 'NGC4476', 'NGC4477', 'NGC4596' # ETGs 
+                            ]
 
     parser = argparse.ArgumentParser()
 
