@@ -1,0 +1,3 @@
+/Users/arazza/DAS/Observations/DuPont/Obs_run2020/ut200225_26
+/Users/arazza/DAS/Observations/DuPont/Obs_run2020/ut200226_27
+/Users/arazza/DAS/Observations/DuPont/Obs_run2020/ut200227_28

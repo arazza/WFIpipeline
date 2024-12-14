@@ -1,0 +1,6 @@
+# DuPont DirCCD bad pixel mask
+# column 1 : X coordinate in FITS images convention
+# column 2 : Y coordinate in FITS images convention
+747	597
+748	597
+	

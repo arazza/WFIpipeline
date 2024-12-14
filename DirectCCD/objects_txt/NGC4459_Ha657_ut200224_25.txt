@@ -1,0 +1,15 @@
+# NGC4459 in Ha657 
+# Observing Run ut200224_25 
+# first row: RA, DEC (hours, degrees) 
+# other rows: crpix1, crpix2 for each dithered frame (pixel)
+12h29m00.03299054s +13d58m42.82660333s
+1082 914
+1122 910
+1152 948
+1153 986
+1115 1025
+1077 1025
+1038 987
+1038 947
+1077 907
+1116 907

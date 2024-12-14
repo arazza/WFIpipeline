@@ -1,0 +1,668 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="file:///Users/arazza/anaconda3/envs/py311/share/scamp/scamp.xsl"?>
+<VOTABLE version="1.1"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns="http://www.ivoa.net/xml/VOTable/v1.1"
+ xmlns:stc="http://www.ivoa.net/xml/STC/v1.10">
+<DESCRIPTION>produced by SCAMP</DESCRIPTION>
+<!-- VOTable description at http://www.ivoa.net/Documents/latest/VOT.html -->
+<RESOURCE ID="SCAMP" name="NGC3489_Ha657_10_newldac.fits">
+ <DESCRIPTION>Data related to SCAMP</DESCRIPTION>
+ <INFO name="QUERY_STATUS" value="OK" />
+ <COOSYS ID="J2000" equinox="J2000" epoch="2000.0" system="ICRS"/>
+ <RESOURCE ID="MetaData" name="MetaData">
+  <DESCRIPTION>SCAMP meta-data</DESCRIPTION>
+  <INFO name="QUERY_STATUS" value="OK" />
+  <PARAM name="Software" datatype="char" arraysize="*" ucd="meta.title;meta.software" value="SCAMP"/>
+  <PARAM name="Version" datatype="char" arraysize="*" ucd="meta.version;meta.software" value="2.10.0"/>
+  <PARAM name="Soft_URL" datatype="char" arraysize="*" ucd="meta.ref.url;meta.software" value="http://astromatic.net/software/scamp"/>
+  <PARAM name="Soft_Auth" datatype="char" arraysize="*" ucd="meta.bib.author;meta.software" value="Emmanuel Bertin"/>
+  <PARAM name="Soft_Ref" datatype="char" arraysize="*" ucd="meta.bib.bibcode;meta.software" value="2006ASPC..351..112B"/>
+  <PARAM name="NThreads" datatype="int" ucd="meta.number;meta.software" value="4"/>
+  <PARAM name="Date" datatype="char" arraysize="*" ucd="time.end;meta.software" value="2024-12-14"/>
+  <PARAM name="Time" datatype="char" arraysize="*" ucd="time.end;meta.software" value="19:41:53"/>
+  <PARAM name="Duration" datatype="float" ucd="time.duration;meta.software" value="144" unit="s"/>
+  <PARAM name="User" datatype="char" arraysize="*" ucd="meta.curation" value="arazza"/>
+  <PARAM name="Host" datatype="char" arraysize="*" ucd="meta.curation" value="(null)"/>
+  <PARAM name="Path" datatype="char" arraysize="*" ucd="meta.dataset" value="/Users/arazza/DAS/Observations/NGC253/pipeline_scripts/DirectCCD"/>
+  <TABLE ID="Fields" name="Fields">
+   <DESCRIPTION>Data gathered by SCAMP for every  input catalog</DESCRIPTION>
+   <!-- NFields may be 0 if an error occurred early in the processing -->
+   <PARAM name="NFields" datatype="int" ucd="meta.number;meta.dataset" value="34"/>
+   <FIELD name="Catalog_Number" datatype="int" ucd="meta.record;meta.table;meta.file"/>
+   <FIELD name="Catalog_Name" datatype="char" arraysize="*" ucd="meta.id;meta.table;meta.file"/>
+   <FIELD name="Image_Ident" datatype="char" arraysize="*" ucd="meta.id;obs.field"/>
+   <FIELD name="NExtensions" datatype="int" ucd="meta.record"/>
+   <FIELD name="NAxis" datatype="int" ucd="pos.wcs.naxis"/>
+   <FIELD name="Lng_Axis" datatype="int" ucd="meta.id;pos.eq.ra"/>
+   <FIELD name="Lat_Axis" datatype="int" ucd="meta.id;pos.eq.dec"/>
+   <FIELD name="Ext_Header" datatype="boolean" ucd="meta.code"/>
+   <FIELD name="NDetect" datatype="int" ucd="meta.number;src"/>
+   <FIELD name="Group" datatype="int" ucd="meta.id.parent;meta.dataset"/>
+   <FIELD name="Astr_Instrum" datatype="char" arraysize="*" ucd="meta.id.parent;meta.dataset"/>
+   <FIELD name="Phot_Instrum" datatype="char" arraysize="*" ucd="meta.id.parent;meta.dataset"/>
+   <FIELD name="Photom_Flag" datatype="boolean" ucd="meta.code;phot"/>
+   <FIELD name="Photom_Link" datatype="boolean" ucd="meta.code;phot"/>
+   <FIELD name="Observation_Date" datatype="double" ucd="time.epoch;obs.field" unit="yr"/>
+   <FIELD name="Exposure_Time" datatype="float" ucd="time.duration;obs.exposure"/>
+   <FIELD name="AirMass" datatype="float" ucd="obs.airMass"/>
+   <FIELD name="Field_Coordinates" datatype="double" arraysize="2" ucd="pos.eq.ra;pos.eq.dec;obs.field" unit="deg"/>
+   <FIELD name="Pixel_Scale" datatype="float" arraysize="2"  ucd="instr.scale;instr.pixel;stat.mean" unit="arcsec"/>
+   <FIELD name="Max_Radius" datatype="float" ucd="phys.size.radius" unit="arcmin"/>
+   <FIELD name="ZeroPoint_Corr" datatype="float" ucd="phot.mag;phot.calib;arith.zp" unit="mag"/>
+   <!-- =========== MATCHing statistics =========== -->
+   <FIELD name="DPixelScale" datatype="float" ucd="instr.scale;instr.pixel;arith.ratio"/>
+   <FIELD name="DPosAngle" datatype="float" ucd="pos.posAng;obs.image;arith.diff" unit="deg"/>
+   <FIELD name="AS_Contrast" datatype="float" ucd="stat.correlation;arith.ratio"/>
+   <FIELD name="DX" datatype="float" ucd="pos.eq.ra;arith.diff" unit="deg"/>
+   <FIELD name="DY" datatype="float" ucd="pos.eq.dec;arith.diff" unit="deg"/>
+   <FIELD name="XY_Contrast" datatype="float" ucd="stat.correlation;arith.ratio"/>
+   <FIELD name="Shear" datatype="float" ucd="phys.size.axisRatio;obs.image"/>
+   <FIELD name="Shear_PosAngle" datatype="float" ucd="pos.posAng;obs.image" unit="deg"/>
+   <!-- =========== Astrometric statistics =========== -->
+   <FIELD name="Chi2_Internal" datatype="float" ucd="stat.fit.chi2"/>
+   <FIELD name="NDeg_Internal" datatype="int" ucd="stat.fit.dof"/>
+   <FIELD name="Chi2_Internal_HighSN" datatype="float" ucd="stat.fit.chi2"/>
+   <FIELD name="NDeg_Internal_HighSN" datatype="int" ucd="stat.fit.dof"/>
+   <FIELD name="AstromOffset_Reference" datatype="float" arraysize="2" ucd="pos.eq.ra;pos.eq.dec;arith.diff;obs.field" unit="arcsec"/>
+   <FIELD name="AstromSigma_Reference" datatype="float" arraysize="2" ucd="stat.stdev;pos.eq;obs.field" unit="arcsec"/>
+   <FIELD name="AstromCorr_Reference" datatype="float" ucd="stat.correlation;pos.eq;obs.field"/>
+   <FIELD name="Chi2_Reference" datatype="float" ucd="stat.fit.chi2"/>
+   <FIELD name="NDeg_Reference" datatype="int" ucd="stat.fit.dof"/>
+   <FIELD name="AstromOffset_Reference_HighSN" datatype="float" arraysize="2" ucd="pos.eq.ra;pos.eq.dec;arith.diff;obs.field" unit="arcsec"/>
+   <FIELD name="AstromSigma_Reference_HighSN" datatype="float" arraysize="2" ucd="stat.stdev;pos.eq;obs.field" unit="arcsec"/>
+   <FIELD name="AstromCorr_Reference_HighSN" datatype="float" ucd="stat.correlation;pos.eq;obs.field"/>
+   <FIELD name="Chi2_Reference_HighSN" datatype="float" ucd="stat.fit.chi2"/>
+   <FIELD name="NDeg_Reference_HighSN" datatype="int" ucd="stat.fit.dof"/>
+   <DATA><TABLEDATA>
+    <TR>
+     <TD>1</TD><TD>NGC3489_Ha657_10_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>24</TD><TD>1</TD><TD>A1</TD><TD>P1</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.157431173</TD><TD>300.000</TD><TD>1.37</TD><TD>165.0780496 13.90244653</TD>
+     <TD>0.260175  0.260175</TD><TD>6.28261</TD><TD>0</TD>
+     <TD>1.00453</TD><TD>0.701842</TD><TD>18.8877</TD>
+     <TD>2.94052e-05</TD><TD>2.83961e-05</TD><TD>6.66583</TD><TD>2.23895e-05</TD><TD>80.4097</TD>
+     <TD>10.379</TD><TD>575</TD><TD>10.8184</TD><TD>415</TD>
+     <TD>-0.0112687 -0.00928795</TD><TD>0.0646991 0.0590496</TD><TD>0.665316</TD><TD>59.8497</TD><TD>19</TD><TD>-0.00394858 -0.00690223</TD><TD>0.0600524 0.0561685</TD><TD>0.54391</TD><TD>71.3074</TD><TD>15</TD>
+    </TR>
+    <TR>
+     <TD>2</TD><TD>NGC3489_Ha657_11_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>28</TD><TD>1</TD><TD>A1</TD><TD>P1</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151955472</TD><TD>300.000</TD><TD>1.50</TD><TD>165.0694291 13.9005834</TD>
+     <TD>0.260203  0.260203</TD><TD>6.28403</TD><TD>0</TD>
+     <TD>1.00451</TD><TD>0.735872</TD><TD>25.7606</TD>
+     <TD>6.01888e-07</TD><TD>4.97568e-06</TD><TD>8.36059</TD><TD>0.000263263</TD><TD>27.9214</TD>
+     <TD>12.3097</TD><TD>638</TD><TD>10.0995</TD><TD>385</TD>
+     <TD>-0.0281849 -0.00503407</TD><TD>0.09184 0.0586194</TD><TD>0.444997</TD><TD>51.6914</TD><TD>22</TD><TD>-0.0143101 0.00224318</TD><TD>0.0780191 0.0436202</TD><TD>0.0611439</TD><TD>67.4672</TD><TD>15</TD>
+    </TR>
+    <TR>
+     <TD>3</TD><TD>NGC3489_Ha657_12_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>25</TD><TD>1</TD><TD>A1</TD><TD>P1</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151955472</TD><TD>300.000</TD><TD>1.48</TD><TD>165.0694073 13.90332366</TD>
+     <TD>0.260231  0.260231</TD><TD>6.28439</TD><TD>0</TD>
+     <TD>1.00465</TD><TD>0.732978</TD><TD>23.8564</TD>
+     <TD>2.24571e-05</TD><TD>4.38989e-06</TD><TD>7.63441</TD><TD>0.000195798</TD><TD>22.3338</TD>
+     <TD>14.1757</TD><TD>604</TD><TD>12.593</TD><TD>441</TD>
+     <TD>-0.018131 -0.00176958</TD><TD>0.0830947 0.0548721</TD><TD>0.390606</TD><TD>50.8676</TD><TD>21</TD><TD>-0.012771 -0.000193401</TD><TD>0.0762648 0.0554784</TD><TD>0.230385</TD><TD>58.8373</TD><TD>17</TD>
+    </TR>
+    <TR>
+     <TD>4</TD><TD>NGC3489_Ha657_13_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>27</TD><TD>1</TD><TD>A1</TD><TD>P1</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151955472</TD><TD>300.000</TD><TD>1.46</TD><TD>165.0722878 13.90618274</TD>
+     <TD>0.260202  0.260202</TD><TD>6.28413</TD><TD>0</TD>
+     <TD>1.00451</TD><TD>0.736119</TD><TD>23.9127</TD>
+     <TD>2.8522e-05</TD><TD>3.07024e-07</TD><TD>8.13199</TD><TD>0.000267994</TD><TD>37.0168</TD>
+     <TD>15.2418</TD><TD>608</TD><TD>12.4857</TD><TD>414</TD>
+     <TD>-0.0299451 -0.00666763</TD><TD>0.0967294 0.058128</TD><TD>0.465122</TD><TD>56.4121</TD><TD>21</TD><TD>-0.0151073 0.00059726</TD><TD>0.0847401 0.054396</TD><TD>0.185545</TD><TD>66.8798</TD><TD>16</TD>
+    </TR>
+    <TR>
+     <TD>5</TD><TD>NGC3489_Ha657_14_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>23</TD><TD>1</TD><TD>A1</TD><TD>P1</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151955472</TD><TD>300.000</TD><TD>1.45</TD><TD>165.0750748 13.90610871</TD>
+     <TD>0.260228  0.260228</TD><TD>6.28395</TD><TD>0</TD>
+     <TD>1.00465</TD><TD>0.737826</TD><TD>22.0989</TD>
+     <TD>-1.00134e-05</TD><TD>-2.65549e-05</TD><TD>6.89292</TD><TD>0.000180691</TD><TD>3.48327</TD>
+     <TD>12.3445</TD><TD>567</TD><TD>11.3894</TD><TD>414</TD>
+     <TD>-0.0186956 -0.00507976</TD><TD>0.0809887 0.0581424</TD><TD>0.424812</TD><TD>58.4255</TD><TD>20</TD><TD>-0.0160237 -0.000149997</TD><TD>0.0817903 0.0558126</TD><TD>0.26586</TD><TD>69.2527</TD><TD>16</TD>
+    </TR>
+    <TR>
+     <TD>6</TD><TD>NGC3489_Ha657_15_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>28</TD><TD>1</TD><TD>A1</TD><TD>P1</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151955472</TD><TD>300.000</TD><TD>1.43</TD><TD>165.0779124 13.90335621</TD>
+     <TD>0.260216  0.260216</TD><TD>6.28428</TD><TD>0</TD>
+     <TD>1.00457</TD><TD>0.708838</TD><TD>23.8859</TD>
+     <TD>3.35584e-05</TD><TD>-3.17756e-06</TD><TD>6.50812</TD><TD>0.000239236</TD><TD>33.1314</TD>
+     <TD>11.7129</TD><TD>635</TD><TD>12.3726</TD><TD>459</TD>
+     <TD>-0.0180278 -0.00357171</TD><TD>0.0792626 0.0578877</TD><TD>0.392997</TD><TD>58.6315</TD><TD>21</TD><TD>-0.0146181 5.60517e-05</TD><TD>0.078341 0.0536975</TD><TD>0.205131</TD><TD>67.4486</TD><TD>17</TD>
+    </TR>
+    <TR>
+     <TD>7</TD><TD>NGC3489_Ha657_16_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>26</TD><TD>1</TD><TD>A1</TD><TD>P1</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151955472</TD><TD>300.000</TD><TD>1.42</TD><TD>165.0779003 13.90068351</TD>
+     <TD>0.260218  0.260218</TD><TD>6.28405</TD><TD>0</TD>
+     <TD>1.00464</TD><TD>0.71711</TD><TD>23.9394</TD>
+     <TD>5.19535e-05</TD><TD>-9.28107e-06</TD><TD>7.15439</TD><TD>0.000123956</TD><TD>47.5243</TD>
+     <TD>11.8121</TD><TD>609</TD><TD>11.593</TD><TD>459</TD>
+     <TD>-0.0170776 -0.00191224</TD><TD>0.0748436 0.0578525</TD><TD>0.40708</TD><TD>57.0911</TD><TD>21</TD><TD>-0.0119222 -0.000784576</TD><TD>0.0740301 0.0538244</TD><TD>0.245599</TD><TD>64.6637</TD><TD>17</TD>
+    </TR>
+    <TR>
+     <TD>8</TD><TD>NGC3489_Ha657_17_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>24</TD><TD>1</TD><TD>A1</TD><TD>P1</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151955472</TD><TD>300.000</TD><TD>1.40</TD><TD>165.0739319 13.89327331</TD>
+     <TD>0.260212  0.260212</TD><TD>6.28371</TD><TD>0</TD>
+     <TD>1.00466</TD><TD>0.710513</TD><TD>30.8718</TD>
+     <TD>5.5907e-05</TD><TD>-2.41215e-05</TD><TD>6.8347</TD><TD>5.07129e-05</TD><TD>30.8859</TD>
+     <TD>12.6959</TD><TD>615</TD><TD>12.8997</TD><TD>446</TD>
+     <TD>-0.0270938 -0.013414</TD><TD>0.0868597 0.0604676</TD><TD>0.654565</TD><TD>54.4148</TD><TD>21</TD><TD>-0.000337939 -0.00351389</TD><TD>0.0595578 0.0567329</TD><TD>0.536152</TD><TD>65.25</TD><TD>16</TD>
+    </TR>
+    <TR>
+     <TD>9</TD><TD>NGC3489_Ha657_18_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>27</TD><TD>1</TD><TD>A1</TD><TD>P1</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151955472</TD><TD>300.000</TD><TD>1.39</TD><TD>165.0709892 13.89050982</TD>
+     <TD>0.26023  0.26023</TD><TD>6.28395</TD><TD>0</TD>
+     <TD>1.00472</TD><TD>0.708831</TD><TD>24.6075</TD>
+     <TD>-2.83032e-05</TD><TD>3.81483e-06</TD><TD>7.65446</TD><TD>5.72463e-05</TD><TD>2.1082</TD>
+     <TD>17.8882</TD><TD>630</TD><TD>16.8271</TD><TD>446</TD>
+     <TD>-0.0370557 -0.0145616</TD><TD>0.0992086 0.0583453</TD><TD>0.66598</TD><TD>56.8886</TD><TD>22</TD><TD>-0.00111302 -0.00313984</TD><TD>0.0635748 0.0538543</TD><TD>0.517663</TD><TD>69.137</TD><TD>16</TD>
+    </TR>
+    <TR>
+     <TD>10</TD><TD>NGC3489_Ha657_19_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>25</TD><TD>1</TD><TD>A1</TD><TD>P1</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151955472</TD><TD>300.000</TD><TD>1.39</TD><TD>165.0681616 13.89334224</TD>
+     <TD>0.260233  0.260233</TD><TD>6.28407</TD><TD>0</TD>
+     <TD>1.00471</TD><TD>0.706949</TD><TD>22.282</TD>
+     <TD>2.48126e-05</TD><TD>-2.12125e-05</TD><TD>7.22645</TD><TD>9.37635e-05</TD><TD>1.47977</TD>
+     <TD>17.4299</TD><TD>613</TD><TD>18.2348</TD><TD>436</TD>
+     <TD>-0.038594 -0.0161197</TD><TD>0.0995437 0.0608347</TD><TD>0.676885</TD><TD>53.0595</TD><TD>21</TD><TD>-0.0143703 -0.00831037</TD><TD>0.080926 0.0574749</TD><TD>0.591668</TD><TD>63.0656</TD><TD>16</TD>
+    </TR>
+    <TR>
+     <TD>11</TD><TD>NGC3489_Ha657_1_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>26</TD><TD>1</TD><TD>A1</TD><TD>P1</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.157431173</TD><TD>300.000</TD><TD>1.38</TD><TD>165.0806097 13.90212236</TD>
+     <TD>0.260199  0.260199</TD><TD>6.28335</TD><TD>0</TD>
+     <TD>1.00459</TD><TD>0.714145</TD><TD>20.6119</TD>
+     <TD>-4.11552e-06</TD><TD>2.1788e-05</TD><TD>6.83489</TD><TD>7.41747e-05</TD><TD>15.2671</TD>
+     <TD>11.208</TD><TD>607</TD><TD>9.34072</TD><TD>428</TD>
+     <TD>-0.00733931 -0.00494283</TD><TD>0.0648528 0.0575615</TD><TD>0.646324</TD><TD>53.0508</TD><TD>20</TD><TD>-0.000931019 -0.00195024</TD><TD>0.0605674 0.0557443</TD><TD>0.525595</TD><TD>61.9145</TD><TD>16</TD>
+    </TR>
+    <TR>
+     <TD>12</TD><TD>NGC3489_Ha657_2_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>27</TD><TD>1</TD><TD>A1</TD><TD>P1</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.157431173</TD><TD>300.000</TD><TD>1.38</TD><TD>165.0777739 13.90209818</TD>
+     <TD>0.260189  0.260189</TD><TD>6.28346</TD><TD>0</TD>
+     <TD>1.00447</TD><TD>0.707223</TD><TD>20.8621</TD>
+     <TD>-4.89595e-06</TD><TD>3.38722e-05</TD><TD>6.47368</TD><TD>0.000236701</TD><TD>21.2639</TD>
+     <TD>10.4288</TD><TD>605</TD><TD>9.47938</TD><TD>441</TD>
+     <TD>-0.0193333 -0.00443329</TD><TD>0.078801 0.0593555</TD><TD>0.358532</TD><TD>59.3687</TD><TD>20</TD><TD>-0.0119224 0.0015214</TD><TD>0.0766686 0.0584113</TD><TD>0.215837</TD><TD>67.3928</TD><TD>17</TD>
+    </TR>
+    <TR>
+     <TD>13</TD><TD>NGC3489_Ha657_3_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>25</TD><TD>1</TD><TD>A1</TD><TD>P1</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.157431173</TD><TD>300.000</TD><TD>1.37</TD><TD>165.0748964 13.90487547</TD>
+     <TD>0.260213  0.260213</TD><TD>6.28327</TD><TD>0</TD>
+     <TD>1.00459</TD><TD>0.706097</TD><TD>21.6215</TD>
+     <TD>5.50366e-05</TD><TD>3.23548e-05</TD><TD>7.20044</TD><TD>0.000179926</TD><TD>76.4797</TD>
+     <TD>11.8551</TD><TD>597</TD><TD>12.966</TD><TD>436</TD>
+     <TD>-0.0201587 -0.00601429</TD><TD>0.0811124 0.0584112</TD><TD>0.396461</TD><TD>61.0644</TD><TD>20</TD><TD>-0.014527 -0.000650908</TD><TD>0.0811923 0.0571644</TD><TD>0.233205</TD><TD>72.9801</TD><TD>16</TD>
+    </TR>
+    <TR>
+     <TD>14</TD><TD>NGC3489_Ha657_4_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>24</TD><TD>1</TD><TD>A1</TD><TD>P1</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.157431173</TD><TD>300.000</TD><TD>1.37</TD><TD>165.0749492 13.90763314</TD>
+     <TD>0.260209  0.260209</TD><TD>6.28299</TD><TD>0</TD>
+     <TD>1.00458</TD><TD>0.707793</TD><TD>19.1676</TD>
+     <TD>-4.563e-06</TD><TD>-2.21452e-05</TD><TD>7.09052</TD><TD>0.000165395</TD><TD>60.3547</TD>
+     <TD>12.4724</TD><TD>532</TD><TD>12.5325</TD><TD>382</TD>
+     <TD>-0.0231568 -0.00891137</TD><TD>0.0859712 0.0542305</TD><TD>0.46826</TD><TD>64.3909</TD><TD>18</TD><TD>-0.0151797 -0.00592475</TD><TD>0.085123 0.0509631</TD><TD>0.347791</TD><TD>74.0075</TD><TD>15</TD>
+    </TR>
+    <TR>
+     <TD>15</TD><TD>NGC3489_Ha657_5_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>24</TD><TD>1</TD><TD>A1</TD><TD>P1</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.157431173</TD><TD>300.000</TD><TD>1.36</TD><TD>165.0777426 13.91045695</TD>
+     <TD>0.260222  0.260222</TD><TD>6.28339</TD><TD>0</TD>
+     <TD>1.00461</TD><TD>0.707178</TD><TD>20.1341</TD>
+     <TD>-2.95372e-06</TD><TD>7.3088e-06</TD><TD>7.32829</TD><TD>0.000218114</TD><TD>75.3272</TD>
+     <TD>11.9419</TD><TD>564</TD><TD>12.6127</TD><TD>432</TD>
+     <TD>-0.0195953 -0.00431955</TD><TD>0.0809127 0.0566615</TD><TD>0.346597</TD><TD>62.3034</TD><TD>19</TD><TD>-0.015334 0.00120881</TD><TD>0.0795604 0.056451</TD><TD>0.212828</TD><TD>70.0907</TD><TD>16</TD>
+    </TR>
+    <TR>
+     <TD>16</TD><TD>NGC3489_Ha657_6_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>22</TD><TD>1</TD><TD>A1</TD><TD>P1</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.157431173</TD><TD>300.000</TD><TD>1.36</TD><TD>165.0805703 13.91049309</TD>
+     <TD>0.260192  0.260192</TD><TD>6.28307</TD><TD>0</TD>
+     <TD>1.0046</TD><TD>0.713006</TD><TD>17.2229</TD>
+     <TD>1.08592e-06</TD><TD>4.00085e-06</TD><TD>6.86961</TD><TD>0</TD><TD>0</TD>
+     <TD>13.6301</TD><TD>517</TD><TD>13.4768</TD><TD>396</TD>
+     <TD>-0.00960863 -0.00964102</TD><TD>0.0712071 0.0637818</TD><TD>0.573843</TD><TD>71.0952</TD><TD>17</TD><TD>-0.00305942 -0.0033386</TD><TD>0.0648936 0.061901</TD><TD>0.441923</TD><TD>78.8787</TD><TD>14</TD>
+    </TR>
+    <TR>
+     <TD>17</TD><TD>NGC3489_Ha657_7_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>24</TD><TD>1</TD><TD>A1</TD><TD>P1</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.157431173</TD><TD>300.000</TD><TD>1.36</TD><TD>165.0834636 13.90779513</TD>
+     <TD>0.260184  0.260184</TD><TD>6.28242</TD><TD>0</TD>
+     <TD>1.00442</TD><TD>0.706626</TD><TD>19.8688</TD>
+     <TD>2.5776e-05</TD><TD>2.4737e-05</TD><TD>7.39522</TD><TD>0.000307111</TD><TD>77.9408</TD>
+     <TD>12.6405</TD><TD>526</TD><TD>12.7167</TD><TD>419</TD>
+     <TD>-0.00855893 -0.00831917</TD><TD>0.0651818 0.0640686</TD><TD>0.554271</TD><TD>67.9597</TD><TD>18</TD><TD>-0.00310824 -0.000587223</TD><TD>0.0604086 0.0616225</TD><TD>0.438606</TD><TD>75.9007</TD><TD>15</TD>
+    </TR>
+    <TR>
+     <TD>18</TD><TD>NGC3489_Ha657_8_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>27</TD><TD>1</TD><TD>A1</TD><TD>P1</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.157431173</TD><TD>300.000</TD><TD>1.37</TD><TD>165.0835625 13.90511156</TD>
+     <TD>0.260175  0.260175</TD><TD>6.28308</TD><TD>0</TD>
+     <TD>1.00446</TD><TD>0.703346</TD><TD>22.6877</TD>
+     <TD>4.92903e-06</TD><TD>-1.90472e-06</TD><TD>7.52773</TD><TD>0.000147306</TD><TD>40.1021</TD>
+     <TD>10.5466</TD><TD>623</TD><TD>11.5848</TD><TD>446</TD>
+     <TD>-0.00734162 -0.00656213</TD><TD>0.0659288 0.0574659</TD><TD>0.607153</TD><TD>58.3108</TD><TD>20</TD><TD>-0.0011096 -0.00122559</TD><TD>0.0621589 0.0571535</TD><TD>0.499351</TD><TD>68.3699</TD><TD>16</TD>
+    </TR>
+    <TR>
+     <TD>19</TD><TD>NGC3489_Ha657_9_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>25</TD><TD>1</TD><TD>A1</TD><TD>P1</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.157431173</TD><TD>300.000</TD><TD>1.37</TD><TD>165.0806885 13.90235189</TD>
+     <TD>0.260213  0.260213</TD><TD>6.28295</TD><TD>0</TD>
+     <TD>1.00457</TD><TD>0.702977</TD><TD>20.7469</TD>
+     <TD>-3.86806e-06</TD><TD>3.15847e-05</TD><TD>7.32347</TD><TD>0.000223304</TD><TD>57.572</TD>
+     <TD>10.1337</TD><TD>622</TD><TD>10.5501</TD><TD>446</TD>
+     <TD>-0.00785104 -0.0065188</TD><TD>0.0647525 0.0572481</TD><TD>0.665392</TD><TD>56.1055</TD><TD>20</TD><TD>-0.000926088 -0.00317752</TD><TD>0.0604765 0.054817</TD><TD>0.555152</TD><TD>65.3828</TD><TD>16</TD>
+    </TR>
+    <TR>
+     <TD>20</TD><TD>NGC3489_r_10_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>124</TD><TD>1</TD><TD>A2</TD><TD>P2</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151951669</TD><TD>60.000</TD><TD>1.36</TD><TD>165.0675085 13.89671488</TD>
+     <TD>0.260208  0.260208</TD><TD>6.2828</TD><TD>0</TD>
+     <TD>1.00455</TD><TD>0.703583</TD><TD>9.34968</TD>
+     <TD>2.26821e-06</TD><TD>3.07865e-05</TD><TD>5.91019</TD><TD>0.0002369</TD><TD>62.3773</TD>
+     <TD>8.98065</TD><TD>1240</TD><TD>20.2796</TD><TD>332</TD>
+     <TD>-0.0409594 -0.0170147</TD><TD>0.0892075 0.0585291</TD><TD>0.407236</TD><TD>10.3148</TD><TD>15</TD><TD>-0.0409594 -0.0170147</TD><TD>0.0892075 0.0585291</TD><TD>0.407236</TD><TD>10.3148</TD><TD>15</TD>
+    </TR>
+    <TR>
+     <TD>21</TD><TD>NGC3489_r_11_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>126</TD><TD>1</TD><TD>A2</TD><TD>P2</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151951669</TD><TD>60.000</TD><TD>1.36</TD><TD>165.0703615 13.89954713</TD>
+     <TD>0.260227  0.260227</TD><TD>6.28331</TD><TD>0</TD>
+     <TD>1.00457</TD><TD>0.702541</TD><TD>9.1174</TD>
+     <TD>-2.82445e-05</TD><TD>4.13064e-06</TD><TD>5.61699</TD><TD>0.000330613</TD><TD>73.7461</TD>
+     <TD>9.28905</TD><TD>1236</TD><TD>23.079</TD><TD>336</TD>
+     <TD>-0.0279369 -0.0131639</TD><TD>0.074207 0.0585124</TD><TD>0.37152</TD><TD>10.2794</TD><TD>15</TD><TD>-0.0298511 -0.0148854</TD><TD>0.0769524 0.0606147</TD><TD>0.370733</TD><TD>10.9085</TD><TD>14</TD>
+    </TR>
+    <TR>
+     <TD>22</TD><TD>NGC3489_r_12_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>176</TD><TD>1</TD><TD>A2</TD><TD>P2</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151953095</TD><TD>150.000</TD><TD>1.36</TD><TD>165.0731056 13.89964731</TD>
+     <TD>0.260224  0.260224</TD><TD>6.28322</TD><TD>0</TD>
+     <TD>1.00452</TD><TD>0.702873</TD><TD>8.17295</TD>
+     <TD>5.58022e-05</TD><TD>1.64504e-06</TD><TD>5.47606</TD><TD>0.000421293</TD><TD>77.5158</TD>
+     <TD>9.39088</TD><TD>1338</TD><TD>22.87</TD><TD>360</TD>
+     <TD>-0.0269913 -0.00986553</TD><TD>0.0704195 0.0578564</TD><TD>0.301147</TD><TD>9.63536</TD><TD>15</TD><TD>-0.0269913 -0.00986553</TD><TD>0.0704195 0.0578564</TD><TD>0.301147</TD><TD>9.63536</TD><TD>15</TD>
+    </TR>
+    <TR>
+     <TD>23</TD><TD>NGC3489_r_13_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>176</TD><TD>1</TD><TD>A2</TD><TD>P2</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151953095</TD><TD>150.000</TD><TD>1.36</TD><TD>165.0758592 13.89698308</TD>
+     <TD>0.26019  0.26019</TD><TD>6.28219</TD><TD>0</TD>
+     <TD>1.0044</TD><TD>0.704022</TD><TD>6.64289</TD>
+     <TD>8.7219e-05</TD><TD>-5.42712e-05</TD><TD>5.37491</TD><TD>0.000385011</TD><TD>68.1058</TD>
+     <TD>7.96876</TD><TD>1337</TD><TD>19.9289</TD><TD>349</TD>
+     <TD>-0.0334078 -0.0216023</TD><TD>0.0843016 0.0638288</TD><TD>0.513474</TD><TD>9.83475</TD><TD>14</TD><TD>-0.0334078 -0.0216023</TD><TD>0.0843016 0.0638288</TD><TD>0.513474</TD><TD>9.83475</TD><TD>14</TD>
+    </TR>
+    <TR>
+     <TD>24</TD><TD>NGC3489_r_14_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>161</TD><TD>1</TD><TD>A2</TD><TD>P2</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151953095</TD><TD>150.000</TD><TD>1.36</TD><TD>165.0758221 13.89426996</TD>
+     <TD>0.260192  0.260192</TD><TD>6.28262</TD><TD>0</TD>
+     <TD>1.00452</TD><TD>0.700213</TD><TD>6.53067</TD>
+     <TD>8.57037e-05</TD><TD>-8.82285e-07</TD><TD>5.2225</TD><TD>0.000172529</TD><TD>65.9231</TD>
+     <TD>7.99423</TD><TD>1310</TD><TD>20.4512</TD><TD>340</TD>
+     <TD>-0.0347062 -0.021003</TD><TD>0.0858273 0.0662849</TD><TD>0.506321</TD><TD>10.3828</TD><TD>14</TD><TD>-0.0347062 -0.021003</TD><TD>0.0858273 0.0662849</TD><TD>0.506321</TD><TD>10.3828</TD><TD>14</TD>
+    </TR>
+    <TR>
+     <TD>25</TD><TD>NGC3489_r_15_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>175</TD><TD>1</TD><TD>A2</TD><TD>P2</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151953095</TD><TD>150.000</TD><TD>1.37</TD><TD>165.0730236 13.89152781</TD>
+     <TD>0.260206  0.260206</TD><TD>6.28265</TD><TD>0</TD>
+     <TD>1.00452</TD><TD>0.699007</TD><TD>7.27601</TD>
+     <TD>6.39986e-05</TD><TD>-2.79743e-05</TD><TD>5.72661</TD><TD>0.000278292</TD><TD>63.1428</TD>
+     <TD>8.96225</TD><TD>1368</TD><TD>22.0466</TD><TD>355</TD>
+     <TD>-0.0395321 -0.0186976</TD><TD>0.0882881 0.061871</TD><TD>0.485259</TD><TD>10.3842</TD><TD>15</TD><TD>-0.0395321 -0.0186976</TD><TD>0.0882881 0.061871</TD><TD>0.485259</TD><TD>10.3842</TD><TD>15</TD>
+    </TR>
+    <TR>
+     <TD>26</TD><TD>NGC3489_r_1_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>82</TD><TD>1</TD><TD>A2</TD><TD>P2</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151951036</TD><TD>20.000</TD><TD>1.38</TD><TD>165.068074 13.89362771</TD>
+     <TD>0.2602  0.2602</TD><TD>6.28275</TD><TD>0</TD>
+     <TD>1.00455</TD><TD>0.70352</TD><TD>11.2121</TD>
+     <TD>3.36556e-06</TD><TD>5.98826e-05</TD><TD>6.4893</TD><TD>0.000167402</TD><TD>58.6102</TD>
+     <TD>9.7777</TD><TD>1049</TD><TD>18.6783</TD><TD>315</TD>
+     <TD>-0.03713 -0.0162183</TD><TD>0.087189 0.0573339</TD><TD>0.465404</TD><TD>9.98984</TD><TD>16</TD><TD>-0.0262705 -0.00705984</TD><TD>0.0862596 0.0556701</TD><TD>0.273333</TD><TD>11.0077</TD><TD>12</TD>
+    </TR>
+    <TR>
+     <TD>27</TD><TD>NGC3489_r_2_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>66</TD><TD>1</TD><TD>A2</TD><TD>P2</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151950956</TD><TD>15.000</TD><TD>1.37</TD><TD>165.0679341 13.89652375</TD>
+     <TD>0.260196  0.260196</TD><TD>6.28253</TD><TD>0</TD>
+     <TD>1.00451</TD><TD>0.703892</TD><TD>11.9071</TD>
+     <TD>-2.52383e-05</TD><TD>6.17305e-05</TD><TD>6.4227</TD><TD>0.000222039</TD><TD>60.2594</TD>
+     <TD>9.26711</TD><TD>995</TD><TD>18.0282</TD><TD>285</TD>
+     <TD>-0.0392698 -0.0194719</TD><TD>0.0881636 0.0610107</TD><TD>0.488576</TD><TD>10.1505</TD><TD>16</TD><TD>-0.00847325 0.00364269</TD><TD>0.0711548 0.0427819</TD><TD>0.20123</TD><TD>9.23654</TD><TD>10</TD>
+    </TR>
+    <TR>
+     <TD>28</TD><TD>NGC3489_r_3_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>65</TD><TD>1</TD><TD>A2</TD><TD>P2</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151950956</TD><TD>15.000</TD><TD>1.37</TD><TD>165.0707509 13.89934215</TD>
+     <TD>0.260225  0.260225</TD><TD>6.28311</TD><TD>0</TD>
+     <TD>1.00453</TD><TD>0.707446</TD><TD>13.6029</TD>
+     <TD>-4.09197e-07</TD><TD>6.40511e-06</TD><TD>6.11242</TD><TD>0.000391271</TD><TD>72.9917</TD>
+     <TD>14.5261</TD><TD>966</TD><TD>36.5203</TD><TD>291</TD>
+     <TD>-0.0283668 -0.010018</TD><TD>0.077299 0.0529354</TD><TD>0.084293</TD><TD>10.453</TD><TD>16</TD><TD>-0.0156929 0.00765482</TD><TD>0.0787899 0.0430271</TD><TD>-0.356831</TD><TD>12.1867</TD><TD>10</TD>
+    </TR>
+    <TR>
+     <TD>29</TD><TD>NGC3489_r_4_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>62</TD><TD>1</TD><TD>A2</TD><TD>P2</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151950956</TD><TD>15.000</TD><TD>1.37</TD><TD>165.0735717 13.89930545</TD>
+     <TD>0.260217  0.260217</TD><TD>6.28315</TD><TD>0</TD>
+     <TD>1.00451</TD><TD>0.707254</TD><TD>13.6474</TD>
+     <TD>-2.28511e-06</TD><TD>4.46933e-06</TD><TD>6.25588</TD><TD>0.000376857</TD><TD>78.4359</TD>
+     <TD>10.5573</TD><TD>969</TD><TD>22.3607</TD><TD>291</TD>
+     <TD>-0.0236082 -0.00585048</TD><TD>0.0663624 0.0540941</TD><TD>0.271188</TD><TD>8.54629</TD><TD>16</TD><TD>-0.00349344 0.0128056</TD><TD>0.0624431 0.0496029</TD><TD>-0.0266912</TD><TD>9.25998</TD><TD>10</TD>
+    </TR>
+    <TR>
+     <TD>30</TD><TD>NGC3489_r_5_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>60</TD><TD>1</TD><TD>A2</TD><TD>P2</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151950956</TD><TD>15.000</TD><TD>1.37</TD><TD>165.0763288 13.89663646</TD>
+     <TD>0.260165  0.260165</TD><TD>6.28126</TD><TD>0</TD>
+     <TD>1.00429</TD><TD>0.707176</TD><TD>9.08125</TD>
+     <TD>3.44379e-05</TD><TD>-2.14763e-05</TD><TD>5.21912</TD><TD>0.000411556</TD><TD>60.4582</TD>
+     <TD>7.20452</TD><TD>890</TD><TD>15.696</TD><TD>255</TD>
+     <TD>-0.0306728 -0.0121963</TD><TD>0.0827791 0.0562201</TD><TD>0.432946</TD><TD>8.80859</TD><TD>13</TD><TD>0.00388149 0.00295762</TD><TD>0.0572239 0.0493184</TD><TD>0.407423</TD><TD>8.42037</TD><TD>8</TD>
+    </TR>
+    <TR>
+     <TD>31</TD><TD>NGC3489_r_6_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>70</TD><TD>1</TD><TD>A2</TD><TD>P2</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151950956</TD><TD>15.000</TD><TD>1.37</TD><TD>165.076341 13.89382233</TD>
+     <TD>0.260191  0.260191</TD><TD>6.28246</TD><TD>0</TD>
+     <TD>1.0045</TD><TD>0.703284</TD><TD>12.1006</TD>
+     <TD>3.64403e-06</TD><TD>-2.37019e-05</TD><TD>5.87828</TD><TD>0.000198276</TD><TD>54.5108</TD>
+     <TD>6.98471</TD><TD>1008</TD><TD>13.9629</TD><TD>278</TD>
+     <TD>-0.0348675 -0.0185943</TD><TD>0.0838004 0.0607535</TD><TD>0.508188</TD><TD>9.39544</TD><TD>15</TD><TD>0.00372285 0.00225762</TD><TD>0.0540127 0.0483814</TD><TD>0.314624</TD><TD>7.91139</TD><TD>9</TD>
+    </TR>
+    <TR>
+     <TD>32</TD><TD>NGC3489_r_7_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>57</TD><TD>1</TD><TD>A2</TD><TD>P2</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151950956</TD><TD>15.000</TD><TD>1.37</TD><TD>165.073425 13.89102488</TD>
+     <TD>0.260207  0.260207</TD><TD>6.28296</TD><TD>0</TD>
+     <TD>1.00451</TD><TD>0.70195</TD><TD>14.2419</TD>
+     <TD>3.22817e-05</TD><TD>-2.73192e-05</TD><TD>6.65425</TD><TD>0.000305011</TD><TD>77.1725</TD>
+     <TD>8.32253</TD><TD>881</TD><TD>15.9553</TD><TD>278</TD>
+     <TD>-0.0411616 -0.0167188</TD><TD>0.0883627 0.0593514</TD><TD>0.485843</TD><TD>9.97671</TD><TD>16</TD><TD>0.00624803 0.00182738</TD><TD>0.05238 0.0435348</TD><TD>0.310002</TD><TD>7.38515</TD><TD>9</TD>
+    </TR>
+    <TR>
+     <TD>33</TD><TD>NGC3489_r_8_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>59</TD><TD>1</TD><TD>A2</TD><TD>P2</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151950956</TD><TD>15.000</TD><TD>1.37</TD><TD>165.0705618 13.89106247</TD>
+     <TD>0.260196  0.260196</TD><TD>6.28252</TD><TD>0</TD>
+     <TD>1.00447</TD><TD>0.700496</TD><TD>11.9968</TD>
+     <TD>1.22946e-06</TD><TD>-2.67815e-05</TD><TD>6.06847</TD><TD>0.000296382</TD><TD>70.3515</TD>
+     <TD>7.97795</TD><TD>894</TD><TD>15.0367</TD><TD>255</TD>
+     <TD>-0.0440464 -0.01869</TD><TD>0.0962552 0.0616066</TD><TD>0.465767</TD><TD>11.716</TD><TD>15</TD><TD>0.00717923 0.0006557</TD><TD>0.0609267 0.0541137</TD><TD>0.299266</TD><TD>9.86892</TD><TD>8</TD>
+    </TR>
+    <TR>
+     <TD>34</TD><TD>NGC3489_r_9_newldac.fits</TD><TD>NGC3489</TD>
+     <TD>1</TD><TD>2</TD><TD>0</TD><TD>1</TD><TD>F</TD>
+     <TD>112</TD><TD>1</TD><TD>A2</TD><TD>P2</TD><TD>F</TD><TD>F</TD>
+     <TD>2020.151951669</TD><TD>60.000</TD><TD>1.37</TD><TD>165.0676473 13.89389297</TD>
+     <TD>0.260212  0.260212</TD><TD>6.28287</TD><TD>0</TD>
+     <TD>1.00453</TD><TD>0.701398</TD><TD>9.90831</TD>
+     <TD>3.05555e-05</TD><TD>2.91143e-05</TD><TD>6.48254</TD><TD>0.000298705</TD><TD>68.5394</TD>
+     <TD>7.8172</TD><TD>1216</TD><TD>16.889</TD><TD>355</TD>
+     <TD>-0.0391531 -0.0168611</TD><TD>0.0888352 0.0566252</TD><TD>0.451467</TD><TD>9.95559</TD><TD>16</TD><TD>-0.0391531 -0.0168611</TD><TD>0.0888352 0.0566252</TD><TD>0.451467</TD><TD>9.95559</TD><TD>16</TD>
+    </TR>
+   </TABLEDATA></DATA>
+  </TABLE>
+  <TABLE ID="FGroups" name="FGroups">
+   <DESCRIPTION>Data gathered by SCAMP for every  group of fields found</DESCRIPTION>
+   <PARAM name="NFGroups" datatype="int" ucd="meta.number;meta.dataset" value="1"/>
+   <FIELD name="Name" datatype="char" arraysize="*" ucd="meta.id;meta.dataset"/>
+   <FIELD name="Index" datatype="int" ucd="meta.record;meta.dataset"/>
+   <FIELD name="NFields" datatype="int" ucd="meta.number;meta.dataset"/>
+   <FIELD name="NAxis" datatype="int" ucd="pos.wcs.naxis"/>
+   <FIELD name="Lng_Axis" datatype="int" ucd="meta.id;pos.eq.ra"/>
+   <FIELD name="Lat_Axis" datatype="int" ucd="meta.id;pos.eq.de"/>
+   <FIELD name="Field_Coordinates" datatype="double" arraysize="2" ucd="pos.eq.ra;pos.eq.dec;obs.field" unit="deg"/>
+   <FIELD name="Pixel_Scale" datatype="float" arraysize="2"  ucd="instr.pixel;obs.field;stat.mean" unit="arcsec"/>
+   <FIELD name="Max_Radius" datatype="float" ucd="phys.size.radius;obs.field" unit="arcmin"/>
+   <!-- =========== Astrometric statistics =========== -->
+   <FIELD name="AstRef_Catalog" datatype="char" arraysize="*" ucd="meta.id;meta.dataset"/>
+   <FIELD name="AstRef_Band" datatype="char" arraysize="*" ucd="instr.bandpass"/>
+   <FIELD name="AstromSigma_Internal" datatype="float" arraysize="2" ucd="stat.stdev;pos.eq;obs.field" unit="arcsec"/>
+   <FIELD name="AstromCorr_Internal" datatype="float" ucd="stat.correlation;pos.eq;obs.field"/>
+   <FIELD name="AstromChi2_Internal" datatype="float" ucd="stat.fit.chi2"/>
+   <FIELD name="AstromNDets_Internal" datatype="int" ucd="meta.number;src"/>
+   <FIELD name="AstromSigma_Internal_HighSN" datatype="float" arraysize="2" ucd="stat.stdev;pos.eq;obs.field" unit="arcsec"/>
+   <FIELD name="AstromCorr_Internal_HighSN" datatype="float" ucd="stat.correlation;pos.eq;obs.field"/>
+   <FIELD name="AstromChi2_Internal_HighSN" datatype="float" ucd="stat.fit.chi2"/>
+   <FIELD name="AstromNDets_Internal_HighSN" datatype="int" ucd="meta.number;src"/>
+   <FIELD name="AstromOffset_Reference" datatype="float" arraysize="2" ucd="arith.diff;pos.eq;obs.field" unit="arcsec"/>
+   <FIELD name="AstromSigma_Reference" datatype="float" arraysize="2" ucd="stat.stdev;pos.eq;obs.field" unit="arcsec"/>
+   <FIELD name="AstromCorr_Reference" datatype="float" ucd="stat.correlation;pos.eq;obs.field"/>
+   <FIELD name="AstromChi2_Reference" datatype="float" ucd="stat.fit.chi2"/>
+   <FIELD name="AstromNDets_Reference" datatype="int" ucd="meta.number;src"/>
+   <FIELD name="AstromOffset_Reference_HighSN" datatype="float" arraysize="2" ucd="arith.diff;pos.eq;obs.field" unit="arcsec"/>
+   <FIELD name="AstromSigma_Reference_HighSN" datatype="float" arraysize="2" ucd="stat.stDev;pos.eq;obs.field" unit="arcsec"/>
+   <FIELD name="AstromCorr_Reference_HighSN" datatype="float" ucd="stat.correlation;pos.eq;obs.field"/>
+   <FIELD name="AstromChi2_Reference_HighSN" datatype="float" ucd="stat.fit.chi2"/>
+   <FIELD name="AstromNDets_Reference_HighSN" datatype="int" ucd="meta.number;src"/>
+   <!-- =========== Photometric statistics =========== -->
+   <PARAM name="NPhotInstru" datatype="int" ucd="meta.number;meta.em" value="2"/>
+   <FIELD name="PhotInstru_Name" datatype="char" arraysize="*" ucd="meta.id;instr.bandpass"/>
+   <FIELD name="PhotSigma_Internal" datatype="float" arraysize="2" ucd="stat.error;phot.mag" unit="mag"/>
+   <FIELD name="PhotChi2_Internal" datatype="float" arraysize="2" ucd="stat.chi2;phot.mag" unit="mag"/>
+   <FIELD name="PhotNDets_Internal" datatype="int" arraysize="2" ucd="meta.number;src"/>
+   <FIELD name="PhotSigma_Internal_HighSN" datatype="float" arraysize="2" ucd="stat.error;phot.mag" unit="mag"/>
+   <FIELD name="PhotChi2_Internal_HighSN" datatype="float" arraysize="2" ucd="stat.chi2;phot.mag" unit="mag"/>
+   <FIELD name="PhotNDets_Internal_HighSN" datatype="int" arraysize="2" ucd="meta.number;src"/>
+   <FIELD name="PhotSigma_Reference" datatype="float" arraysize="2" ucd="stat.error;phot.mag" unit="mag"/>
+   <FIELD name="PhotChi2_Reference" datatype="float" arraysize="2" ucd="stat.chi2;phot.mag" unit="mag"/>
+   <FIELD name="PhotNDets_Reference" datatype="int" arraysize="2" ucd="meta.number;src"/>
+   <FIELD name="PhotSigma_Reference_HighSN" datatype="float" arraysize="2" ucd="stat.error;phot.mag" unit="mag"/>
+   <FIELD name="PhotChi2_Reference_HighSN" datatype="float" arraysize="2" ucd="stat.chi2;phot.mag" unit="mag"/>
+   <FIELD name="PhotNDets_Reference_HighSN" datatype="int" arraysize="2" ucd="meta.number;src"/>
+   <DATA><TABLEDATA>
+   <TR>
+     <TD>G1</TD><TD>1</TD><TD>34</TD>
+     <TD>2</TD><TD>0</TD><TD>1</TD>
+     <TD>165.0743575 13.89958125</TD><TD>0.259  0.259</TD><TD>6.9981</TD>
+     <TD>GAIA-DR1</TD><TD>G</TD>
+     <TD>0.0335775 0.0360975</TD><TD>0.0277015</TD><TD>10.4669</TD><TD>1935</TD>
+     <TD>0.0128037 0.0109534</TD><TD>0.183621</TD><TD>15.2458</TD><TD>556</TD>
+     <TD>-0.0346387 -0.00893406</TD><TD>0.0895416 0.0533398</TD><TD>0.424676</TD><TD>40.1903</TD><TD>24</TD>
+     <TD>-0.0332496 -0.00915673</TD><TD>0.0848368 0.0517421</TD><TD>0.424676</TD><TD>46.4792</TD><TD>24</TD>
+     <TD>P1,P2</TD>
+     <TD>0.0310901 0.740097</TD><TD>70.7888 22285.1</TD><TD>440 1492</TD>
+     <TD>0.0219613 0.735295</TD><TD>89.5963 122196</TD><TD>331 223</TD>
+     <TD>0 0</TD><TD>0 0</TD><TD>0 0</TD>
+     <TD>0 0</TD><TD>0 0</TD><TD>0 0</TD>
+    </TR>
+   </TABLEDATA></DATA>
+  </TABLE>
+  <TABLE ID="Astrometric_Instruments" name="Astrometric_Instruments">
+   <DESCRIPTION>Data gathered by SCAMP for every  astrometric instrument identified</DESCRIPTION>
+   <PARAM name="NAstromInstru" datatype="int" ucd="meta.number;meta.dataset" value="2"/>
+   <FIELD name="Name" datatype="char" arraysize="*" ucd="meta.id;meta.dataset"/>
+   <FIELD name="Index" datatype="int" ucd="meta.record;meta.dataset"/>
+   <FIELD name="NFields" datatype="int" ucd="meta.number;meta.dataset"/>
+   <FIELD name="NExtensions" datatype="int" ucd="meta.number;meta.dataset"/>
+   <FIELD name="NKeys" datatype="int" ucd="meta.number"/>
+   <FIELD name="Keys" datatype="char" arraysize="*" ucd="meta.note"/>
+   <DATA><TABLEDATA>
+    <TR>
+     <TD>A1</TD><TD>1</TD><TD>19</TD><TD>1</TD>
+     <TD>2</TD><TD>FILTER  = 'Ha657   '            ,QRUNID  =                       </TD>
+    </TR>
+    <TR>
+     <TD>A2</TD><TD>2</TD><TD>15</TD><TD>1</TD>
+     <TD>2</TD><TD>FILTER  = 'r       '            ,QRUNID  =                       </TD>
+    </TR>
+   </TABLEDATA></DATA>
+  </TABLE>
+  <TABLE ID="Photometric_Instruments" name="Photometric_Instruments">
+   <DESCRIPTION>Data gathered by SCAMP for every  photometric instrument identified</DESCRIPTION>
+   <PARAM name="NPhotomInstru" datatype="int" ucd="meta.number;meta.dataset" value="2"/>
+   <FIELD name="Name" datatype="char" arraysize="*" ucd="meta.id;meta.dataset"/>
+   <FIELD name="Index" datatype="int" ucd="meta.record;meta.dataset"/>
+   <FIELD name="NFields" datatype="int" ucd="meta.number;meta.dataset"/>
+   <FIELD name="MagZeroPoint_Output" datatype="float" ucd="phot.mag;phot.calib;arith.zp" unit="mag"/>
+   <FIELD name="NKeys" datatype="int" ucd="meta.number"/>
+   <FIELD name="Keys" datatype="char" arraysize="*" ucd="meta.note"/>
+   <DATA><TABLEDATA>
+    <TR>
+     <TD>P1</TD><TD>1</TD><TD>19</TD><TD>0</TD>
+     <TD>1</TD><TD>FILTER  = 'Ha657   '            </TD>
+    </TR>
+    <TR>
+     <TD>P2</TD><TD>2</TD><TD>15</TD><TD>0</TD>
+     <TD>1</TD><TD>FILTER  = 'r       '            </TD>
+    </TR>
+   </TABLEDATA></DATA>
+  </TABLE>
+  <TABLE ID="Warnings" name="Warnings">
+   <DESCRIPTION>SCAMP warnings (limited to the last 1000)</DESCRIPTION>
+   <FIELD name="Date" datatype="char" arraysize="*" ucd="meta;time.end"/>
+   <FIELD name="Time" datatype="char" arraysize="*" ucd="meta;time.end"/>
+   <FIELD name="Msg" datatype="char" arraysize="*" ucd="meta"/>
+   <DATA><TABLEDATA>
+    <TR><TD>2024-12-14</TD><TD>19:39:29</TD><TD>scamp.conf not found, using internal defaults</TD></TR>
+   </TABLEDATA></DATA>
+  </TABLE>
+  <RESOURCE ID="Config" name="Config">
+   <DESCRIPTION>SCAMP configuration</DESCRIPTION>
+   <PARAM name="Command_Line" datatype="char" arraysize="*" ucd="obs.param" value="scamp /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_Ha657_10_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_Ha657_11_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_Ha657_12_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_Ha657_13_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_Ha657_14_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_Ha657_15_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_Ha657_16_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_Ha657_17_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_Ha657_18_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_Ha657_19_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_Ha657_1_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_Ha657_2_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_Ha657_3_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_Ha657_4_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_Ha657_5_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_Ha657_6_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_Ha657_7_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_Ha657_8_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_Ha657_9_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_r_10_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_r_11_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_r_12_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_r_13_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_r_14_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_r_15_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_r_1_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_r_2_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_r_3_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_r_4_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_r_5_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_r_6_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_r_7_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_r_8_newldac.fits /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_r_9_newldac.fits -ASTREF_CATALOG GAIA-DR1 -ASTREF_BAND DEFAULT -ASTREFMAG_LIMITS 13.0,19.0 -DISTORT_DEGREES 3 -SOLVE_PHOTOM N -SAVE_REFCATALOG Y -REFOUT_CATPATH /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs -MERGEDOUTCAT_TYPE ASCII_HEAD -MERGEDOUTCAT_NAME /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_scamp.cat -FULLOUTCAT_TYPE ASCII_HEAD -FULLOUTCAT_NAME /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_full.cat -CHECKPLOT_NAME /Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/fgroups,/Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/distort,/Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/astr_interror2d,/Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/astr_interror1d,/Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/astr_referror2d,/Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/astr_referror1d,/Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/astr_chi2,/Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/psphot_error -NTHREADS 0"/>
+   <PARAM name="Prefs_Name" datatype="char" arraysize="*" ucd="obs.param;meta.file" value="scamp.conf"/>
+   <PARAM name="Ref_Server" datatype="char" arraysize="*" ucd="meta.ref.url" value="vizier.unistra.fr"/>
+   <PARAM name="Ref_TimeOut" unit="s" datatype="double" arraysize="1" ucd="meta;time.duration" value="10"/>
+   <PARAM name="AstRef_Catalog" datatype="char" arraysize="*" ucd="meta.code;meta.file" value="GAIA-DR1"/>
+   <PARAM name="AstRef_Band" datatype="char" arraysize="*" ucd="instr.bandpass" value="DEFAULT"/>
+   <PARAM name="AstRefCat_Name" datatype="char" arraysize="*" ucd="meta.id;meta.file;meta.dataset" value="astrefcat.cat"/>
+   <PARAM name="AstRefCent_Keys" datatype="char" arraysize="*" ucd="meta.id;pos.eq" value="X_WORLD,Y_WORLD"/>
+   <PARAM name="AstRefErr_Keys" datatype="char" arraysize="*" ucd="meta.id;pos.errorEllipse" value="ERRA_WORLD,ERRB_WORLD,ERRTHETA_WORLD"/>
+   <PARAM name="AstRefMag_Key" datatype="char" arraysize="*" ucd="meta.id;phot.mag" value="MAG"/>
+   <PARAM name="AstRefMagErr_Key" datatype="char" arraysize="*" ucd="meta.id;phot.mag" value="MAGERR"/>
+   <PARAM name="AstRefObsDate_Key" datatype="char" arraysize="*" ucd="meta.id;time.epoch" value="OBSDATE"/>
+   <PARAM name="AstRefMag_Limits" unit="mag" datatype="double" arraysize="2" ucd="phot.mag;stat.min;stat.max;obs.param" value="13 19"/>
+   <PARAM name="Save_RefCatalog" datatype="boolean" ucd="meta.code" value="T"/>
+   <PARAM name="RefOut_CatPath" datatype="char" arraysize="*" ucd="meta.id;meta.file" value="/Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs"/>
+   <PARAM name="MergedOutCat_Name" datatype="char" arraysize="*" ucd="meta.id;meta.file;meta.dataset" value="/Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_scamp.cat"/>
+   <PARAM name="MergedOutCat_Type" datatype="char" arraysize="*" ucd="meta.code;meta.dataset" value="ASCII_HEAD"/>
+   <PARAM name="Save_DGeoMap" datatype="boolean" ucd="meta.code" value="F"/>
+   <PARAM name="DGeoMap_Name" datatype="char" arraysize="*" ucd="meta.id;meta.file;meta.dataset" value="dgeo.fits"/>
+   <PARAM name="DGeoMap_Step" unit="pix" datatype="int" ucd="meta.number" value="2"/>
+   <PARAM name="DGeoMap_NNearest" datatype="int" ucd="meta.number" value="21"/>
+   <PARAM name="FullOutCat_Name" datatype="char" arraysize="*" ucd="meta.id;meta.file;meta.dataset" value="/Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/NGC3489_full.cat"/>
+   <PARAM name="FullOutCat_Type" datatype="char" arraysize="*" ucd="meta.code;meta.dataset" value="ASCII_HEAD"/>
+   <PARAM name="Match" datatype="boolean" ucd="meta.code;obs.param" value="T"/>
+   <PARAM name="Match_NMax" datatype="int" ucd="meta.number;src;obs.param" value="0"/>
+   <PARAM name="PixScale_MaxErr" datatype="double" ucd="instr.precision;instr.pixel;obs.param" value="1.2"/>
+   <PARAM name="PosAngle_MaxErr" unit="deg" datatype="double" ucd="instr.precision;pos.posAng;obs.param" value="5"/>
+   <PARAM name="Position_MaxErr" unit="arcmin" datatype="double" arraysize="2" ucd="instr.precision;pos.eq;obs.param" value="0.0166667 0.0166667"/>
+   <PARAM name="Match_Resol" unit="arcsec" datatype="double" ucd="stat.param;phys.angSize" value="0"/>
+   <PARAM name="Match_Flipped" datatype="boolean" ucd="instr.param;obs.param" value="F"/>
+   <PARAM name="Mosaic_Type" datatype="char" arraysize="*" ucd="instr.param;obs.param" value="UNCHANGED"/>
+   <PARAM name="FixFocalPlane_NMin" datatype="int" ucd="meta.number;src;obs.param" value="1"/>
+   <PARAM name="CrossId_Radius" unit="arcsec" datatype="double" ucd="pos.angDistance;stat.max" value="2"/>
+   <PARAM name="Solve_Astrom" datatype="boolean" ucd="meta.code;obs.param" value="T"/>
+   <PARAM name="Projection_Type" datatype="char" arraysize="*" ucd="instr.param;obs.param" value="SAME"/>
+   <PARAM name="AstrInstru_Key" datatype="char" arraysize="*" ucd="meta.id;instr.setup;pos" value="FILTER,QRUNID"/>
+   <PARAM name="Stability_Type" datatype="char" arraysize="*" ucd="instr.param;obs.param" value="INSTRUMENT"/>
+   <PARAM name="Centroid_Keys" datatype="char" arraysize="*" ucd="meta.id;pos.barycenter;src" value="XWIN_IMAGE,YWIN_IMAGE"/>
+   <PARAM name="CentroidErr_Keys" datatype="char" arraysize="*" ucd="meta.id;pos.errorEllipse;src" value="ERRAWIN_IMAGE,ERRBWIN_IMAGE,ERRTHETAWIN_IMAGE"/>
+   <PARAM name="Distort_Keys" datatype="char" arraysize="*" ucd="meta.id;stat.fit.param;src" value="XWIN_IMAGE,YWIN_IMAGE"/>
+   <PARAM name="Distort_Groups" datatype="int" arraysize="2" ucd="meta.id;stat.fit.param" value="1 1"/>
+   <PARAM name="Distort_Degrees" datatype="int" arraysize="1" ucd="meta.id;stat.fit.param" value="3"/>
+   <PARAM name="FocDistort_Degree" datatype="int" ucd="meta.id;stat.fit.param" value="1"/>
+   <PARAM name="Astref_Weight" datatype="double" ucd="meta.id;stat.fit.param" value="1"/>
+   <PARAM name="AstrAccuracy_Type" datatype="char" arraysize="*" ucd="instr.param;obs.param" value="SIGMA-PIXEL"/>
+   <PARAM name="AstrAccuracy_Key" datatype="char" arraysize="*" ucd="meta.id;stat.fit.param;src" value="ASTRACCU"/>
+   <PARAM name="Astr_Accuracy" datatype="double" ucd="meta.id;stat.param;pos" value="0.01"/>
+   <PARAM name="AstrClip_NSigma" datatype="double" ucd="meta.id;stat.param;pos" value="3"/>
+   <PARAM name="Compute_Parallaxes" datatype="boolean" ucd="meta.code;obs.param" value="F"/>
+   <PARAM name="Compute_ProperMotions" datatype="boolean" ucd="meta.code;obs.param" value="F"/>
+   <PARAM name="Correct_ColourShifts" datatype="boolean" ucd="meta.code;obs.param" value="F"/>
+   <PARAM name="Include_AstRefCatalog" datatype="boolean" ucd="meta.code;obs.param" value="T"/>
+   <PARAM name="Astr_FlagsMask" datatype="int" ucd="meta.code.qual" value="252"/>
+   <PARAM name="Astr_ImaFlagsMask" datatype="int" ucd="meta.code.qual" value="0"/>
+   <PARAM name="Solve_Photom" datatype="boolean" ucd="meta.code;phot.calib;obs.param" value="F"/>
+   <PARAM name="MagZero_Out" unit="mag" datatype="double" arraysize="1" ucd="arith.zp;phot.calib;obs.param" value="0"/>
+   <PARAM name="MagZero_IntErr" unit="mag" datatype="double" arraysize="1" ucd="stat.error;phot.mag;obs.param" value="0.01"/>
+   <PARAM name="MagZero_RefErr" unit="mag" datatype="double" arraysize="1" ucd="stat.error;phot.calib;obs.param" value="0.03"/>
+   <PARAM name="PhotInstru_Key" datatype="char" arraysize="*" ucd="meta.id;instr.setup;phot.calib" value="FILTER"/>
+   <PARAM name="MagZero_Key" datatype="char" arraysize="*" ucd="meta.id;arith.zp;phot.calib" value="PHOT_C"/>
+   <PARAM name="ExpoTime_Key" datatype="char" arraysize="*" ucd="meta.id;time.duration.expo" value="EXPTIME"/>
+   <PARAM name="AirMass_Key" datatype="char" arraysize="*" ucd="meta.id;obs.airmass" value="AIRMASS"/>
+   <PARAM name="Extinct_Key" datatype="char" arraysize="*" ucd="meta.id;obs.atmos.extinction" value="PHOT_K"/>
+   <PARAM name="PhotomFlag_Key" datatype="char" arraysize="*" ucd="meta.id;obs.atmos" value="PHOTFLAG"/>
+   <PARAM name="PhotFlux_Key" datatype="char" arraysize="*" ucd="meta.id;phot.flux;src" value="FLUX_AUTO"/>
+   <PARAM name="PhotFluxerr_Key" datatype="char" arraysize="*" ucd="meta.id;phot.flux;src" value="FLUXERR_AUTO"/>
+   <PARAM name="PhotClip_NSigma" datatype="double" ucd="meta.id;stat.param;phot" value="3"/>
+   <PARAM name="Phot_Accuracy" datatype="double" ucd="meta.id;stat.param;phot" value="0.001"/>
+   <PARAM name="Phot_FlagsMask" datatype="int" ucd="meta.code.qual" value="252"/>
+   <PARAM name="Phot_ImaFlagsMask" datatype="int" ucd="meta.code.qual" value="0"/>
+   <PARAM name="SN_Thresholds" datatype="double" arraysize="2" ucd="stat.snr;stat.min;phot.flux;obs.param" value="10 100"/>
+   <PARAM name="FWHM_Thresholds" datatype="double" arraysize="2" ucd="phys.size.diameter;stat.min;instr.det.psf;obs.param" value="0 100"/>
+   <PARAM name="Ellipticity_Max" datatype="double" ucd="src.ellipticity;stat.max;obs.param" value="0.5"/>
+   <PARAM name="Flags_Mask" datatype="int" ucd="meta.code.qual" value="16711920"/>
+   <PARAM name="WeightFlags_Mask" datatype="int" ucd="meta.code.qual" value="255"/>
+   <PARAM name="ImaFlags_Mask" datatype="int" ucd="meta.code.qual" value="0"/>
+   <PARAM name="AHeader_Global" datatype="char" arraysize="*" ucd="meta.id;meta.file" value="scamp.ahead"/>
+   <PARAM name="AHeader_Name" datatype="char" arraysize="*" ucd="meta.id;meta.file" value=""/>
+   <PARAM name="AHeader_Suffix" datatype="char" arraysize="*" ucd="meta.id.part;meta.file" value=".ahead"/>
+   <PARAM name="Header_Name" datatype="char" arraysize="*" ucd="meta.id;meta.file" value=""/>
+   <PARAM name="Header_Suffix" datatype="char" arraysize="*" ucd="meta.id.part;meta.file" value=".head"/>
+   <PARAM name="Header_Type" datatype="char" arraysize="*" ucd="meta.code;meta.file" value="NORMAL"/>
+   <PARAM name="CheckPlot_CKey" datatype="char" arraysize="*" ucd="meta.id;meta.code" value="SCAMPCOL"/>
+   <PARAM name="CheckPlot_Dev" datatype="char" arraysize="*" ucd="meta.code" value="PNG"/>
+   <PARAM name="CheckPlot_Res" datatype="int" arraysize="1" ucd="meta.number;meta" value="0"/>
+   <PARAM name="CheckPlot_AntiAlias" datatype="boolean" ucd="meta.code" value="F"/>
+   <PARAM name="CheckPlot_Type" datatype="char" arraysize="*" ucd="meta.code" value="FGROUPS,DISTORTION,ASTR_INTERROR2D,ASTR_INTERROR1D,ASTR_REFERROR2D,ASTR_REFERROR1D,ASTR_CHI2,PHOT_ERROR"/>
+   <PARAM name="CheckPlot_Name" datatype="char" arraysize="*" ucd="meta.id;meta.file" value="/Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/fgroups,/Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/distort,/Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/astr_interror2d,/Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/astr_interror1d,/Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/astr_referror2d,/Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/astr_referror1d,/Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/astr_chi2,/Users/arazza/DAS/Observations/DuPont/Obs_run2020/catalogs/psphot_error"/>
+   <PARAM name="CheckImage_Type" datatype="char" arraysize="*" ucd="meta.code" value="NONE"/>
+   <PARAM name="CheckImage_Name" datatype="char" arraysize="*" ucd="meta.id;meta.file;meta.fits" value="check.fits"/>
+   <PARAM name="Verbose_Type" datatype="char" arraysize="*" ucd="meta.code" value="NORMAL"/>
+   <PARAM name="Write_XML" datatype="boolean" ucd="meta.code" value="T"/>
+   <PARAM name="XSL_URL" datatype="char" arraysize="*" ucd="meta.ref.url" value="file:///Users/arazza/anaconda3/envs/py311/share/scamp/scamp.xsl"/>
+   <PARAM name="NThreads" datatype="int" ucd="meta.number;meta.software" value="4"/>
+  </RESOURCE>
+ </RESOURCE>
+</RESOURCE>
+</VOTABLE>

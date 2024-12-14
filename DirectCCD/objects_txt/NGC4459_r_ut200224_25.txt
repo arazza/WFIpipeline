@@ -1,0 +1,16 @@
+# NGC4459 in r 
+# Observing Run ut200224_25 
+# first row: RA, DEC (hours, degrees) 
+# other rows: crpix1, crpix2 for each dithered frame (pixel)
+12h29m00.03299054s +13d58m42.82660333s
+1037 1040
+1039 1000
+1040 960
+1117 920
+1152 954
+1153 994
+1117 1033
+1079 1034
+1040 997
+1039 959
+1081 918

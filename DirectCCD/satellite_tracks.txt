@@ -1,0 +1,10 @@
+# Columns:
+# 1 --> filenames
+# 2, 3, 4, 5 --> x1, y1, x2, y2 for line 1
+# 6, 7, 8, 9 --> x3, y3, x4, y4 for line 2
+# Note: the 2 sets of points for each file define the disequation limits for a satellite track
+NGC3507_Ha657_2.fits 1 1567 1680 1903 1 1574 1674 1909
+NGC3507_Ha657_3.fits 1 782 2048 947 1 791 2048 955
+NGC3507_Ha657_7.fits 1 1508 2048 578 1 1521 2048 588
+NGC2090_Ha657_2.fits 1 687 351 2048 1 705 347 2048
+IC1954_r_3.fits 628 1 2048 485 599 1 2048 498
