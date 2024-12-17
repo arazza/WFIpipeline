@@ -1,82 +1,60 @@
-# WFI pipeline
-Pipeline to detrend and calibrate observations with WFI instrument at MPG 2.2-m telescope for PHANGS
+# duPont pipeline
+Pipeline to detrend and calibrate observations with DirectCCD instrument at du Pont (DP) telescope for PHANGS
 
-### SOME VERY BASIC STEP-BY-STEP INSTRUCTIONS ###
-### (1) Put all raw WFI data in a folder following the structure 
-_{path_to_WFI_data}/{night: YYYY-MM-DD}/rawdata_
-### (2) Uncompress fits.Z files with 
+### PRE-PROCESSING ###
+### (1) Put all raw DP data in a folder following the structure 
+_{path_to_DP_data}/{night: utYYYYMMDD_DD}_
+where with _DD_DD_ we indicate the beginning and ending day of the observation.
+### (2) Check with the _list_in_browser.py_ script if the galaxy names and filter correspond
 ```sh
-uncompress *fits.Z
+python list_in_browser.py -p {path_to_DP_raw_data}
 ```
-### (3) Check files with
+### (3) Change galaxy name or filter in the raw data headers
 ```sh
-fitsheader *.fits -f -e 0 -k OBJECT -k "EXPTIME" -k "HIERARCH ESO DPR TYPE" -k "HIERARCH ESO INS FILT1 NAME"
+python pre-processing.py -p {path_to_file_paths} --old_objname {wrong_galname} --new_objname {correct_name} --old_filtnames {filt1} {filt2} {filt3} --new_filtnames r Ha657 Ha663
 ```
+The file where to store the paths to the raw data to update is _DirCCDData_paths.txt_.
 
-### (4) Open one of the raw files and check in which CCD the centre of the galaxy is located and give the number to ***make_objects_txt_WFI.py*** with the optional keyword -c {number}
-### (5) Execute ***make_objects_txt_WFI.py*** locally or with X forwarding, because a ds9 instance is needed
-##### (5b) If this doesn't work well, you can also manually create/edit the output files ***{galaxy}\_Rc_{night}.txt*** and ***{galaxy}\_Ha_{night}.txt***. This file shows the RA/DEC and pixel coordinates of the galaxy centre, but a reference star can also be used.
-##### (5c) The new observations seem to have "_large" and "_small" added to the actual object name in the header keyword. There is a function in ***make_objects_txt_WFI.py*** which removes these suffixes, whith will otherwise make the pipeline break. Call it if necessary with the --chkeys option.
-### (6) Check if it is necessary to exclude CCDs from the reduction and add the numbers in WFIpipeline.config
-### (7) Add galaxy to list in ***PHANGS_WFI_galaxies.txt***
-### (8) Add path to ***paths_to_uncalib_WFI.txt*** in the form 
-_{path_to_WFI_data}/{night YYYY-MM-DD}/processed/output/stacks_ 
-### and to  paths_to_calib_WFI.txt in the form  
-_{path_to_WFI_data}/{night YYYY-MM-DD}/processed/output/stacks/phot_calib_
-### (9) Execute python scripts in the following order:
+### DATA REDUCTION ###
 
+### Execute python scripts in the following order:
 ```sh
-python make_objects_txt_WFI.py {path_to_WFI_data}/{night: YYYY-MM-DD}/rawdata {galaxy} phangs_sample_table_v1p6.fits -c {CCD number}
+python dirCCDreduction.py {path_to_data_folder} {galaxy} {filter} -d --plot
+```
+where _{path_to_data_folder}_ is the one with the structure _utYYYYMMDD_DD_ and where the raw data are stored.
+Note: the raw data are then moved to a folder named _input_.
+```sh
+python make_objects_txt_DP.py {path_to_data_folder} {galaxy}
+```
+The script will look either in the root where the raw data where originaly stored or in the _output/detrend_ where the detrended file are created after having run _dirCCDreduction.py_. In both ways DS9 is opened to save the centre of galaxy pixedl position for each frame in the same way as for WFI data reduction.
+```sh
+python dirCCDastrometry.py {path_to_data_folder} {galaxy} --plot --rotate_image
+```
+Move to the root pipeline folder to run the following scripts working on both WFI and DirectCCD observations: 
+```sh
+python BB_phot_calib.py --ccd_path {path_to_reproj} -w NGC0000 -c {galaxy} 
+```
+_{path_to_reproj}_ is the path to the galaxies reprojected onto the WCS solution. It is created in the main data root.
+```sh
+python NB_phot_calib.py --ccd_path {path_to_reproj} -w NGC0000 -c {galaxy}
 ```
 ```sh
-python CCDred_basic.py {path_to_WFI_data} {night} -o {galaxy} -jmbed
-```
-```sh
-python WFIpipeline.py {path_to_WFI_data} {night} -o {galaxy} -a -c
-```
-```sh
-python newmask_reprojection.py -g {galaxy}
-```
-```sh
-python mask_saturated_pixels.py -g {galaxy}
-```
-```sh
-python BB_phot_calib.py -w {galaxy} -c NGC0000 
-```
-```sh
-python NB_phot_calib.py -w {galaxy} -c NGC0000
-```
-```sh
-python make_galaxy_cutouts_v21.py -g {galaxy}
-```
-```sh
-python PSF_compute_gauss_to_gauss.py -w {galaxy} -c NGC0000 --bkg_subtraction
+python PSF_compute_gauss_to_gauss.py --ccd_path {path_to_calib} -w NGC0000 -c {galaxy} --bkg_subtraction
 # (only the background subtraction part as indicated in the tutorial)
 ```
+where _{path_to_calib} is the output folder wheere the photometrically calibrated galaxies are saved.
 ```sh
-python weight_combine_v23.py --wfi_galaxies {galaxy} --ccd_galaxies NGC0000
+python weight_combine_v23.py --ccd_path {path_to_data_folder} --wfi_galaxies NGC0000 --ccd_galaxies {galaxy}
 ```
 
 ### POST-PROCESSING SCRIPTS FOR ASTROMETRIC REGISTRATION ###
-This set of four scripts allows a further astrometric registration towards zero offset with Gaia DR2 stars matched with the stars in the WFI images.
+This set of two scripts allows a further astrometric registration towards zero offset with Gaia DR2 stars matched with the stars in the DP images.
 Execute the scripts in the following order:
 ```sh
-python Bkg_subtraction_full_FOV.py --wfi_fullFOV_path {path_to_WFI_calib} -w {galaxy}
-```
-to create the background subtracted images of each calibrated frame. An argument ***--frame_number {number_of_frame}*** can be added to start the computation from one specific frame in case of failure for running out of memory. 
-```sh
-python weight_combine_v23.py --wfi_path {path_to_WFI_calib} --wfi_galaxies {galaxy} --full_FOV
-```
-to combine the background-subtracted full FOV images.
-```sh
-python astrometry_tables_WFI.py --path {path_to_final_full_FOV} --tbl_path {path_to_pipeline_folder}/WFI_tables --phot_sel --wfi_galaxies {galaxy} --gaia_dr GAIA-DR2
+python astrometry_tables_DP.py --path {path_to_final_images} --tbl_path {path_to_pipeline_folder}/CCD_tables --phot_sel --ccd_galaxies {galaxy} --gaia_dr GAIA-DR2
 ```
 to write a table of Gaia DR2 stars in the galaxy field by reading the final ***comb*** images.
 ```sh
-python astrometry_registration_plot_WFI.py --path {path_to_final_full_FOV} --tbl_path {path_to_pipeline_folder}/WFI_tables --plot_path {path_to_pipeline_folder}/WFI_astrometry_plots --phot_sel --wfi_galaxies {galaxy} --gaia_dr GAIA-DR2 --correct_astrometry
+python astrometry_registration_plot_DP.py --path {path_to_final_images} --tbl_path {path_to_pipeline_folder}/CCD_tables --plot_path {path_to_pipeline_folder}/CCD_astrometry_plots --phot_sel --ccd_galaxies {galaxy} --gaia_dr GAIA-DR2 --correct_astrometry
 ```
-to plot the RA-DEC plots of the offset positions between Gaia DR2 stars and the stars in WFI images ans to apply the mean offset to re-register the astrometry of the full FOV images
-```sh
-python astrometry_registration_plot_WFI.py --path {path_to_final_cutouts} --tbl_path {path_to_pipeline_folder}/WFI_tables --plot_path {path_to_pipeline_folder}/WFI_astrometry_plots --phot_sel --wfi_galaxies {galaxy} --gaia_dr GAIA-DR2 --correct_astrometry --cutouts
-```
-to do the same as above but to register the same astrometric solution found from the ***comb*** images into the cutouts.
+to plot the RA-DEC plots of the offset positions between Gaia DR2 stars and the stars in DP images and to apply the mean offset to re-register the astrometry of the final images.
