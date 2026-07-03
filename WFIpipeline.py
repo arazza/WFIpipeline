@@ -1,13 +1,13 @@
 # coding: utf-8
 '''
-This code is an adaptation of the original WFI pipeline used to detrend, 
+This code is an adaptation of the original WFI pipeline used to detrend,
 astrometrically register and coadd WFI raw images.
 
 The adaptation is meant to reduce two spectrophotometric standard star fields,
 namely LTT3864 and LTT2415.
 
 These parts (no longer necessary) are commented out:
-- check if the observation date or data folder are valid (existing) 
+- check if the observation date or data folder are valid (existing)
 - all the calls and argumments connected to the script to re-organize WFI data
 '''
 
@@ -27,11 +27,11 @@ from astromatic_pipeline import aw_pipeline
 # Main
 
 if __name__ == "__main__":
-    
+
     start_time = timeit.default_timer()
-    
+
     parser = argparse.ArgumentParser(prefix_chars='-+')
-    
+
     parser.add_argument('pathtodata', help='path to data and/or to observation dates folders')
     parser.add_argument('obsdate', help='observation date containing data to reduce')
     #parser.add_argument('-r', '--read', action="store_true", default=False, help='read and organize WFI archive data')
@@ -46,11 +46,11 @@ if __name__ == "__main__":
     parser.add_argument('+a', '--ref_catalog', action="store", default='GAIA-DR1', help='find the astrometric solution with the given reference catalog (default GAIA-DR1)')
     parser.add_argument('+f', '--ref_file', action="store", default='None', help='reference catalog file name')
     parser.add_argument('-c', '--coadd', action="store_true", default=False, help='resample the images to create the mosaics and coadd them together')
-    
+
     parser.add_argument('-v', '--version', action='version', version='%(prog)s 2.0')
-    
+
     args = parser.parse_args()
-    
+
     print ('\n')
     print ('****************************')
     print ('******* WFI Pipeline *******')
@@ -58,7 +58,7 @@ if __name__ == "__main__":
     print ('\n')
     print ('\n')
     print ('\n')
-    
+
     ## Check whether pathtodata and obsdate are correct
     #if not os.path.exists(args.pathtodata) :
     #    sys.exit('%s is not a valid path to WFI data!'%args.pathtodata)
@@ -112,15 +112,15 @@ if __name__ == "__main__":
                 args.ref_file = raw_input('Reference catalog file name : ')
         if args.ref_catalog in list_ref_catalog :
             aw_pipeline(args, config)
-        else : 
+        else :
             print ('Write a valid reference catalog for the astrometry!')
             for c in list_ref_catalog :
                 print (c),
             while args.ref_catalog not in list_ref_catalog :
                 args.ref_catalog = raw_input('>>> ')
             aw_pipeline(args, config)
-        
-        
+
+
 
     elapsed = timeit.default_timer() - start_time
     m, s = divmod(elapsed, 60)

@@ -207,7 +207,7 @@ class ImageStars (object) :
             self.tbl[col].info.format = '%.4f'
 
 
-    def star_positions (self, instr) :
+    def star_positions (self, instr, r=1.2) :
         '''
         This method filter the positions of stars too close to each other or too close to masked pixels.
         It instantiates and mask an ellipse around the galaxy.
@@ -221,7 +221,7 @@ class ImageStars (object) :
         myellipse = GalaxyEllipse(self.obj, 'Rc', self.filename, self.mask)
         myellipse.get_ellipse()
         myellipse.ellipse_to_pixel(instr)
-        myellipse.mask_ellipse(r=1.2)
+        myellipse.mask_ellipse(r)
 
         # Mask the stars
         d1 = 12    # equivalent to typical FWHM * 3
@@ -411,9 +411,9 @@ class GAIAStars (object) :
             mask2 = (result[0]['e_Gmag']<0.003)&(result[0]['e_BPmag']<0.01)&(result[0]['e_RPmag']<0.01)
         # check of consistency for the excess factor as in https://www.aanda.org/articles/aa/full_html/2018/08/aa32756-18/F17.html
         if self.instr == 'WFI' :
-            mask3 = (result[0]['E_BR_RP_']<1.5+0.03*(result[0]['BPmag']-result[0]['RPmag'])**2.)
+            mask3 = (result[0]['E(BR/RP)']<1.5+0.03*(result[0]['BPmag']-result[0]['RPmag'])**2.)
         if self.instr == 'CCD' :
-            mask3 = (result[0]['E_BR_RP_']<1.3+0.06*(result[0]['BPmag']-result[0]['RPmag'])**2.)
+            mask3 = (result[0]['E(BR/RP)']<1.3+0.06*(result[0]['BPmag']-result[0]['RPmag'])**2.)
 
         #gaia_tbl = result[0][mask1&mask2]
         #gaia_tbl = result[0][mask1&mask2&mask3]
@@ -537,7 +537,7 @@ class ZPParams (object) :
         tbl_filename = '%s_%s_%s_phot_table.dat'%(stars.obj,stars.filt,stars.filenum)
 
         stars.tbl.write(stars.tbl_path.joinpath(tbl_filename), format='ascii.commented_header', overwrite=True)
-        
+
         # Plot 1
         stars.ax2.errorbar (gaia_r, iZP, xerr=err_gaia_r, yerr=sigma_iZP, fmt='none', ms=4, alpha=0.5, ecolor='lightgray', zorder=1)
         im = stars.ax2.scatter (gaia_r, iZP, c=gaia_color, marker='o', s=30, alpha=0.5, zorder=2)
@@ -634,11 +634,11 @@ class ZPParams (object) :
 
 
 if __name__ == "__main__":
-    
+
     start_time = timeit.default_timer()
-    
+
     wfi_galaxies = list(np.loadtxt('PHANGS_WFI_galaxies.txt', dtype='str', unpack=True))
-    
+
     ccd_galaxies = ['NGC0685', 'NGC1317', 'NGC1326', 'IC1954', 'IC1993', 'NGC1511', 'NGC1546', 'NGC1559',
                       'NGC1809',
                       'NGC1792', 'NGC2090', 'NGC2283', 'NGC2566', 'NGC2775', 'NGC3059', 'NGC3507',
@@ -658,11 +658,16 @@ if __name__ == "__main__":
     parser.add_argument('-c', '--ccd', nargs='*', type=str, default=ccd_galaxies,
         help='list of selected CCD galaxies (type a non-valid galaxy to avoid calibrating CCD)')
     parser.add_argument('-f', '--fwhm', action='store', type=float, default=4.0, help='FWHM to be used for IRAFStarFinder')
+    parser.add_argument('-e', '--ell_radius', action='store', default=1.2, help='galaxy ellipse increasing factor')
     parser.add_argument('--snr', action='store', type=float, default=20., help='threshold for rejecting low SNR as computed with the aperture photometry')
 
     parser.add_argument('--g_corr', action='store_true', default=False, help='apply Gaia DR2 G-band correction in Casagrande (2018)')
 
     args = parser.parse_args()
+
+    # Instantiate the ellipse radius for the star selection
+
+    r = args.ell_radius
 
     # Instantiate the lists of galaxies
 
@@ -761,7 +766,7 @@ if __name__ == "__main__":
                     stars.match_with_gaia(gs)
 
                     # Create tuples of star positions and filter those too close to each other or to masked pixels
-                    stars.star_positions('WFI')
+                    stars.star_positions('WFI', r)
 
                     # Aperture photometry
                     stars.annulus_photometry(args.snr)
@@ -842,7 +847,7 @@ if __name__ == "__main__":
                     stars.match_with_gaia(gs)
 
                     # Create tuples of star positions and filter those too close to each other or to masked pixels
-                    stars.star_positions('CCD')
+                    stars.star_positions('CCD', r)
 
                     # Aperture photometry
                     stars.annulus_photometry(args.snr)

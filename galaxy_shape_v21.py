@@ -17,7 +17,7 @@ from astroquery.simbad import Simbad
 from astroquery.vizier import Vizier
 
 from astropy.coordinates import SkyCoord, Angle
-import astropy.units as u 
+import astropy.units as u
 from astropy.wcs import WCS
 from astropy.io import fits
 from astropy.nddata import Cutout2D
@@ -40,22 +40,22 @@ from cubehelix_palette import PaperPalette
 
 
 class GalaxyEllipse (object) :
-    
-    
+
+
     def __init__ (self, name, filt, filename, bpm) :
-        
+
         self.name = name
         self.filter = filt
         self.data = fits.open(str(filename))[0].data
         self.bpm = bpm
         self.wcs = WCS(str(filename))
-        
-    
+
+
     def get_ellipse (self) :
-            
+
         phangs_tbl = Table.read('phangs_sample_table_v1p6.fits')
         #phangs_tbl = Table.read('/Users/arazza/DAS/Papers_in_prep/PHANGS/Halpha_Survey/All_plots/Files/phangs_sample_table_v1p6.fits')
-        
+        print(self.name)
         try:
             if self.name=='M83':
                 obj = 'NGC5236'
@@ -67,17 +67,16 @@ class GalaxyEllipse (object) :
                 obj = self.name
             pgc = [phangs_tbl['pgc'][i] for i,galname in enumerate(phangs_tbl['name']) if galname.strip()==obj.lower()][0]
             my_gal = phangs_tbl['pgc']==pgc
-    
+
             self.a = Angle(phangs_tbl['size_r25'][my_gal][0] * u.arcsec).to(u.arcmin)
             self.b = self.a * np.cos(Angle(phangs_tbl['orient_incl'][my_gal][0] * u.deg).radian)
             self.pa = phangs_tbl['orient_posang'][my_gal][0] * u.deg
             self.obj_coord = SkyCoord (ra=phangs_tbl['orient_ra'][my_gal][0], dec=phangs_tbl['orient_dec'][my_gal][0], unit=(u.deg, u.deg))
             print('Taking galaxy parameters from the PHANGS sample table.')
-        
+
         except:
             print('Galaxy is not in PHANGS sample.')
             try:
-
                 data=fits.open('CGS.fits')[1].data
                 if self.name.startswith('NGC'):
                     obj = 'NGC '+str(int(self.name[3:]))
@@ -87,29 +86,58 @@ class GalaxyEllipse (object) :
                     obj = 'M '+self.name[1:]
                 elif self.name.startswith('PGC'):
                     obj = 'PGC '+str(int(self.name[3:]))
+                elif self.name.startswith('ESO'):
+                    text = self.name[3:].split('-')
+                    obj = f'ESO {text[0]}-G{int(text[1]):03d}'
 
                 my_gal = data['Name']==obj
-                
+
                 self.a = Angle(data['D25'][my_gal][0]*u.arcmin)
                 self.b = self.a * (1-data['ell'][my_gal][0])
                 self.pa = data['PA'][my_gal][0] * u.deg
                 self.obj_coord = SkyCoord(ra=data['_RAJ2000'][my_gal][0],dec=data['_DEJ2000'][my_gal][0],unit=(u.deg,u.deg))
                 print('Taking galaxy parameters from the CGS table.')
-                
+
             except:
                 print('Galaxy is not in CGS sample.')
                 try:
                     data=fits.open('RC3.fits')[1].data
-                    if self.name.startswith('NGC') and self.name != 'NGC0864':
+                    if self.name=='NGC4437':
+                        obj = 'NGC  4517'
+                    elif self.name=='NGC1551':
+                        obj = 'NGC  1550'
+                    elif self.name.startswith('NGC') and not self.name.startswith('NGC0'):
                         obj = 'NGC  '+self.name[3:]
-                    elif self.name.startswith('IC') and self.name != 'IC1727':
+                    elif self.name.startswith('NGC0'):
+                    	obj = 'NGC   '+self.name[4:]
+                    elif self.name.startswith('IC') and self.name != 'IC1727' and not self.name.startswith('IC0'):
                         obj = 'IC    '+self.name[2:]
+                    elif self.name.startswith('IC0'):
+                        obj = 'IC    '+self.name[3:]
                     elif self.name=='ESO486-021':
                         obj = 'PGC16643'
                     elif self.name=='IC1727':
                         obj = 'PGC 6574'
                     elif self.name=='NGC0864':
                         obj = 'PGC 8631'
+                    elif self.name=='UGC5340':
+                        obj = 'PGC28714'
+                    elif self.name=='UGC0685':
+                    	obj = 'PGC 3974'
+                    elif self.name=='ESO433-008':
+                    	obj = 'PGC25943'                        
+                    elif self.name=='ESO443-042':
+                    	obj = 'PGC45098'
+                    elif self.name=='ESO512-012':
+                    	obj = 'PGC52411'
+                    elif self.name=='ESO562-014':
+                    	obj = 'PGC23992'
+                    elif self.name=='PGC049940':
+                    	obj = 'PGC49940'
+                    elif self.name=='PGC028308':
+                    	obj = 'PGC28308'
+                    elif self.name=='ESO443-021':
+                    	obj = 'PGC44663'
 
                     my_gal = data['name']==obj
                     if my_gal.sum() == 0:
@@ -128,7 +156,7 @@ class GalaxyEllipse (object) :
                 except Exception:
                     print('Galaxy is not in RC3 sample. Please provide parameters manually.')
                     raise
-            
+
         print('Position of %s : '%self.name, self.obj_coord.to_string('hmsdms'))
         print('Semi-major axis : ',round(self.a.value, 3) * u.arcmin)
         print('Semi-minor axis : ',round(self.b.value, 3) * u.arcmin)
@@ -147,11 +175,11 @@ class GalaxyEllipse (object) :
         self.b_pix = self.b.to(u.arcsec) / pixel_scale
 
         print('Position of %s (pixels) : '%self.name, np.round(self.x0, 2), np.round(self.y0, 2))
-        print('Semi-major axis (pixels) : ', round(self.a_pix.value, 2)) 
+        print('Semi-major axis (pixels) : ', round(self.a_pix.value, 2))
         print('Semi-minor axis (pixels) : ', round(self.b_pix.value, 2))
-        
 
-    
+
+
     def mask_ellipse (self, r) :
 
         def rotate(origin, point, angle):
@@ -301,9 +329,9 @@ class GalaxyEllipse (object) :
             medians.append(median_sigclip)
 
             aper.plot(ax=ax1, color='C1', lw=0.7)
-        
+
         rad_aper.plot(ax=ax1, color='k', lw=1.0, zorder=2)
-        
+
         ax1.set_xlabel('x [pix]')
         ax1.set_ylabel('y [pix]')
 
@@ -342,7 +370,10 @@ class GalaxyEllipse (object) :
             if not isinstance(median, np.ma.core.MaskedConstant) :
 
                 with open(table_file, 'a') as f :
-                    f.write('%s %s %s\n'%(round(radius, 1), round(median, 6), round((median-last_median)/last_median*100, 2)))
+                    try:
+                        f.write('%s %s %s\n'%(round(radius, 1), round(median, 6), round((median-last_median)/last_median*100, 2)))
+                    except:
+                        f.write('%s %s %s\n'%(round(radius, 1), round(median, 6), np.nan))
 
 
 
