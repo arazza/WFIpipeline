@@ -27,7 +27,7 @@ from astropy.utils.data import conf
 
 from scipy import ndimage
 
-from photutils import IRAFStarFinder
+from photutils.detection import IRAFStarFinder
 
 from galaxy_shape_v21 import GalaxyEllipse
 
@@ -157,7 +157,10 @@ class GAIAStars (object) :
         
         new_limit = 60  # sets the timeout to 60s
         with conf.set_temp('remote_timeout', new_limit):
-            obj_coord = SkyCoord.from_name(self.obj)
+            if self.obj == 'CenA':
+                obj_coord = SkyCoord.from_name('NGC5128')
+            else:
+                obj_coord = SkyCoord.from_name(self.obj)
         
         vizier = Vizier(columns=['*', 'E(BR/RP)'], catalog=self.catname, row_limit=-1, timeout=60)
         result = vizier.query_region(obj_coord, radius=1*u.deg)
@@ -170,7 +173,7 @@ class GAIAStars (object) :
             # cuts on photometric errors as in https://gea.esac.esa.int/archive/documentation/GDR2/Data_processing/chap_cu5pho/sec_cu5pho_calibr/ssec_cu5pho_PhotTransf.html
             mask2 = (result[0]['e_Gmag']<0.01)&(result[0]['e_BPmag']<0.01)&(result[0]['e_RPmag']<0.01)
             # check of consistency for the excess factor as in https://www.aanda.org/articles/aa/full_html/2018/08/aa32756-18/F17.html
-            mask3 = (result[0]['E_BR_RP_']<1.5+0.03*(result[0]['BPmag']-result[0]['RPmag'])**2.)
+            mask3 = (result[0]['E(BR/RP)']<1.5+0.03*(result[0]['BPmag']-result[0]['RPmag'])**2.)
             
             gaia_tbl = result[0][mask1&mask3]
             

@@ -121,7 +121,7 @@ class WFIMosaic (object) :
         self.cutouts_plots_folder = self.cutout_folder.joinpath('cutout_plots')
         self.cutouts_plots_folder.mkdir(exist_ok=True)
 
-        fig.savefig(self.cutouts_plots_folder.joinpath('%s_%s_frame%s_cutout_plot.png'%(self.obj,self.filter,self.filenum)))
+        #fig.savefig(self.cutouts_plots_folder.joinpath('%s_%s_frame%s_cutout_plot.png'%(self.obj,self.filter,self.filenum)))
 
         plt.close()
 
@@ -196,6 +196,7 @@ if __name__ == "__main__":
 
             if mosaics == [] :
                 continue
+
 
             myell = GalaxyEllipse(obj, filt, mosaics[0], fits.open(maskframes[0])[0].data)
             myell.get_ellipse()

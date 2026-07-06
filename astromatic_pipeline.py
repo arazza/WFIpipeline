@@ -394,14 +394,12 @@ def astrometry (paths, config, exposures, stack_name, ref_catalog, ref_band='DEF
     print ('\nRunning SCAMP')
     print ('Finding astrometric solution ...\n')
     os.system (cmd_scamp)
-
     #img_coord, cat_coord, idximg, idxcat = refine_astrometry (paths, ref_catalog)
 
 
     # Create wcs-corrected image frames, with updated headers, mask and error frames
 
     for files in exposures :
-
         # load image
         hdu = fits.open(files['image'])
         rwcs_data = hdu[0].data

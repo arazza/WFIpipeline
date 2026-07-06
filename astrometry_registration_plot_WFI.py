@@ -411,7 +411,7 @@ def make_astrometry_plots (sep_dic, plot_path, filt, string, phot_sel, show_insi
     ax1_histx.hist(wfi_ra_sep, bins=bins, color=color2)
     ax1_histy.hist(wfi_de_sep, bins=bins, orientation='horizontal', color=color2)
     
-    plt.show()
+    #plt.show()
 
     if phot_sel :
         string = string + '_phot_sel'

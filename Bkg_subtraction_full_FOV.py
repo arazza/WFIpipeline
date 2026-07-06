@@ -30,10 +30,10 @@ from scipy.ndimage.filters import generic_filter
 from scipy.interpolate import griddata
 from scipy.optimize import least_squares
 
-from photutils import Background2D, detect_threshold, detect_sources
-from photutils.background import SExtractorBackground, StdBackgroundRMS, BkgZoomInterpolator
+from photutils.segmentation import detect_threshold, detect_sources
+from photutils.background import Background2D, SExtractorBackground, StdBackgroundRMS, BkgZoomInterpolator
 
-from photutils import EllipticalAperture
+from photutils.aperture import EllipticalAperture
 
 from matplotlib import pyplot as plt
 import matplotlib.gridspec as gridspec
@@ -43,6 +43,8 @@ import seaborn as sns
 
 from astropy.modeling import models, fitting
 from astropy.stats import sigma_clipped_stats
+
+from configparser import ConfigParser
 
 from galaxy_shape_v21 import GalaxyEllipse
 from mask_ds9_regions import DS9Reg
@@ -85,13 +87,20 @@ class SkyImage (object) :
     def compute_bkg (self, myellipse, exclude_percentile=10.0, dilate_size=11) :
 
         def mask_sources (data, input_mask, snr, dilate_size) :
-
+            
             sigclip_sigma=3.0
             #sigclip_sigma=2.0  
             sigclip_iters=5
             mean, median, std = sigma_clipped_stats(data, mask=input_mask, sigma=sigclip_sigma, maxiters=sigclip_iters)    
-            print (mean, median, std)
+            print(mean, median, std)
             
+            print("data shape:", data.shape)
+            print("mask shape:", input_mask.shape)
+            print("masked pixels:", np.sum(input_mask))
+            print("total pixels:", input_mask.size)
+            print("all masked?:", np.all(input_mask))
+            print("finite data pixels:", np.sum(np.isfinite(data)))
+
             threshold = detect_threshold(data, snr, background=median, error=std, mask=input_mask)
             print('Threshold --> ', threshold[0][0])
             
@@ -106,7 +115,8 @@ class SkyImage (object) :
 
         
         print ('\nComputing the sky for %s ...\n'%self.path.stem)
-    
+        print("all masked bpm?:", np.all(self.bpm))
+        print("all masked ellipse?:", np.all(myellipse.mask))
         # Mask all the sources above 2*snr
         print ('Masking the image sources ...')
         self.mask = mask_sources (self.data, self.bpm+myellipse.mask, 2, dilate_size)
@@ -119,7 +129,7 @@ class SkyImage (object) :
         self.bkg = Background2D (self.data, (64, 64), mask=self.mask, exclude_percentile=exclude_percentile, filter_size=(3, 3), interpolator=interpolator)#, sigma_clip=None)  
 
 
-    def plot_bkg (self, myellipse) :
+    def plot_bkg (self, myellipse, outpath) :
 
         cmap = sns.cubehelix_palette(dark=.3, light=.8, as_cmap=True)
         
@@ -180,10 +190,10 @@ class SkyImage (object) :
         
         fig1.suptitle('%s %s frame %s '%(self.obj, self.filter, self.filenum))
 
-        Path('bkg').mkdir(exist_ok=True)
-        Path('bkg').joinpath(self.obj).mkdir(exist_ok=True)
+        outpath.joinpath('bkg').mkdir(exist_ok=True)
+        outpath.joinpath('bkg').joinpath(self.obj).mkdir(exist_ok=True)
     
-        fig1.savefig('bkg/%s/%s_%s_%s_'%(self.obj, self.obj, self.filter, self.filenum)+'bkg_v2_fullFOV.png')
+        fig1.savefig(str(outpath.joinpath('bkg/%s/%s_%s_%s_'%(self.obj, self.obj, self.filter, self.filenum)+'bkg_v2_fullFOV.png')))
         
         print('\nClosing plots ..')
         plt.close()
@@ -207,6 +217,9 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     
+    config = ConfigParser()
+    config.read('WFIpipeline.config')
+
 
     ##### Main loop #####
             
@@ -214,6 +227,8 @@ if __name__ == "__main__":
 
     wfi_galnames = np.atleast_1d(wfi_galnames)
     wfi_paths = np.atleast_1d(wfi_paths)
+    
+    outpath = Path(config.get('Paths','data_products'))
     
     for gal, p in zip(wfi_galnames, wfi_paths) :
     
@@ -270,7 +285,7 @@ if __name__ == "__main__":
                 
                 sky = SkyImage(scienceframe, maskframe, errorframe, ds9_reg.mask, gal, filt)
                 
-                myellipse = sky.elliptical_aperture(r=1.5, instr='WFI')
+                myellipse = sky.elliptical_aperture(r=1.0, instr='WFI')
                 
                 sky.compute_bkg(myellipse)
                 
@@ -280,7 +295,7 @@ if __name__ == "__main__":
                 
                 # Plot the result
                 
-                sky.plot_bkg(myellipse)
+                sky.plot_bkg(myellipse, outpath)
                  
                 # Saving the file
                  

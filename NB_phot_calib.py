@@ -188,10 +188,15 @@ if __name__ == "__main__":
         help='list of selected WFI galaxies (type a non-valid galaxy to avoid calibrating WFI)')
     parser.add_argument('-c', '--ccd', nargs='*', type=str, default=ccd_galaxies,
         help='list of selected CCD galaxies (type a non-valid galaxy to avoid calibrating CCD)')
+    parser.add_argument('-e', '--ell_radius', action='store', default=1.2, help='galaxy ellipse increasing factor')
     parser.add_argument('-f', '--fwhm', action='store', type=float, default=4.0, help='FWHM to be used for IRAFStarFinder')
     parser.add_argument('--snr', action='store', type=float, default=20., help='threshold for rejecting low SNR as computed with the aperture photometry')
 
     args = parser.parse_args()
+
+    # Instantiate the ellipse radius for the star selection
+
+    r = args.ell_radius
 
     # Instantiate the lists of galaxies
 
@@ -278,7 +283,7 @@ if __name__ == "__main__":
                     stars.merge_masks()
 
                     # Find stars in the image
-                    stars.find_image_stars(threshold_nstd=5.)
+                    stars.find_image_stars(threshold_nstd=5.0)
 
                     # Instantiate Gaia stars
                     gs = GAIAStars(stars.obj, stars.instr)
@@ -288,7 +293,7 @@ if __name__ == "__main__":
                     stars.match_with_gaia(gs)
 
                     # Create tuples of star positions and filter those too close to each other or to masked pixels
-                    stars.star_positions('WFI')
+                    stars.star_positions('WFI', r)
 
                     # Aperture photometry
                     stars.annulus_photometry(args.snr)
@@ -375,7 +380,7 @@ if __name__ == "__main__":
                     stars.match_with_gaia(gs)
 
                     # Create tuples of star positions and filter those too close to each other or to masked pixels
-                    stars.star_positions('CCD')
+                    stars.star_positions('CCD', r)
 
                     # Aperture photometry
                     stars.annulus_photometry(args.snr)
