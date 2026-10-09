@@ -75,7 +75,7 @@ to write a table of Gaia DR2 stars in the galaxy field by reading the final ***c
 ```sh
 python astrometry_registration_plot_WFI.py --path {path_to_final_full_FOV} --tbl_path {path_to_pipeline_folder}/WFI_tables --plot_path {path_to_pipeline_folder}/WFI_astrometry_plots --phot_sel --wfi_galaxies {galaxy} --gaia_dr GAIA-DR2 --correct_astrometry
 ```
-to plot the RA-DEC plots of the offset positions between Gaia DR2 stars and the stars in WFI images ans to apply the mean offset to re-register the astrometry of the full FOV images
+to produce the RA-DEC plots of the offset positions between Gaia DR2 stars and the stars in WFI images and to apply the mean offset to re-register the astrometry of the full FOV images
 ```sh
 python astrometry_registration_plot_WFI.py --path {path_to_final_cutouts} --tbl_path {path_to_pipeline_folder}/WFI_tables --plot_path {path_to_pipeline_folder}/WFI_astrometry_plots --phot_sel --wfi_galaxies {galaxy} --gaia_dr GAIA-DR2 --correct_astrometry --cutouts
 ```
