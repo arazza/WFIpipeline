@@ -170,7 +170,8 @@ class GAIAStars (object) :
             # cuts on photometric errors as in https://gea.esac.esa.int/archive/documentation/GDR2/Data_processing/chap_cu5pho/sec_cu5pho_calibr/ssec_cu5pho_PhotTransf.html
             mask2 = (result[0]['e_Gmag']<0.01)&(result[0]['e_BPmag']<0.01)&(result[0]['e_RPmag']<0.01)
             # check of consistency for the excess factor as in https://www.aanda.org/articles/aa/full_html/2018/08/aa32756-18/F17.html
-            mask3 = (result[0]['E_BR_RP_']<1.3+0.06*(result[0]['BPmag']-result[0]['RPmag'])**2.)
+            col = 'E(BR/RP)' if 'E(BR/RP)' in result[0].colnames else 'E_BR_RP_'    # to fix column name format returned by VizieR
+            mask3 = (result[0][col]<1.3+0.06*(result[0]['BPmag']-result[0]['RPmag'])**2.)
             
             gaia_tbl = result[0][mask1&mask3]
             

@@ -397,8 +397,9 @@ class GAIAStars (object) :
         new_limit = 60  # sets the timeout to 60s
         with conf.set_temp('remote_timeout', new_limit):
             obj_coord = SkyCoord.from_name(self.obj)
-
+        
         vizier = Vizier(columns=['*', 'E(BR/RP)'], catalog='Gaia-DR2', row_limit=-1, timeout=60)
+
         result = vizier.query_region(obj_coord, radius=1*u.deg)
 
         # cuts on colours as in https://gea.esac.esa.int/archive/documentation/GDR2/Data_processing/chap_cu5pho/sec_cu5pho_calibr/ssec_cu5pho_PhotTransf.html
@@ -410,10 +411,11 @@ class GAIAStars (object) :
         if self.instr == 'CCD' :
             mask2 = (result[0]['e_Gmag']<0.003)&(result[0]['e_BPmag']<0.01)&(result[0]['e_RPmag']<0.01)
         # check of consistency for the excess factor as in https://www.aanda.org/articles/aa/full_html/2018/08/aa32756-18/F17.html
+        col = 'E(BR/RP)' if 'E(BR/RP)' in result[0].colnames else 'E_BR_RP_'    # to fix column name format returned by VizieR   
         if self.instr == 'WFI' :
-            mask3 = (result[0]['E(BR/RP)']<1.5+0.03*(result[0]['BPmag']-result[0]['RPmag'])**2.)
+            mask3 = (result[0][col]<1.5+0.03*(result[0]['BPmag']-result[0]['RPmag'])**2.)
         if self.instr == 'CCD' :
-            mask3 = (result[0]['E(BR/RP)']<1.3+0.06*(result[0]['BPmag']-result[0]['RPmag'])**2.)
+            mask3 = (result[0][col]<1.3+0.06*(result[0]['BPmag']-result[0]['RPmag'])**2.)
 
         #gaia_tbl = result[0][mask1&mask2]
         #gaia_tbl = result[0][mask1&mask2&mask3]
