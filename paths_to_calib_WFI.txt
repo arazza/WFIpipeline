@@ -51,7 +51,7 @@ ESO219-21 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2024-03-11
 #IC5201 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2024-10-01/processed/output/stacks/phot_calib
 #UGC0685 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2024-10-01/processed/output/stacks/phot_calib
 #NGC1313 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/1999-12-17/processed/output/stacks/phot_calib
-NGC300 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/1999-07-30/processed/output/stacks/phot_calib
+#NGC300 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/1999-07-30/processed/output/stacks/phot_calib
 #NGC300 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/1999-07-31/processed/output/stacks/phot_calib
 #NGC4594 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2009-07-06/processed/output/stacks/phot_calib
 #NGC4697 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2006-04-06/processed/output/stacks/phot_calib
@@ -68,7 +68,7 @@ NGC3621 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2025-03-25/p
 NGC4437 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2025-03-25/processed/output/stacks/phot_calib
 NGC4818 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2025-03-25/processed/output/stacks/phot_calib
 NGC4064 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2025-03-26/processed/output/stacks/phot_calib
-NGC4698 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2025-03-26/processed/output/stacks/phot_calib
+#NGC4698 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2025-03-26/processed/output/stacks/phot_calib
 NGC5921 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2025-03-26/processed/output/stacks/phot_calib
 NGC4394 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2025-03-27/processed/output/stacks/phot_calib
 NGC3368 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2025-03-28/processed/output/stacks/phot_calib
@@ -106,3 +106,20 @@ NGC1551 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2008-09-22/p
 NGC3091 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2006-04-04/processed/output/stacks/phot_calib
 NGC3115 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2000-04-09/processed/output/stacks/phot_calib
 NGC3585 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2000-04-03/processed/output/stacks/phot_calib
+
+# Galaxies for re-reduction on Alessandro's local drive (note: the path is not used by weight_combine_v23.py)
+NGC1055 /Users/arazza/DAS/Observations/NGC253/pipeline_scripts/cutout_images
+NGC1097 /Users/arazza/DAS/Observations/NGC253/pipeline_scripts/cutout_images
+NGC1808 /Users/arazza/DAS/Observations/NGC253/pipeline_scripts/cutout_images
+NGC0660 /Users/arazza/DAS/Observations/NGC253/pipeline_scripts/cutout_images
+NGC2903 /Users/arazza/DAS/Observations/NGC253/pipeline_scripts/cutout_images
+NGC3628 /Users/arazza/DAS/Observations/NGC253/pipeline_scripts/cutout_images
+NGC4945 /Users/arazza/DAS/Observations/NGC253/pipeline_scripts/cutout_images
+
+# M83 (flagged galaxy) and NGC4698 (test galaxy for M83) re-reduction
+M83 /Volumes/My_Passport/WFIDATA/WFI_DATA_Extended/2002-06-16/processed/output/stacks/phot_calib
+NGC4698 /Volumes/My_Passport/WFIDATA/WFI_DATA_Extended/2025-03-26/processed/output/stacks/phot_calib
+
+# NGC300 re-reduction
+#NGC300 /Volumes/My_Passport/WFIDATA/WFI_DATA_Extended/1999-07-30/processed/output/stacks/phot_calib
+NGC300 /Volumes/My_Passport/WFIDATA/WFI_DATA_Extended/1999-07-31/processed/output/stacks/phot_calib

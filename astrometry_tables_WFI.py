@@ -58,7 +58,7 @@ class WFIImage (object) :
         print (self.image_mean, self.image_median, self.image_std)
 
         
-    def find_image_stars (self, ellipse) :
+    def find_image_stars (self, ellipse, r) :
         '''
         This method computes the image threshold to find stars with 
         IRAFFindStars algorithm. An astropy Table is created with pixel positions 
@@ -77,7 +77,7 @@ class WFIImage (object) :
         self.myellipse = GalaxyEllipse(self.obj, self.filter, self.filename, mask)
         self.myellipse.get_ellipse()
         self.myellipse.ellipse_to_pixel('WFI')
-        self.myellipse.mask_ellipse(1.2)
+        self.myellipse.mask_ellipse(r)
         
         if ellipse :
             
@@ -201,6 +201,7 @@ if __name__ == "__main__":
     parser.add_argument('--gaia_dr', action='store', type=str, default='Gaia-DR1', 
         help='gaia data release to use as reference (GAIA-DR1, GAIA-DR2, GAIA-EDR3, default GAIA-DR1)')
     parser.add_argument('--phot_sel', action='store_true', default=False, help='create table with Gaia photometrically selected stars')
+    parser.add_argument('-e', '--ell_radius', action='store', default=1.2, help='galaxy ellipse increasing factor')
     parser.add_argument('--include_ellipse', action='store_true', default=False, help='include stars in the galaxy ellipse')
     args = parser.parse_args()
     
@@ -228,7 +229,7 @@ if __name__ == "__main__":
         
             wfi_im.mask_sources(snr=3)
             
-            wfi_im.find_image_stars(args.include_ellipse)
+            wfi_im.find_image_stars(args.include_ellipse, args.ell_radius) 
             
             gs = GAIAStars(wfi_im.obj, args.gaia_dr)
             print('\nQuerying %s...\n'%gs.catname)

@@ -55,7 +55,7 @@ NGC4691 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2024-03-12/p
 #IC5201 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2024-10-01/processed/output/stacks
 #UGC0685 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2024-10-01/processed/output/stacks
 #NGC1313 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/1999-12-17/processed/output/stacks
-NGC300 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/1999-07-30/processed/output/stacks
+#NGC300 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/1999-07-30/processed/output/stacks
 #NGC300 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/1999-07-31/processed/output/stacks
 #NGC4594 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2009-07-06/processed/output/stacks
 #NGC4697 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2006-04-06/processed/output/stacks
@@ -68,7 +68,7 @@ NGC3621 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2025-03-25/p
 NGC4437 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2025-03-25/processed/output/stacks
 NGC4818 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2025-03-25/processed/output/stacks
 NGC4064 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2025-03-26/processed/output/stacks
-NGC4698 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2025-03-26/processed/output/stacks
+#NGC4698 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2025-03-26/processed/output/stacks
 NGC5921 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2025-03-26/processed/output/stacks
 NGC4394 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2025-03-27/processed/output/stacks
 NGC3368 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2025-03-28/processed/output/stacks
@@ -106,4 +106,12 @@ NGC1551 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2008-09-22/p
 NGC3091 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2006-04-04/processed/output/stacks
 NGC3115 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2000-04-09/processed/output/stacks
 NGC3585 /nexus/posix0/MIA-astro-env/eschinner/shared/PHANGS/WFI/RAW/2000-04-03/processed/output/stacks
+
+# M83 (flagged galaxy) and NGC4698 (test galaxy for M83) re-reduction
+M83 /Volumes/My_Passport/WFIDATA/WFI_DATA_Extended/2002-06-16/processed/output/stacks/
+NGC4698 /Volumes/My_Passport/WFIDATA/WFI_DATA_Extended/2025-03-26/processed/output/stacks/
+
+# NGC300 re-reduction
+NGC300 /Volumes/My_Passport/WFIDATA/WFI_DATA_Extended/1999-07-30/processed/output/stacks/
+#NGC300 /Volumes/My_Passport/WFIDATA/WFI_DATA_Extended/1999-07-31/processed/output/stacks/
 

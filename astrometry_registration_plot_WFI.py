@@ -61,9 +61,9 @@ class ImageAstrometry (object) :
         self.img_coord = SkyCoord(ra=self.tbl['ra']*u.deg, dec=self.tbl['dec']*u.deg, frame='icrs')
 
 
-    def galaxy_ellipse (self, filt, r=1.2) :
+    def galaxy_ellipse (self, filt) :
         '''
-        Methos to call the GalaxyEllipse class and its methods
+        Methods to call the GalaxyEllipse class and its methods
         '''
 
         self.myellipse = GalaxyEllipse(self.gal_name, filt, self.filename, None)
@@ -71,7 +71,7 @@ class ImageAstrometry (object) :
         self.myellipse.ellipse_to_pixel('WFI')
 
 
-    def ellipse_check (self, plot_path, filt, string, phot_sel, r=1.2) :
+    def ellipse_check (self, plot_path, filt, string, phot_sel, r) :
         '''
         Method to check whether a point in RA/DEC coordinates is inside or outside the galaxy ellipse
         '''
@@ -446,6 +446,7 @@ if __name__ == "__main__":
     parser.add_argument('--phot_sel', action='store_true', default=False, help='create table with Gaia photometrically selected stars')
     #parser.add_argument('--exclude_ellipse', action='store_true', default=False, 
     #    help='exclude stars in the galaxy ellipse in astrometry precision computation')
+    parser.add_argument('-e', '--ell_radius', action='store', default=1.2, help='galaxy ellipse increasing factor')
     parser.add_argument('--include_ellipse', action='store_true', default=False, 
         help='include stars in the galaxy ellipse in astrometry precision computation')
     parser.add_argument('--correct_astrometry', action='store_true', default=False, help='correct the astrometry and save the statistics in the headers')
@@ -510,7 +511,7 @@ if __name__ == "__main__":
 
             imastro.galaxy_ellipse(filt)
         
-            imastro.ellipse_check(plot_path, filt, string, args.phot_sel)
+            imastro.ellipse_check(plot_path, filt, string, args.phot_sel, args.ell_radius)
              
             imastro.compute_radec_offset(args.include_ellipse)
              

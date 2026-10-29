@@ -824,7 +824,7 @@ class GAIAStars (object) :
         new_limit = 60  # sets the timeout to 60s
         with conf.set_temp('remote_timeout', new_limit):
             obj_coord = SkyCoord.from_name(self.obj)
-
+        
         vizier = Vizier(columns=['*', 'E(BR/RP)'], catalog='Gaia-DR2', row_limit=-1, timeout=60)
         result = vizier.query_region(obj_coord, radius=1*u.deg)
 
